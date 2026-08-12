@@ -49,10 +49,28 @@
                 <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
             </nav>
 
-            <!-- CTA Action -->
-            <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
-                WhatsApp Chat
-            </a>
+            <!-- Right Actions (WhatsApp + Mobile Hamburger Button) -->
+            <div class="flex items-center gap-3">
+                <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
+                    WhatsApp Chat
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <button id="menu-btn" class="md:hidden text-zinc-300 hover:text-white focus:outline-none p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="index.html" class="block text-brandYellow font-medium py-2">Home</a>
+            <a href="series.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Series Tracks</a>
+            <a href="resources.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Resources</a>
+            <a href="events.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Events</a>
+            <a href="prayer.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Prayer</a>
         </div>
     </header>
 
@@ -183,6 +201,16 @@
             <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
         </div>
     </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
 
 </body>
 </html>
