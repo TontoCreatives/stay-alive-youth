@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series Tracks & Reflections | Stay Alive Fellowship</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FACC15',
+                        darkBg: '#09090b',
+                        cardBg: '#121214'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Link to your separate custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
+
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo / Brand -->
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="Banner images and logo/bible study logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
+                <span class="font-bold tracking-wider text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
+            </a>
+            
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+                <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
+                <a href="series.html" class="text-brandYellow transition-colors">Series Tracks</a>
+                <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+                <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+                <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+            </nav>
+
+            <!-- CTA Action -->
+            <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
+                WhatsApp Chat
+            </a>
+        </div>
+    </header>
+
+    <!-- PAGE HEADER -->
+    <section class="py-16 border-b border-zinc-900 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Curriculum & Reflections</span>
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Series Tracks & Articles</h1>
+            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                Dive deeper into our active verse-by-verse studies and read theological reflections designed to anchor your faith.
+            </p>
+        </div>
+    </section>
+
+    <!-- MAIN SERIES LISTING SECTION -->
+    <section class="py-20 bg-darkBg border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <h2 class="text-2xl font-bold text-white">Active Teaching Tracks</h2>
+                <p class="text-zinc-400 text-sm mt-1">Join us live every week as we unpack God's Word together.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                
+                <!-- Thursday Track Card -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
+                    <div class="relative w-full overflow-hidden bg-black">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Thursday Fellowship • 6:00 PM – 8:00 PM</div>
+                        <img src="blog images/BEYOND THE RUINS.jpg" alt="Beyond The Ruins Series" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
+                        <div>
+                            <div class="text-xs text-brandYellow font-semibold mb-2 uppercase tracking-wide">Every Thursday | 6:00 PM – 8:00 PM</div>
+                            <h3 class="text-2xl font-bold text-white mb-3">Beyond The Ruins</h3>
+                            <p class="text-zinc-400 text-sm mb-6 leading-relaxed">
+                                A deep dive exploration into Matthew 24, navigating prophetic text, historical context, and the call to vigilance in modern times.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">Active Track</span>
+                            <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all">
+                                Join Session &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sunday Track Card -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
+                    <div class="relative w-full overflow-hidden bg-black">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Sunday Fellowship • 10:00 AM – 12:00 PM</div>
+                        <img src="blog images/PIECES OF ME.jpg" alt="Pieces of Me Series" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
+                        <div>
+                            <div class="text-xs text-brandYellow font-semibold mb-2 uppercase tracking-wide">Every Sunday | 10:00 AM – 12:00 PM</div>
+                            <h3 class="text-2xl font-bold text-white mb-3">Pieces of Me</h3>
+                            <p class="text-zinc-400 text-sm mb-6 leading-relaxed">
+                                A raw thematic journey through brokenness, examining the anatomy of Sin, Confession, Forgiveness, and Restoration through the Gospel.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">Active Track</span>
+                            <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all">
+                                Join Session &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- INTEGRATED ARTICLES & REFLECTIONS SECTION -->
+    <section class="py-20 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+            <div class="mb-10">
+                <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Written Insights</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Series Reflections & Articles</h2>
+                <p class="text-zinc-400 text-sm mt-1">Short theological notes and study guides to accompany our tracks.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Article Card 1 -->
+                <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">Matthew 24</span>
+                            <span class="text-zinc-500 text-xs">August 12, 2026</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">Finding Stability When the World Shakes</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                            Birth pains mark the hour, but the dawn belongs to Him. Examining what it means to stay spiritually vigilant in a culture of constant disruption.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">Antony Mutahi</span></div>
+                        <a href="article.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider">Read Full Reflection &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Article Card 2 (Placeholder for future articles) -->
+                <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all opacity-75">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">Pieces of Me</span>
+                            <span class="text-zinc-500 text-xs">Upcoming</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">The Anatomy of Restoration: Moving Past Guilt</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                            A look at how true confession breaks the cycle of hidden shame and opens the door to complete healing in Christ.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">Antony Mutahi</span></div>
+                        <span class="inline-flex items-center text-xs font-bold text-zinc-500 uppercase tracking-wider">Coming Soon</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="hover:text-zinc-300">Home</a>
+                <a href="series.html" class="hover:text-zinc-300">Series</a>
+                <a href="prayer.html" class="hover:text-zinc-300">Prayer</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

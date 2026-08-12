@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources & Feedback | Stay Alive Fellowship</title>
+    <!-- START: Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FACC15',
+                        darkBg: '#09090b',
+                        cardBg: '#121214'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- END: Tailwind CSS CDN -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black overflow-x-hidden">
+
+    <!-- ==========================================
+       START: Navigation Bar Component
+       ========================================== -->
+    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="Banner images and logo/bible study logo.jpg" alt="Logo" class="h-10 w-10 object-contain rounded">
+                <span class="font-bold tracking-wider text-sm sm:text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+                <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
+                <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+                <a href="resources.html" class="text-brandYellow transition-colors">Resources</a>
+                <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+                <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+            </nav>
+            <div class="hidden md:flex items-center gap-4">
+                <a href="https://github.com/" target="_blank" class="text-xs text-zinc-400 hover:text-brandYellow transition-colors">GitHub</a>
+                <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">WhatsApp</a>
+            </div>
+            <button id="menu-btn" class="md:hidden text-zinc-300 hover:text-white focus:outline-none p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="index.html" class="block text-zinc-300 py-2">Home</a>
+            <a href="series.html" class="block text-zinc-300 py-2">Series Tracks</a>
+            <a href="resources.html" class="block text-brandYellow font-medium py-2">Resources</a>
+            <a href="events.html" class="block text-zinc-300 py-2">Events</a>
+            <a href="prayer.html" class="block text-zinc-300 py-2">Prayer</a>
+            <div class="pt-4 flex items-center justify-between border-t border-zinc-800">
+                <a href="https://github.com/" target="_blank" class="text-xs text-zinc-400">GitHub</a>
+                <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-xs">WhatsApp</a>
+            </div>
+        </div>
+    </header>
+    <!-- END: Navigation Bar Component -->
+
+    <!-- ==========================================
+       START: Page Header Section
+       ========================================== -->
+    <section class="py-12 sm:py-16 border-b border-zinc-900 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Downloads & Community Feedback</span>
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Ministry Resources</h1>
+            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                Access free study outlines and reading guides. Let us know how we can improve these materials based on your feedback!
+            </p>
+        </div>
+    </section>
+    <!-- END: Page Header Section -->
+
+    <!-- ==========================================
+       START: Resources & WhatsApp Feedback Section
+       ========================================== -->
+    <main class="py-12 sm:py-20 bg-darkBg">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <!-- Download List Group -->
+            <div class="space-y-6">
+                <h2 class="text-xl font-bold text-white">Available Study Material</h2>
+                
+                <!-- Resource Item 1 -->
+                <div class="bg-cardBg p-5 sm:p-8 rounded-xl border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:border-brandYellow/50 transition-all">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">PDF Guide</span>
+                            <span class="text-zinc-500 text-xs">Matthew 24 Track</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2">Beyond The Ruins: Complete Study Outline</h3>
+                        <p class="text-zinc-400 text-sm">Comprehensive verse-by-verse notes, historical context breakdown, and discussion questions.</p>
+                    </div>
+                    <a href="#" class="bg-brandYellow text-black font-bold px-5 py-3 rounded-lg text-xs hover:bg-yellow-400 transition-all text-center whitespace-nowrap">
+                        Download PDF &rarr;
+                    </a>
+                </div>
+
+                <!-- Resource Item 2 -->
+                <div class="bg-cardBg p-5 sm:p-8 rounded-xl border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:border-brandYellow/50 transition-all">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">PDF Guide</span>
+                            <span class="text-zinc-500 text-xs">Pieces of Me Track</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-2">Pieces of Me: Personal Reflection Journal</h3>
+                        <p class="text-zinc-400 text-sm">Guided prompts focusing on confession, repentance, and the anatomy of spiritual restoration.</p>
+                    </div>
+                    <a href="#" class="bg-brandYellow text-black font-bold px-5 py-3 rounded-lg text-xs hover:bg-yellow-400 transition-all text-center whitespace-nowrap">
+                        Download PDF &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- WhatsApp Feedback Card Component -->
+            <div class="bg-cardBg border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brandYellow/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex flex-col sm:flex-row items-center gap-6">
+                    <img src="Banner images and logo/bible study logo.jpg" alt="Logo" class="h-16 w-16 sm:h-20 sm:w-20 object-contain rounded-xl border border-zinc-800 bg-black p-1 shadow-md flex-shrink-0">
+                    <div class="text-center sm:text-left flex-grow">
+                        <span class="text-brandYellow text-xs font-bold uppercase tracking-wider">Direct Feedback Loop</span>
+                        <h3 class="text-xl font-bold text-white mt-1 mb-2">Have Suggestions or Feedback?</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">
+                            We are building this slowly and want it to serve you better. Drop your thoughts, layout feedback, or requests straight to our WhatsApp line!
+                        </p>
+                    </div>
+                    <a href="https://wa.me/" target="_blank" class="w-full sm:w-auto bg-brandYellow text-black font-bold px-6 py-3 rounded-lg text-xs hover:bg-yellow-400 transition-all text-center whitespace-nowrap flex-shrink-0">
+                        Chat on WhatsApp &rarr;
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <!-- END: Resources & WhatsApp Feedback Section -->
+
+    <!-- ==========================================
+       START: Footer Component
+       ========================================== -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+            <div class="flex items-center gap-6">
+                <a href="https://github.com/" target="_blank" class="hover:text-zinc-300">GitHub</a>
+                <a href="index.html" class="hover:text-zinc-300">Home</a>
+                <a href="series.html" class="hover:text-zinc-300">Series</a>
+            </div>
+        </div>
+    </footer>
+    <!-- END: Footer Component -->
+
+    <!-- ==========================================
+       START: JavaScript Logic (Mobile Menu Toggle)
+       ========================================== -->
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    </script>
+    <!-- END: JavaScript Logic -->
+</body>
+</html>

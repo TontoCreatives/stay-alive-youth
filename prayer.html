@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Requests | Stay Alive Fellowship</title>
+    <!-- START: Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FACC15',
+                        darkBg: '#09090b',
+                        cardBg: '#121214'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- END: Tailwind CSS CDN -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black overflow-x-hidden">
+
+    <!-- ==========================================
+       START: Navigation Bar Component
+       ========================================== -->
+    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="Banner images and logo/bible study logo.jpg" alt="Logo" class="h-10 w-10 object-contain rounded">
+                <span class="font-bold tracking-wider text-sm sm:text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+                <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
+                <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+                <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+                <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+                <a href="prayer.html" class="text-brandYellow transition-colors">Prayer</a>
+            </nav>
+            <div class="hidden md:flex items-center gap-4">
+                <a href="https://github.com/" target="_blank" class="text-xs text-zinc-400 hover:text-brandYellow transition-colors">GitHub</a>
+                <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">WhatsApp</a>
+            </div>
+            <button id="menu-btn" class="md:hidden text-zinc-300 hover:text-white focus:outline-none p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="index.html" class="block text-zinc-300 py-2">Home</a>
+            <a href="series.html" class="block text-zinc-300 py-2">Series Tracks</a>
+            <a href="resources.html" class="block text-zinc-300 py-2">Resources</a>
+            <a href="events.html" class="block text-zinc-300 py-2">Events</a>
+            <a href="prayer.html" class="block text-brandYellow font-medium py-2">Prayer</a>
+            <div class="pt-4 flex items-center justify-between border-t border-zinc-800">
+                <a href="https://github.com/" target="_blank" class="text-xs text-zinc-400">GitHub</a>
+                <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-xs">WhatsApp</a>
+            </div>
+        </div>
+    </header>
+    <!-- END: Navigation Bar Component -->
+
+    <!-- ==========================================
+       START: Page Header Section
+       ========================================== -->
+    <section class="py-12 sm:py-16 border-b border-zinc-900 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Intercession & Support</span>
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Submit a Prayer Request</h1>
+            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                "Do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be made known to God." (Philippians 4:6)
+            </p>
+        </div>
+    </section>
+    <!-- END: Page Header Section -->
+
+    <!-- ==========================================
+       START: Prayer Form Section
+       ========================================== -->
+    <section class="py-20 bg-darkBg">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-cardBg p-8 sm:p-10 rounded-2xl border border-zinc-800 shadow-xl">
+                <form action="#" method="POST" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">Your Name (Optional)</label>
+                        <input type="text" id="name" placeholder="Enter your name or keep anonymous" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brandYellow transition-colors">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">Contact / Email (Optional)</label>
+                        <input type="email" id="email" placeholder="If you'd like a follow-up response" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brandYellow transition-colors">
+                    </div>
+
+                    <div>
+                        <label for="request" class="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">Prayer Request Details *</label>
+                        <textarea id="request" rows="5" required placeholder="Share what you would like our leadership team to pray over..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-4 text-sm text-white focus:outline-none focus:border-brandYellow transition-colors"></textarea>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" id="confidential" class="h-4 w-4 rounded border-zinc-800 bg-zinc-900 text-brandYellow focus:ring-brandYellow">
+                        <label for="confidential" class="text-xs text-zinc-400">Keep this request strictly confidential (Leadership team only)</label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brandYellow text-black font-bold py-3.5 rounded-lg text-sm hover:bg-yellow-400 transition-all">
+                        Submit Prayer Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- END: Prayer Form Section -->
+
+    <!-- ==========================================
+       START: Footer Component
+       ========================================== -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+            <div class="flex items-center gap-6">
+                <a href="https://github.com/" target="_blank" class="hover:text-zinc-300">GitHub</a>
+                <a href="index.html" class="hover:text-zinc-300">Home</a>
+                <a href="series.html" class="hover:text-zinc-300">Series</a>
+            </div>
+        </div>
+    </footer>
+    <!-- END: Footer Component -->
+
+    <!-- ==========================================
+       START: JavaScript Logic (Mobile Menu Toggle)
+       ========================================== -->
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    </script>
+    <!-- END: JavaScript Logic -->
+</body>
+</html>

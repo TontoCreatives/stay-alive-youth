@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stay Alive Fellowship | Youth Bible Study</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FACC15',
+                        darkBg: '#09090b',
+                        cardBg: '#121214'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Link to your separate custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
+
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo / Brand -->
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="Banner images and logo/bible study logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
+                <span class="font-bold tracking-wider text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
+            </a>
+            
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+                <a href="index.html" class="text-brandYellow transition-colors">Home</a>
+                <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+                <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+                <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+                <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+            </nav>
+
+            <!-- CTA Action -->
+            <a href="https://wa.me/" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
+                WhatsApp Chat
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative py-20 lg:py-32 overflow-hidden border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Left Column: Mission text -->
+                <div>
+                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Deep Faith & Consistent Prayer</span>
+                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white mt-6 mb-6 leading-none">
+                        Know Christ More <span class="text-brandYellow">Deeply.</span>
+                    </h1>
+                    <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-8">
+                        We exist to know Christ more deeply and make Him known more clearly. The Bible is God’s authoritative, sufficient, and life-giving Word. Our goal is transformation—minds renewed and lives shaped by the Gospel.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="series.html" class="bg-brandYellow text-black font-bold px-6 py-3 rounded text-sm hover:bg-yellow-400 transition-all">
+                            Explore Current Series
+                        </a>
+                        <a href="prayer.html" class="border border-zinc-700 hover:border-brandYellow text-white font-semibold px-6 py-3 rounded text-sm transition-all">
+                            Send Prayer Request
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Visual Atmosphere / Image Grid Preview -->
+                <div class="relative flex justify-center">
+                    <div class="relative w-full max-w-md rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl bg-cardBg p-2">
+                        <img src="Banner images and logo/youth being in the bible study.jpg" alt="Youth Fellowship Session" class="rounded-xl w-full h-72 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                        <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-md p-4 rounded-lg border border-zinc-800">
+                            <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">Active Community</p>
+                            <p class="text-sm font-medium text-white">Rooted in Scripture, Centered on the Gospel.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DNA SECTION -->
+    <section class="py-16 bg-zinc-950 border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Our Ministry DNA</h2>
+                <p class="text-zinc-400 text-sm mt-2">Grounded firmly in three structural pillars.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- DNA Pillar 1 -->
+                <div class="bg-cardBg p-6 rounded-xl border border-zinc-800/80 hover:border-brandYellow/50 transition-all">
+                    <div class="text-brandYellow font-bold text-xl mb-3">01</div>
+                    <h3 class="text-lg font-bold text-white mb-2">Rooted in Scripture</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">“All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.” <br><span class="text-zinc-500 font-semibold text-xs mt-2 block">2 Timothy 3:16–17</span></p>
+                </div>
+
+                <!-- DNA Pillar 2 -->
+                <div class="bg-cardBg p-6 rounded-xl border border-zinc-800/80 hover:border-brandYellow/50 transition-all">
+                    <div class="text-brandYellow font-bold text-xl mb-3">02</div>
+                    <h3 class="text-lg font-bold text-white mb-2">Centered on the Gospel</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">“For I decided to know nothing among you except Jesus Christ and him crucified.” <br><span class="text-zinc-500 font-semibold text-xs mt-2 block">1 Corinthians 2:2</span></p>
+                </div>
+
+                <!-- DNA Pillar 3 -->
+                <div class="bg-cardBg p-6 rounded-xl border border-zinc-800/80 hover:border-brandYellow/50 transition-all">
+                    <div class="text-brandYellow font-bold text-xl mb-3">03</div>
+                    <h3 class="text-lg font-bold text-white mb-2">Equipped for Life</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">“But be doers of the word, and not hearers only, deceiving yourselves.” <br><span class="text-zinc-500 font-semibold text-xs mt-2 block">James 1:22</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DUAL TRACK SERIES SPOTLIGHT -->
+    <section class="py-20 bg-darkBg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Active Teaching Tracks</span>
+                    <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
+                </div>
+                <a href="series.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View Full Curriculum &rarr;</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                
+                <!-- Thursday Track Card -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
+                    <div class="relative w-full overflow-hidden bg-black">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Thursday Fellowship • 6:00 PM – 8:00 PM</div>
+                        <img src="blog images/BEYOND THE RUINS.jpg" alt="Beyond The Ruins Series" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
+                        <div>
+                            <div class="text-xs text-brandYellow font-semibold mb-1">Every Thursday | 6:00 PM – 8:00 PM</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Beyond The Ruins</h3>
+                            <p class="text-zinc-400 text-sm mb-4 leading-relaxed">Deep dive exploration into Matthew 24, navigating prophetic text, historical context, and the call to vigilance.</p>
+                        </div>
+                        <a href="series.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider">Explore Matthew 24 Track &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Sunday Track Card -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
+                    <div class="relative w-full overflow-hidden bg-black">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Sunday Fellowship • 10:00 AM – 12:00 PM</div>
+                        <img src="blog images/PIECES OF ME.jpg" alt="Pieces of Me Series" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
+                        <div>
+                            <div class="text-xs text-brandYellow font-semibold mb-1">Every Sunday | 10:00 AM – 12:00 PM</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Pieces of Me</h3>
+                            <p class="text-zinc-400 text-sm mb-4 leading-relaxed">A raw thematic journey through brokenness, examining the anatomy of Sin, Confession, Forgiveness, and Restoration.</p>
+                        </div>
+                        <a href="series.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider">Explore Brokenness Track &rarr;</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="hover:text-zinc-300">Home</a>
+                <a href="series.html" class="hover:text-zinc-300">Series</a>
+                <a href="prayer.html" class="hover:text-zinc-300">Prayer</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
