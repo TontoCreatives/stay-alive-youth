@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Series Tracks & Reflections | Stay Alive Fellowship</title>
-    <!-- Tailwind CSS CDN -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,21 +20,19 @@
             }
         }
     </script>
-    <!-- Link to your separate custom stylesheet -->
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
 
-    <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Logo / Brand -->
+            
             <a href="index.html" class="flex items-center gap-3">
                 <img src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
                 <span class="font-bold tracking-wider text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
             </a>
             
-            <!-- Desktop Nav Links -->
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
                 <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
                 <a href="series.html" class="text-brandYellow transition-colors">Series Tracks</a>
@@ -43,13 +41,11 @@
                 <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
             </nav>
 
-            <!-- Right Actions (WhatsApp + Mobile Hamburger Button) -->
             <div class="flex items-center gap-3">
                 <a href="https://wa.me/254715836373" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
                     WhatsApp Chat
                 </a>
                 
-                <!-- Mobile Menu Button -->
                 <button id="menu-btn" class="md:hidden text-zinc-300 hover:text-white focus:outline-none p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
@@ -58,7 +54,6 @@
             </div>
         </div>
 
-        <!-- Mobile Dropdown Menu (Hidden by default) -->
         <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
             <a href="index.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Home</a>
             <a href="series.html" class="block text-brandYellow font-medium py-2">Series Tracks</a>
@@ -68,7 +63,7 @@
         </div>
     </header>
 
-    <!-- PAGE HEADER -->
+
     <section class="py-16 border-b border-zinc-900 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
             <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Curriculum & Reflections</span>
@@ -79,18 +74,17 @@
         </div>
     </section>
 
-    <!-- MAIN SERIES LISTING SECTION -->
+
     <section class="py-20 bg-darkBg border-b border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
             <div class="mb-10">
                 <h2 class="text-2xl font-bold text-white">Active Teaching Tracks</h2>
                 <p class="text-zinc-400 text-sm mt-1">Join us live every week as we unpack God's Word together.</p>
             </div>
 
-            <!-- Active Tracks Grid (2 Columns) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-20">
                 
-                <!-- Thursday Track Card -->
                 <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
                     <div class="relative w-full overflow-hidden bg-black">
                         <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Thursday Fellowship • 6:00 PM – 8:00 PM</div>
@@ -113,7 +107,6 @@
                     </div>
                 </div>
 
-                <!-- Sunday Track Card -->
                 <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
                     <div class="relative w-full overflow-hidden bg-black">
                         <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Sunday Fellowship • 10:00 AM – 12:00 PM</div>
@@ -138,26 +131,19 @@
 
             </div>
 
-            <!-- Past Series Section Header -->
+
             <div class="mb-10 max-w-5xl mx-auto">
                 <h2 class="text-2xl font-bold text-white">Past Series Archives</h2>
                 <p class="text-zinc-400 text-sm mt-1">Explore our previous seasonal tracks and study foundations.</p>
             </div>
 
-            <!-- ======================================================== -->
-            <!-- PASTE NEW PAST SERIES CARDS BELOW THIS LINE               -->
-            <!-- Each card inside this grid will automatically align side-by-side -->
-            <!-- ======================================================== -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 
-                <!-- START OF ARCHIVE CARD: Sea of Faces -->
                 <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
                     <div class="relative w-full overflow-hidden bg-black">
                         <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Past Series Track</div>
-                        <!-- UPDATE IMAGE PATH HERE IF NEEDED -->
                         <img src="blog%20images/sea%20of%20faces.jpg" alt="Sea of Faces Series" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
-                    
                     <div class="p-6 sm:p-8 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
                         <div>
                             <div class="text-xs text-brandYellow font-semibold mb-2 uppercase tracking-wide">Archived Study Track</div>
@@ -166,7 +152,6 @@
                                 Navigating identity, purpose, and authenticity in a crowded world—answering why we are here, whether life has meaning, and how to find it.
                             </p>
                         </div>
-                        
                         <div class="pt-4 border-t border-zinc-800 flex items-center gap-3">
                             <a href="resources.html" class="flex-1 bg-brandYellow text-black font-bold py-2.5 rounded text-xs hover:bg-yellow-400 transition-all text-center">
                                 Get Materials
@@ -177,20 +162,13 @@
                         </div>
                     </div>
                 </div>
-                <!-- END OF ARCHIVE CARD -->
-
-                <!-- 
-                  HOW TO ADD A NEW PAST SERIES LATER:
-                  Copy the entire block between <!-- START OF ARCHIVE CARD --&gt; and <!-- END OF ARCHIVE CARD --&gt;, 
-                  paste it right below here inside this same grid div, and change the image src, title, and description!
-                -->
 
             </div>
 
         </div>
     </section>
 
-    <!-- INTEGRATED ARTICLES & REFLECTIONS SECTION -->
+
     <section class="py-20 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
             <div class="mb-10">
@@ -201,7 +179,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
-                <!-- Article Card 1 -->
                 <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all">
                     <div>
                         <div class="flex items-center justify-between mb-3">
@@ -215,25 +192,28 @@
                     </div>
                     <div>
                         <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">Antony Mutahi</span></div>
-                        <a href="article.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider">Read Full Reflection &rarr;</a>
+                        <a href="matthew-24.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">
+                            Read Full Reflection &rarr;
+                        </a>
                     </div>
                 </div>
 
-                <!-- Article Card 2 -->
-                <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all opacity-75">
+                <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all">
                     <div>
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">Pieces of Me</span>
-                            <span class="text-zinc-500 text-xs">Upcoming</span>
+                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">Sea of Faces</span>
+                            <span class="text-zinc-500 text-xs">August 14, 2026</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">The Anatomy of Restoration: Moving Past Guilt</h3>
+                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">What Is Purpose, Really?</h3>
                         <p class="text-zinc-400 text-sm leading-relaxed mb-6">
-                            A look at how true confession breaks the cycle of hidden shame and opens the door to complete healing in Christ.
+                            Beyond the system, the career, and the unknown. Looking past worldly targets to discover God's predefined assignment for your life.
                         </p>
                     </div>
                     <div>
                         <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">Antony Mutahi</span></div>
-                        <span class="inline-flex items-center text-xs font-bold text-zinc-500 uppercase tracking-wider">Coming Soon</span>
+                        <a href="article.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">
+                            Read Full Reflection &rarr;
+                        </a>
                     </div>
                 </div>
 
@@ -241,7 +221,7 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
+
     <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
@@ -253,7 +233,7 @@
         </div>
     </footer>
 
-    <!-- Mobile Menu Script -->
+
     <script>
         const btn = document.getElementById('menu-btn');
         const menu = document.getElementById('mobile-menu');
