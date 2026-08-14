@@ -139,8 +139,7 @@
             menu.classList.toggle('hidden');
         });
     </script>
-
-    <!-- Sanity Data Injector Script -->
+<!-- Sanity Data Injector Script -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client'
 
@@ -154,6 +153,7 @@
         async function fetchArticle() {
             const query = `*[_type == "post" && slug.current == "when-the-ground-moves-matthew-24"][0]{
                 title,
+                _createdAt,
                 publishedAt,
                 excerpt,
                 body,
@@ -165,26 +165,37 @@
 
             try {
                 const article = await client.fetch(query)
-                console.log("Fetched article:", article)
 
                 if (article) {
                     if (article.title) document.getElementById('article-title').innerText = article.title
-                    if (article.excerpt) document.getElementById('article-intro').innerText = article.excerpt
-                    if (article.publishedAt) {
-                        document.getElementById('article-date').innerText = new Date(article.publishedAt).toLocaleDateString()
+                    if (article.excerpt) {
+                        document.getElementById('article-intro').innerText = article.excerpt
                     }
+                    
+                    // Fallback date handling
+                    const dateValue = article.publishedAt || article._createdAt
+                    if (dateValue) {
+                        document.getElementById('article-date').innerText = new Date(dateValue).toLocaleDateString()
+                    }
+
                     if (article.bannerUrl) {
                         document.getElementById('banner-image').src = article.bannerUrl
                     }
+                    
                     if (article.authorName) {
                         document.getElementById('author-name').innerText = article.authorName
-                        document.getElementById('author-bio').innerText = article.authorBio || ''
+                        // Safely handle bio whether it's a string or portable text array
+                        const bioText = typeof article.authorBio === 'string' 
+                            ? article.authorBio 
+                            : (Array.isArray(article.authorBio) ? article.authorBio.map(b => b.children?.map(c => c.text).join('')).join(' ') : '')
+                        document.getElementById('author-bio').innerText = bioText
                     }
+
                     if (article.authorImage) {
                         document.getElementById('author-image').src = article.authorImage
                     }
+
                     if (article.body) {
-                        // Handles block text output safely
                         const bodyHtml = article.body.map(block => {
                             if (block._type === 'block' && block.children) {
                                 return `<p class="mb-4">${block.children.map(c => c.text).join('')}</p>`
@@ -193,12 +204,9 @@
                         }).join('')
                         document.getElementById('article-body').innerHTML = bodyHtml
                     }
-                } else {
-                    document.getElementById('article-title').innerText = "Article not found."
                 }
             } catch (err) {
                 console.error("Sanity fetch error:", err)
-                document.getElementById('article-title').innerText = "Error loading content."
             }
         }
 
