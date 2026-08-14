@@ -80,8 +80,8 @@
                 <h1 id="article-title" class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-6 leading-tight">
                     Loading title...
                 </h1>
-                <p id="article-intro" class="text-zinc-300 text-base sm:text-lg leading-relaxed">
-                    Loading introduction...
+                <!-- Hidden by default, auto-shows if data exists in Sanity -->
+                <p id="article-intro" class="text-zinc-300 text-base sm:text-lg leading-relaxed hidden">
                 </p>
             </header>
 
@@ -176,13 +176,14 @@
                 if (article) {
                     if (article.title) document.getElementById('article-title').innerText = article.title
                     
-                    // Grabs whichever intro field contains data across multiple fallback options
+                    // Conditional Intro Display: only shows if text exists in CMS
                     const introText = article.excerpt || article.summary || article.description || article.subtitle || article.intro || article.leadText || article.overview
+                    const introEl = document.getElementById('article-intro')
                     if (introText) {
-                        document.getElementById('article-intro').innerText = introText
+                        introEl.innerText = introText
+                        introEl.classList.remove('hidden')
                     }
                     
-                    // Fallback date handling
                     const dateValue = article.publishedAt || article._createdAt
                     if (dateValue) {
                         document.getElementById('article-date').innerText = new Date(dateValue).toLocaleDateString()
@@ -194,7 +195,6 @@
                     
                     if (article.authorName) {
                         document.getElementById('author-name').innerText = article.authorName
-                        // Safely handle bio whether it's a string or portable text array
                         const bioText = typeof article.authorBio === 'string' 
                             ? article.authorBio 
                             : (Array.isArray(article.authorBio) ? article.authorBio.map(b => b.children?.map(c => c.text).join('')).join(' ') : '')
