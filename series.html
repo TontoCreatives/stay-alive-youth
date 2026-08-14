@@ -63,7 +63,6 @@
         </div>
     </header>
 
-
     <section class="py-16 border-b border-zinc-900 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
             <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Curriculum & Reflections</span>
@@ -73,7 +72,6 @@
             </p>
         </div>
     </section>
-
 
     <section class="py-20 bg-darkBg border-b border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -131,7 +129,6 @@
 
             </div>
 
-
             <div class="mb-10 max-w-5xl mx-auto">
                 <h2 class="text-2xl font-bold text-white">Past Series Archives</h2>
                 <p class="text-zinc-400 text-sm mt-1">Explore our previous seasonal tracks and study foundations.</p>
@@ -168,7 +165,7 @@
         </div>
     </section>
 
-
+    <!-- Dynamic Articles Section -->
     <section class="py-20 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
             <div class="mb-10">
@@ -177,50 +174,12 @@
                 <p class="text-zinc-400 text-sm mt-1">Short theological notes and study guides to accompany our tracks.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">Matthew 24</span>
-                            <span class="text-zinc-500 text-xs">August 12, 2026</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">Finding Stability When the World Shakes</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed mb-6">
-                            Birth pains mark the hour, but the dawn belongs to Him. Examining what it means to stay spiritually vigilant in a culture of constant disruption.
-                        </p>
-                    </div>
-                    <div>
-                        <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">Antony Mutahi</span></div>
-                        <a href="matthew-24.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">
-                            Read Full Reflection &rarr;
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20">Sea of Faces</span>
-                            <span class="text-zinc-500 text-xs">August 14, 2026</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">What Is Purpose, Really?</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed mb-6">
-                            Beyond the system, the career, and the unknown. Looking past worldly targets to discover God's predefined assignment for your life.
-                        </p>
-                    </div>
-                    <div>
-                        <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">Antony Mutahi</span></div>
-                        <a href="article.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">
-                            Read Full Reflection &rarr;
-                        </a>
-                    </div>
-                </div>
-
+            <!-- Articles Container injected via Sanity CMS -->
+            <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <p class="text-zinc-400">Loading series reflections...</p>
             </div>
         </div>
     </section>
-
 
     <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -233,7 +192,7 @@
         </div>
     </footer>
 
-
+    <!-- Mobile Menu Script -->
     <script>
         const btn = document.getElementById('menu-btn');
         const menu = document.getElementById('mobile-menu');
@@ -241,6 +200,81 @@
         btn.addEventListener('click', () => {
             menu.classList.toggle('hidden');
         });
+    </script>
+
+    <!-- Sanity Dynamic Loop Script -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@sanity/client'
+
+        const client = createClient({
+            projectId: 'y4q1h6a9',
+            dataset: 'production',
+            apiVersion: '2026-08-14',
+            useCdn: true
+        })
+
+        async function fetchAllArticles() {
+            const query = `*[_type == "post"] | order(publishedAt desc) {
+                title,
+                slug,
+                publishedAt,
+                _createdAt,
+                excerpt,
+                summary,
+                description,
+                subtitle,
+                intro,
+                leadText,
+                overview,
+                "authorName": author->name
+            }`
+
+            try {
+                const posts = await client.fetch(query)
+                const container = document.getElementById('articles-container')
+
+                if (posts && posts.length > 0) {
+                    container.innerHTML = '' // Clear loading text
+
+                    posts.forEach(post => {
+                        const title = post.title || 'Untitled Article'
+                        const slug = post.slug?.current || '#'
+                        const introText = post.excerpt || post.summary || post.description || post.subtitle || post.intro || post.leadText || post.overview || 'Read full theological insights and notes.'
+                        const dateValue = new Date(post.publishedAt || post._createdAt).toLocaleDateString()
+                        const author = post.authorName || 'Stay Alive Fellowship'
+
+                        const card = `
+                            <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/25">Reflection</span>
+                                        <span class="text-zinc-500 text-xs">${dateValue}</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">${title}</h3>
+                                    <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                                        ${introText}
+                                    </p>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">${author}</span></div>
+                                    <a href="article.html?slug=${slug}" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">
+                                        Read Full Reflection &rarr;
+                                    </a>
+                                </div>
+                            </div>
+                        `
+                        container.innerHTML += card
+                    })
+                } else {
+                    container.innerHTML = '<p class="text-zinc-400">No reflections published yet.</p>'
+                }
+            } catch (err) {
+                console.error("Sanity fetch error:", err)
+                document.getElementById('articles-container').innerHTML = '<p class="text-red-400">Failed to load articles from CMS.</p>'
+            }
+        }
+
+        fetchAllArticles()
     </script>
 
 </body>
