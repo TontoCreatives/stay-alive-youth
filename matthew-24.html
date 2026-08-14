@@ -139,7 +139,8 @@
             menu.classList.toggle('hidden');
         });
     </script>
-<!-- Sanity Data Injector Script -->
+
+    <!-- Sanity Data Injector Script -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client'
 
@@ -156,6 +157,12 @@
                 _createdAt,
                 publishedAt,
                 excerpt,
+                summary,
+                description,
+                subtitle,
+                intro,
+                leadText,
+                overview,
                 body,
                 "authorName": author->name,
                 "authorBio": author->bio,
@@ -168,8 +175,11 @@
 
                 if (article) {
                     if (article.title) document.getElementById('article-title').innerText = article.title
-                    if (article.excerpt) {
-                        document.getElementById('article-intro').innerText = article.excerpt
+                    
+                    // Grabs whichever intro field contains data across multiple fallback options
+                    const introText = article.excerpt || article.summary || article.description || article.subtitle || article.intro || article.leadText || article.overview
+                    if (introText) {
+                        document.getElementById('article-intro').innerText = introText
                     }
                     
                     // Fallback date handling
