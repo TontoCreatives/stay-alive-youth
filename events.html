@@ -43,9 +43,8 @@
 
             <!-- Right Actions -->
             <div class="flex items-center gap-3">
-             <a href="https://wa.me/254715836373" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
-    WhatsApp Chat
-</a>
+                <a href="https://wa.me/254715836373" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
+                    WhatsApp Chat
                 </a>
                 
                 <!-- Mobile Menu Button -->
@@ -78,9 +77,13 @@
         </div>
     </section>
 
+    <!-- DYNAMIC EVENTS GRID -->
     <section class="py-20 bg-darkBg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-zinc-400">Check back soon for upcoming special event announcements!</p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Javascript will inject dynamic event cards here -->
+                <div class="text-center col-span-2 text-zinc-500 py-12">Loading upcoming events...</div>
+            </div>
         </div>
     </section>
 
@@ -95,6 +98,80 @@
             </div>
         </div>
     </footer>
+
+    <!-- SANITY FETCH SCRIPT -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@sanity/client';
+
+        const client = createClient({
+            projectId: 'y4q1h6a9',
+            dataset: 'production',
+            useCdn: true,
+            apiVersion: '2024-01-01'
+        });
+
+        async function fetchEvents() {
+            const container = document.getElementById('events-container');
+            try {
+                // Fetch events from Sanity
+                const query = `*[_type == "event"]{
+                    title,
+                    badge,
+                    schedule,
+                    dateText,
+                    description,
+                    "imageUrl": mainImage.asset->url
+                }`;
+                const events = await client.fetch(query);
+
+                if (!events || events.length === 0) {
+                    container.innerHTML = `<div class="text-center col-span-2 text-zinc-400 py-12">Check back soon for upcoming special event announcements!</div>`;
+                    return;
+                }
+
+                container.innerHTML = events.map(event => `
+                    <div class="bg-cardBg border border-zinc-800 rounded-xl overflow-hidden flex flex-col justify-between hover:border-zinc-700 transition-all">
+                        ${event.imageUrl ? `
+                            <div class="relative w-full bg-zinc-900 overflow-hidden">
+                                ${event.badge ? `
+                                    <div class="absolute top-4 left-4 z-10 bg-black/70 backdrop-blur-md border border-zinc-700/50 text-brandYellow text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wider">
+                                        ${event.badge}
+                                    </div>
+                                ` : ''}
+                                <img src="${event.imageUrl}" alt="${event.title}" class="w-full h-auto object-cover">
+                            </div>
+                        ` : ''}
+                        <div class="p-6 sm:p-8 flex flex-col flex-grow">
+                            ${!event.imageUrl && event.badge ? `
+                                <span class="text-brandYellow text-xs font-bold uppercase tracking-widest mb-2">${event.badge}</span>
+                            ` : ''}
+                            <h3 class="text-2xl font-black text-white mb-3">${event.title}</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed mb-6 flex-grow">${event.description || ''}</p>
+                            
+                            <div class="border-t border-zinc-800/80 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-zinc-400">
+                                <div>
+                                    <span class="block text-zinc-500 uppercase tracking-wider font-semibold">Schedule</span>
+                                    <span class="text-zinc-200 font-medium">${event.schedule || 'TBA'}</span>
+                                </div>
+                                ${event.dateText ? `
+                                    <div>
+                                        <span class="block text-zinc-500 uppercase tracking-wider font-semibold">Frequency / Date</span>
+                                        <span class="text-brandYellow font-medium">${event.dateText}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error("Sanity fetch error:", err);
+                container.innerHTML = `<div class="text-center col-span-2 text-red-400 py-12">Failed to load events. Please check your connection.</div>`;
+            }
+        }
+
+        fetchEvents();
+    </script>
 
     <script>
         const btn = document.getElementById('menu-btn');

@@ -1,0 +1,39 @@
+export default {
+  name: 'resource',
+  title: 'Ministry Resources',
+  type: 'document',
+  fields: [
+    { name: 'title', title: 'Resource Title', type: 'string' },
+    { name: 'categoryLabel', title: 'Category Tag (e.g. PDF Guide, E-Book)', type: 'string' },
+    { name: 'trackName', title: 'Associated Track (e.g. Matthew 24 Track)', type: 'string' },
+    { name: 'shortDescription', title: 'Short Description for Card', type: 'text' },
+    { 
+      name: 'mode', 
+      title: 'Reading Mode', 
+      type: 'string', 
+      options: { 
+        list: [
+          { title: 'Rich Text Notes (Written on-site)', value: 'RichText' },
+          { title: 'PDF E-Reader (Uploaded Document)', value: 'PDF_Viewer' }
+        ] 
+      },
+      initialValue: 'RichText'
+    },
+    { 
+      name: 'fullContent', 
+      title: 'Full Online Reading Content (Used if Rich Text mode)', 
+      type: 'blockContent' 
+    },
+    { 
+      name: 'pdfFile', 
+      title: 'Upload PDF / Document (Used if PDF E-Reader mode)', 
+      type: 'file' 
+    },
+    { 
+      name: 'allowDownload', 
+      title: 'Enable PDF Download Button', 
+      type: 'boolean',
+      initialValue: false 
+    }
+  ]
+}
