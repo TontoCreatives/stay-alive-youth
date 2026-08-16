@@ -139,7 +139,7 @@
         });
     </script>
 
-    <!-- Sanity Dynamic Loop Script using teachingTrack -->
+    <!-- Sanity Dynamic Loop Script using track schema -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client'
         import imageUrlBuilder from 'https://esm.sh/@sanity/image-url'
@@ -157,7 +157,7 @@
         }
 
         async function fetchTracksAndArticles() {
-            const tracksQuery = `*[_type == "teachingTrack"] | order(publishedAt desc) {
+            const tracksQuery = `*[_type == "track"] | order(publishedAt desc) {
                 title,
                 slug,
                 schedule,
