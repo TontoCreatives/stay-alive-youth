@@ -1,6 +1,424 @@
-import blockContent from './blockContent'
-import category from './category'
-import post from './post'
-import author from './author'
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stay Alive Fellowship | Youth Bible Study</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FACC15',
+                        darkBg: '#09090b',
+                        cardBg: '#121214'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Link to custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- WhatsApp & Social Media Preview Meta Tags -->
+    <meta property="og:title" content="Stay Alive Fellowship | Youth Bible Study">
+    <meta property="og:description" content="Know Christ more deeply. Join our weekly Thursday and Sunday series tracks.">
+    <meta property="og:image" content="https://tontocreatives.github.io/stay-alive-youth/Banner%20images%20and%20logo/bible%20study%20logo.jpg">
+    <meta property="og:url" content="https://tontocreatives.github.io/stay-alive-youth/">
+    <meta property="og:type" content="website">
+    <style>
+        /* Custom scrollbar and smooth horizontal track styling */
+        .posts-slider-section {
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #FACC15 #121214;
+        }
+        .posts-slider-section::-webkit-scrollbar {
+            height: 8px;
+        }
+        .posts-slider-section::-webkit-scrollbar-track {
+            background: #121214;
+            border-radius: 4px;
+        }
+        .posts-slider-section::-webkit-scrollbar-thumb {
+            background: #FACC15;
+            border-radius: 4px;
+        }
+        .posts-track {
+            display: flex;
+            gap: 2rem;
+            width: max-content;
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
 
-export const schemaTypes = [post, author, category, blockContent]
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo / Brand -->
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
+                <span class="font-bold tracking-wider text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
+            </a>
+            
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+                <a href="index.html" class="text-brandYellow transition-colors">Home</a>
+                <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+                <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+                <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+                <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+            </nav>
+
+            <!-- Right Actions (WhatsApp + Mobile Hamburger Button) -->
+            <div class="flex items-center gap-3">
+                <a href="https://wa.me/254715836373" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
+                    WhatsApp Chat
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <button id="menu-btn" class="md:hidden text-zinc-300 hover:text-white focus:outline-none p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="index.html" class="block text-brandYellow font-medium py-2">Home</a>
+            <a href="series.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Series Tracks</a>
+            <a href="resources.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Resources</a>
+            <a href="events.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Events</a>
+            <a href="prayer.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Prayer</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative py-20 lg:py-32 overflow-hidden border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Left Column: Mission text -->
+                <div>
+                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Deep Faith & Consistent Prayer</span>
+                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white mt-6 mb-6 leading-none">
+                        Know Christ More <span class="text-brandYellow">Deeply.</span>
+                    </h1>
+                    <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-8">
+                        We exist to know Christ more deeply and make Him known more clearly. The Bible is God’s authoritative, sufficient, and life-giving Word. Our goal is transformation—minds renewed and lives shaped by the Gospel.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="series.html" class="bg-brandYellow text-black font-bold px-6 py-3 rounded text-sm hover:bg-yellow-400 transition-all">
+                            Explore Current Series
+                        </a>
+                        <a href="prayer.html" class="border border-zinc-700 hover:border-brandYellow text-white font-semibold px-6 py-3 rounded text-sm transition-all">
+                            Send Prayer Request
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Visual Atmosphere -->
+                <div class="relative flex justify-center">
+                    <div class="relative w-full max-w-md rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl bg-cardBg p-2">
+                        <img src="Banner%20images%20and%20logo/youth%20being%20in%20the%20bible%20study.jpg" alt="Youth Fellowship Session" class="rounded-xl w-full h-72 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                        <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-md p-4 rounded-lg border border-zinc-800">
+                            <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">Active Community</p>
+                            <p class="text-sm font-medium text-white">Rooted in Scripture, Centered on the Gospel.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DNA SECTION -->
+    <section class="py-16 bg-zinc-950 border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Our Ministry DNA</h2>
+                <p class="text-zinc-400 text-sm mt-2">Grounded firmly in three structural pillars.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- DNA Pillar 1 -->
+                <div class="bg-cardBg p-6 rounded-xl border border-zinc-800/80 hover:border-brandYellow/50 transition-all">
+                    <div class="text-brandYellow font-bold text-xl mb-3">01</div>
+                    <h3 class="text-lg font-bold text-white mb-2">Rooted in Scripture</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">“All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.” <br><span class="text-zinc-500 font-semibold text-xs mt-2 block">2 Timothy 3:16–17</span></p>
+                </div>
+
+                <!-- DNA Pillar 2 -->
+                <div class="bg-cardBg p-6 rounded-xl border border-zinc-800/80 hover:border-brandYellow/50 transition-all">
+                    <div class="text-brandYellow font-bold text-xl mb-3">02</div>
+                    <h3 class="text-lg font-bold text-white mb-2">Centered on the Gospel</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">“For I decided to know nothing among you except Jesus Christ and him crucified.” <br><span class="text-zinc-500 font-semibold text-xs mt-2 block">1 Corinthians 2:2</span></p>
+                </div>
+
+                <!-- DNA Pillar 3 -->
+                <div class="bg-cardBg p-6 rounded-xl border border-zinc-800/80 hover:border-brandYellow/50 transition-all">
+                    <div class="text-brandYellow font-bold text-xl mb-3">03</div>
+                    <h3 class="text-lg font-bold text-white mb-2">Equipped for Life</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">“But be doers of the word, and not hearers only, deceiving yourselves.” <br><span class="text-zinc-500 font-semibold text-xs mt-2 block">James 1:22</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURRENT & UPCOMING SERIES POSTERS SECTION (Restored to Top) -->
+    <section class="py-20 bg-darkBg border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
+            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Weekly Series Tracks</span>
+            <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-white mt-4">Current Fellowship Series</h2>
+            <p class="text-zinc-400 text-sm mt-2">Join us live every Thursday and Sunday for deep textual exploration.</p>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Poster Card 1: Thursday Fellowship -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group hover:border-brandYellow/50 transition-all shadow-xl">
+                    <div class="relative w-full bg-black p-4 flex items-center justify-center">
+                        <img src="Banner%20images%20and%20logo/Beyond%20the%20ruins%20poster.jpg" alt="Beyond the Ruins Poster" class="rounded-lg w-full h-auto object-contain max-h-[550px]">
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow justify-between border-t border-zinc-800/80">
+                        <div>
+                            <div class="text-xs font-bold text-brandYellow uppercase tracking-wider mb-2">Every Thursday | 6:00 PM – 8:00 PM</div>
+                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">Beyond The Ruins</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed mb-6">Deep dive exploration into Matthew 24, navigating prophetic text, historical context, and the call to vigilance.</p>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-zinc-800 pt-4">
+                            <span class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poster Card 2: Sunday Fellowship -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group hover:border-brandYellow/50 transition-all shadow-xl">
+                    <div class="relative w-full bg-black p-4 flex items-center justify-center">
+                        <img src="Banner%20images%20and%20logo/Pieces%20of%20me%20poster.jpg" alt="Pieces of Me Poster" class="rounded-lg w-full h-auto object-contain max-h-[550px]">
+                    </div>
+                    <div class="p-6 sm:p-8 flex flex-col flex-grow justify-between border-t border-zinc-800/80">
+                        <div>
+                            <div class="text-xs font-bold text-brandYellow uppercase tracking-wider mb-2">Every Sunday | 10:00 AM – 12:00 PM</div>
+                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">Pieces of Me</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed mb-6">A raw thematic journey through brokenness, examining the anatomy of Sin, Confession, Forgiveness, and Restoration.</p>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-zinc-800 pt-4">
+                            <a href="series.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">Explore Brokenness Track &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DYNAMIC HORIZONTAL SCROLLING POSTS SECTION (Sanity CMS Feed) -->
+    <section class="py-20 bg-darkBg border-b border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between">
+                <div>
+                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Dynamic Studio Feed</span>
+                    <h2 class="text-3xl font-black tracking-tight text-white mt-2">Latest Teaching Tracks & Content</h2>
+                </div>
+                <p class="text-zinc-400 text-sm mt-2 md:mt-0">Scroll horizontally to explore all published series boxes &rarr;</p>
+            </div>
+        </div>
+
+        <!-- Horizontal Slider Container -->
+        <div class="posts-slider-section">
+            <div id="posts-horizontal-track" class="posts-track px-4 sm:px-8">
+                <!-- Loading fallback card -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col w-[420px] flex-shrink-0 p-8 text-center">
+                    <p class="text-zinc-400 text-sm">Loading dynamic boxes from Sanity...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LATEST THEOLOGICAL REFLECTIONS SECTION -->
+    <section class="py-16 bg-zinc-950 border-t border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Articles & Essays</span>
+                    <h2 class="text-3xl font-black tracking-tight text-white mt-2">Latest Theological Reflections</h2>
+                </div>
+            </div>
+
+            <!-- Dynamic Container for Sanity Articles -->
+            <div id="latest-articles-container" class="grid grid-cols-1 max-w-3xl mx-auto gap-6">
+                <p class="text-zinc-500 text-sm">Loading latest reflections...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
+    <!-- Sanity Home Feed & Horizontal Slider Script -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@sanity/client'
+        import imageUrlBuilder from 'https://esm.sh/@sanity/image-url'
+
+        const client = createClient({
+            projectId: 'y4q1h6a9',
+            dataset: 'production',
+            apiVersion: '2026-08-14',
+            useCdn: true
+        })
+
+        const builder = imageUrlBuilder(client)
+        function urlFor(source) {
+            return builder.image(source)
+        }
+
+        // 1. Fetch posts for the Horizontal Slider Section
+        async function fetchHorizontalPosts() {
+            const query = `*[_type == "post"] | order(publishedAt desc) {
+                title,
+                slug,
+                publishedAt,
+                _createdAt,
+                excerpt,
+                mainImage,
+                body
+            }`
+
+            try {
+                const posts = await client.fetch(query)
+                const trackContainer = document.getElementById('posts-horizontal-track')
+
+                if (!trackContainer) return
+
+                if (posts.length === 0) {
+                    trackContainer.innerHTML = "<p class='text-zinc-400 p-6'>No posts published in CMS yet.</p>"
+                    return
+                }
+
+                trackContainer.innerHTML = posts.map(post => {
+                    const imageUrl = post.mainImage ? urlFor(post.mainImage).url() : 'blog%20images/WHY.jpg';
+                    const title = post.title || 'Untitled Series';
+                    const excerpt = post.excerpt || 'Explore this teaching track and deepen your faith in Scripture.';
+                    const slug = post.slug?.current || '#';
+                    const dateVal = post.publishedAt || post._createdAt;
+                    const formattedDate = dateVal ? new Date(dateVal).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+
+                    return `
+                        <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col w-[420px] flex-shrink-0 group hover:border-brandYellow/50 transition-all shadow-xl">
+                            <div class="relative w-full overflow-hidden bg-black h-[450px]">
+                                ${formattedDate ? `<div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${formattedDate}</div>` : ''}
+                                <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60 bg-cardBg">
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brandYellow transition-colors">${title}</h3>
+                                    <p class="text-zinc-400 text-sm mb-4 leading-relaxed line-clamp-3">${excerpt}</p>
+                                </div>
+                                <a href="article.html?slug=${slug}" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline mt-2">Explore Track &rarr;</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error("Horizontal posts fetch error:", err);
+                const trackContainer = document.getElementById('posts-horizontal-track');
+                if (trackContainer) {
+                    trackContainer.innerHTML = "<p class='text-red-400 text-sm p-6'>Failed to load dynamic tracks from Sanity.</p>";
+                }
+            }
+        }
+
+        // 2. Fetch latest single article for theological reflections block
+        async function fetchLatestArticles() {
+            const query = `*[_type == "post"] | order(publishedAt desc)[0...1]{
+                title,
+                slug,
+                publishedAt,
+                _createdAt,
+                excerpt,
+                "imageUrl": mainImage.asset->url,
+                "authorName": author->name
+            }`
+
+            try {
+                const posts = await client.fetch(query)
+                const container = document.getElementById('latest-articles-container')
+                
+                if (!container) return
+
+                if (posts.length === 0) {
+                    container.innerHTML = "<p class='text-zinc-400'>No reflections published yet.</p>"
+                    return
+                }
+
+                container.innerHTML = posts.map(post => {
+                    const dateVal = post.publishedAt || post._createdAt;
+                    const formattedDate = dateVal ? new Date(dateVal).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+                    const imageUrl = post.imageUrl || 'blog%20images/WHY.jpg';
+                    const author = post.authorName || 'Antony Mutahi';
+                    const excerpt = post.excerpt || 'Read full theological insights and notes.';
+                    const slug = post.slug?.current || '#';
+
+                    return `
+                        <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col sm:flex-row gap-6 items-center group hover:border-brandYellow/50 transition-all shadow-xl">
+                            <img src="${imageUrl}" alt="${post.title}" class="w-full sm:w-36 h-36 rounded-lg object-cover border border-zinc-700/80 flex-shrink-0 group-hover:scale-[1.02] transition-transform duration-300">
+                            
+                            <div class="flex flex-col justify-between flex-grow">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/25">Theological Reflection</span>
+                                        <span class="text-zinc-500 text-xs">${formattedDate}</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brandYellow transition-colors">${post.title}</h3>
+                                    <p class="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-2">
+                                        ${excerpt}
+                                    </p>
+                                </div>
+                                <div class="flex items-center justify-between border-t border-zinc-800/80 pt-4 mt-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="text-xs text-zinc-400 font-medium">By <span class="text-white">${author}</span></div>
+                                    </div>
+                                    <a href="article.html?slug=${slug}" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">Read Full Article &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error("Sanity home fetch error:", err);
+                document.getElementById('latest-articles-container').innerHTML = "<p class='text-red-400 text-sm'>Failed to load articles from CMS.</p>";
+            }
+        }
+
+        fetchHorizontalPosts();
+        fetchLatestArticles();
+    </script>
+
+</body>
+</html>

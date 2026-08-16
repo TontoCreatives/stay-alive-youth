@@ -49,6 +49,18 @@ export default defineType({
       title: 'Body',
       type: 'blockContent',
     }),
+    defineField({
+      name: 'studyNotes',
+      title: 'Study Notes & Insights',
+      type: 'text',
+      description: 'Write or paste the breakdown of today scriptural text or theme',
+    }),
+    defineField({
+      name: 'questionnaire',
+      title: 'Discussion & Devotional Questions',
+      type: 'text',
+      description: 'Questions for group discussion or personal self-reflection',
+    }),
   ],
 
   preview: {
