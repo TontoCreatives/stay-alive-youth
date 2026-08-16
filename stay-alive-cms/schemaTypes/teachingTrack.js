@@ -8,7 +8,7 @@ export default {
     { name: 'schedule', title: 'Schedule (e.g. Thursday Fellowship • 6 PM)', type: 'string' },
     { name: 'trackType', title: 'Track Type (e.g. Thursday Track)', type: 'string' },
     { name: 'description', title: 'Description', type: 'text' },
-    { name: 'mainImage', title: 'Track Flyer / Image', type: 'image', options: { hotspot: true } },
+    { name: 'trackFlyer', title: 'Track Flyer / Image', type: 'image', options: { hotspot: true } },
     { 
       name: 'isArchived', 
       title: 'Archive this series?', 
