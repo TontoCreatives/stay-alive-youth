@@ -25,6 +25,18 @@ export default {
       initialValue: 'Current Study'
     },
     { 
+      name: 'featuredDate', 
+      title: 'Series Date (e.g. Sunday 16th August 2026)', 
+      type: 'string',
+      description: 'The day the study takes place.'
+    },
+    { 
+      name: 'featuredTime', 
+      title: 'Series Time / Schedule (e.g. 10:00PM - 12:00PM)', 
+      type: 'string',
+      description: 'The time slot for the study session.'
+    },
+    { 
       name: 'featuredDescription', 
       title: 'Series Description', 
       type: 'text',
