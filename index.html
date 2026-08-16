@@ -136,7 +136,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-12">
                 <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Active Curriculum & Notes</span>
-                <h2 class="text-3xl font-black tracking-tight text-white mt-2">Current Ongoing Series</h2>
+                <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
             </div>
             <!-- Dynamic container pulled from Sanity Home Settings -->
             <div id="tracks-container" class="flex justify-center">
@@ -240,7 +240,7 @@
                     const tracksContainer = document.getElementById('tracks-container');
                     if (tracksContainer) {
                         if (!data.featuredTitle) {
-                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm'>No ongoing series set in Home Settings yet.</p>";
+                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full text-center'>No ongoing series title provided in Home & Site Settings.</p>";
                             return;
                         }
 
@@ -249,10 +249,10 @@
                         const description = data.featuredDescription || '';
                         const imageUrl = data.featuredFlyerUrl || 'Banner%20images%20and%20logo/bible%20study%20logo.jpg';
                         const btnText = data.buttonText || 'Get Study Materials';
-                        const btnUrl = data.buttonUrl || 'series.html';
+                        const btnUrl = data.buttonUrl || '#';
 
                         tracksContainer.innerHTML = `
-                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group max-w-md w-full shadow-2xl">
+                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group max-w-md w-full shadow-2xl mx-auto">
                                 <div class="relative w-full aspect-[4/5] overflow-hidden bg-black flex items-center justify-center">
                                     <div class="absolute top-4 left-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${badge}</div>
                                     <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
