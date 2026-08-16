@@ -80,7 +80,7 @@
     <!-- DYNAMIC EVENTS GRID -->
     <section class="py-20 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
                 <!-- Javascript will inject dynamic event cards here -->
                 <div class="text-center col-span-2 text-zinc-500 py-12">Loading upcoming events...</div>
             </div>
@@ -113,13 +113,14 @@
         async function fetchEvents() {
             const container = document.getElementById('events-container');
             try {
-                // Fetch events from Sanity
+                // Fetch events including headingLevel option from Sanity
                 const query = `*[_type == "event"]{
                     title,
                     badge,
                     schedule,
                     dateText,
                     description,
+                    headingLevel,
                     "imageUrl": mainImage.asset->url
                 }`;
                 const events = await client.fetch(query);
@@ -129,23 +130,29 @@
                     return;
                 }
 
-                container.innerHTML = events.map(event => `
-                    <div class="bg-cardBg border border-zinc-800 rounded-xl overflow-hidden flex flex-col justify-between hover:border-zinc-700 transition-all">
+                container.innerHTML = events.map(event => {
+                    // Determine heading tag based on Sanity field, fallback to h2
+                    const headingTag = event.headingLevel === 'h1' ? 'h1' : 'h2';
+
+                    return `
+                    <div class="w-full max-w-lg bg-cardBg border border-zinc-800 rounded-xl overflow-hidden flex flex-col justify-between hover:border-zinc-700 transition-all shadow-xl">
                         ${event.imageUrl ? `
-                            <div class="relative w-full bg-zinc-900 overflow-hidden">
+                            <div class="relative w-full aspect-square bg-zinc-950 overflow-hidden flex items-center justify-center">
                                 ${event.badge ? `
                                     <div class="absolute top-4 left-4 z-10 bg-black/70 backdrop-blur-md border border-zinc-700/50 text-brandYellow text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wider">
                                         ${event.badge}
                                     </div>
                                 ` : ''}
-                                <img src="${event.imageUrl}" alt="${event.title}" class="w-full h-auto object-cover">
+                                <img src="${event.imageUrl}" alt="${event.title}" class="w-full h-full object-cover">
                             </div>
                         ` : ''}
                         <div class="p-6 sm:p-8 flex flex-col flex-grow">
                             ${!event.imageUrl && event.badge ? `
                                 <span class="text-brandYellow text-xs font-bold uppercase tracking-widest mb-2">${event.badge}</span>
                             ` : ''}
-                            <h3 class="text-2xl font-black text-white mb-3">${event.title}</h3>
+                            
+                            <${headingTag} class="text-2xl font-black text-white mb-3">${event.title}</${headingTag}>
+                            
                             <p class="text-zinc-400 text-sm leading-relaxed mb-6 flex-grow">${event.description || ''}</p>
                             
                             <div class="border-t border-zinc-800/80 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-zinc-400">
@@ -162,7 +169,8 @@
                             </div>
                         </div>
                     </div>
-                `).join('');
+                `;
+                }).join('');
 
             } catch (err) {
                 console.error("Sanity fetch error:", err);

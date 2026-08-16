@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Series Tracks & Reflections | Stay Alive Fellowship</title>
-    
+    <title>Series Tracks | Stay Alive Fellowship</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,19 +20,17 @@
             }
         }
     </script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
 
+    <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
             <a href="index.html" class="flex items-center gap-3">
                 <img src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
                 <span class="font-bold tracking-wider text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
             </a>
-            
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
                 <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
                 <a href="series.html" class="text-brandYellow transition-colors">Series Tracks</a>
@@ -40,109 +38,60 @@
                 <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
                 <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
             </nav>
-
             <div class="flex items-center gap-3">
                 <a href="https://wa.me/254715836373" target="_blank" class="bg-brandYellow text-black font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-400 transition-all">
                     WhatsApp Chat
                 </a>
-                
-                <button id="menu-btn" class="md:hidden text-zinc-300 hover:text-white focus:outline-none p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
             </div>
-        </div>
-
-        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
-            <a href="index.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Home</a>
-            <a href="series.html" class="block text-brandYellow font-medium py-2">Series Tracks</a>
-            <a href="resources.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Resources</a>
-            <a href="events.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Events</a>
-            <a href="prayer.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Prayer</a>
         </div>
     </header>
 
+    <!-- PAGE HEADER -->
     <section class="py-16 border-b border-zinc-900 bg-zinc-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Curriculum & Reflections</span>
-            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Series Tracks & Articles</h1>
-            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                Dive deeper into our active verse-by-verse studies and read theological reflections designed to anchor your faith.
-            </p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-black tracking-tight text-white mb-3">Series Tracks & Archives</h1>
+            <p class="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto">Dive deeper into our active verse-by-verse studies and explore our previous seasonal foundations.</p>
         </div>
     </section>
 
-    <!-- DYNAMICALLY MANAGED TRACKS SECTION FROM SANITY CMS -->
-    <section class="py-20 bg-darkBg border-b border-zinc-900">
+    <!-- ACTIVE TEACHING TRACKS SECTION -->
+    <section class="py-16 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="mb-10 max-w-5xl mx-auto flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Active Teaching Tracks</h2>
-                    <p class="text-zinc-400 text-sm mt-1">Managed directly from your Sanity Studio CMS dashboard.</p>
-                </div>
-            </div>
-
-            <!-- Active Tracks Container injected via Sanity CMS -->
-            <div id="active-tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-20">
-                <div class="text-zinc-400 col-span-full">Loading active tracks from CMS...</div>
-            </div>
-
-            <div class="mb-10 max-w-5xl mx-auto">
-                <h2 class="text-2xl font-bold text-white">Past Series Archives</h2>
-                <p class="text-zinc-400 text-sm mt-1">Explore our previous seasonal tracks and study foundations.</p>
-            </div>
-
-            <!-- Archived Tracks Container injected via Sanity CMS -->
-            <div id="archive-tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                <div class="text-zinc-400 col-span-full">Loading past archives from CMS...</div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Dynamic Articles Section -->
-    <section class="py-20 bg-zinc-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
             <div class="mb-10">
-                <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Written Insights</span>
-                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Series Reflections & Articles</h2>
-                <p class="text-zinc-400 text-sm mt-1">Short theological notes and study guides to accompany our tracks.</p>
+                <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Current Curriculum</span>
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">Active Teaching Tracks</h2>
             </div>
-
-            <!-- Articles Container injected via Sanity CMS -->
-            <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <p class="text-zinc-400">Loading series reflections...</p>
+            <!-- Container for Active Tracks -->
+            <div id="active-tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <p class="text-zinc-500 text-sm col-span-full">Loading active tracks...</p>
             </div>
         </div>
     </section>
 
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
-            <div class="flex items-center gap-6">
-                <a href="index.html" class="hover:text-zinc-300">Home</a>
-                <a href="series.html" class="hover:text-zinc-300">Series</a>
-                <a href="prayer.html" class="hover:text-zinc-300">Prayer</a>
+    <!-- PAST SERIES ARCHIVES SECTION -->
+    <section class="py-16 bg-zinc-950 border-t border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">History & Legacy</span>
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">Past Series Archives</h2>
             </div>
+            <!-- Container for Archived Tracks -->
+            <div id="archive-tracks-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <p class="text-zinc-500 text-sm col-span-full">Loading past archives...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
         </div>
     </footer>
 
-    <!-- Mobile Menu Script -->
-    <script>
-        const btn = document.getElementById('menu-btn');
-        const menu = document.getElementById('mobile-menu');
-
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
-
-    <!-- Sanity Dynamic Loop Script using track schema -->
+    <!-- Sanity Client & Separate Fetch Script -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client'
-        import imageUrlBuilder from 'https://esm.sh/@sanity/image-url'
 
         const client = createClient({
             projectId: 'y4q1h6a9',
@@ -151,155 +100,73 @@
             useCdn: true
         })
 
-        const builder = imageUrlBuilder(client)
-        function urlFor(source) {
-            return source ? builder.image(source).url() : ''
-        }
-
-        async function fetchTracksAndArticles() {
-            const tracksQuery = `*[_type == "track"] | order(publishedAt desc) {
-                title,
-                slug,
-                schedule,
-                description,
-                image,
-                isArchived
-            }`
-
-            const articlesQuery = `*[_type == "post"] | order(publishedAt desc) {
-                title,
-                slug,
-                publishedAt,
-                _createdAt,
-                excerpt,
-                summary,
-                description,
-                subtitle,
-                intro,
-                leadText,
-                overview,
-                "authorName": author->name
-            }`
-
+        async function fetchSeriesTracks() {
             try {
-                const [tracks, posts] = await Promise.all([
-                    client.fetch(tracksQuery),
-                    client.fetch(articlesQuery)
-                ])
+                // 1. Fetch Active tracks (where isArchived is not true)
+                const activeQuery = `*[_type == "teachingTrack" && !isArchived] | order(_createdAt desc){
+                    title, schedule, description, "imageUrl": coalesce(mainImage.asset->url, trackFlyer.asset->url, image.asset->url)
+                }`;
+                
+                // 2. Fetch Archived tracks (where isArchived is true)
+                const archiveQuery = `*[_type == "teachingTrack" && isArchived == true] | order(_createdAt desc){
+                    title, schedule, description, "imageUrl": coalesce(mainImage.asset->url, trackFlyer.asset->url, image.asset->url)
+                }`;
 
-                const activeContainer = document.getElementById('active-tracks-container')
-                const archiveContainer = document.getElementById('archive-tracks-container')
-                const articlesContainer = document.getElementById('articles-container')
+                const activeTracks = await client.fetch(activeQuery);
+                const archivedTracks = await client.fetch(archiveQuery);
 
-                if (tracks && tracks.length > 0) {
-                    let activeHTML = ''
-                    let archiveHTML = ''
-
-                    tracks.forEach(track => {
-                        const title = track.title || 'Untitled Track'
-                        const schedule = track.schedule || 'Regular Fellowship'
-                        const desc = track.description || 'Explore this teaching track.'
-                        const imgSrc = urlFor(track.image) || 'blog images/BEYOND THE RUINS.jpg'
-                        const isArchived = track.isArchived === true
-
-                        if (isArchived) {
-                            archiveHTML += `
-                                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
-                                    <div class="relative w-full overflow-hidden bg-black aspect-video">
-                                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Past Series Track</div>
-                                        <img src="${imgSrc}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                    </div>
-                                    <div class="p-6 sm:p-8 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
-                                        <div>
-                                            <div class="text-xs text-brandYellow font-semibold mb-2 uppercase tracking-wide">Archived Study Track</div>
-                                            <h3 class="text-2xl font-bold text-white mb-3">${title}</h3>
-                                            <p class="text-zinc-400 text-sm mb-6 leading-relaxed">${desc}</p>
-                                        </div>
-                                        <div class="pt-4 border-t border-zinc-800 flex items-center gap-3">
-                                            <a href="resources.html" class="flex-1 bg-brandYellow text-black font-bold py-2.5 rounded text-xs hover:bg-yellow-400 transition-all text-center">
-                                                Get Materials
-                                            </a>
-                                            <a href="https://wa.me/254715836373" target="_blank" class="px-4 py-2.5 border border-zinc-700 text-zinc-300 rounded text-xs hover:border-zinc-500 hover:text-white transition-all text-center">
-                                                Discuss
-                                            </a>
-                                        </div>
-                                    </div>
+                // Render Active Section
+                const activeContainer = document.getElementById('active-tracks-container');
+                if (activeContainer) {
+                    if (activeTracks.length === 0) {
+                        activeContainer.innerHTML = "<p class='text-zinc-500 text-sm col-span-full'>No active teaching tracks published right now.</p>";
+                    } else {
+                        activeContainer.innerHTML = activeTracks.map(track => `
+                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
+                                <div class="relative w-full aspect-[4/5] overflow-hidden bg-black flex items-center justify-center">
+                                    <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Fellowship'}</div>
+                                    <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
-                            `
-                        } else {
-                            activeHTML += `
-                                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
-                                    <div class="relative w-full overflow-hidden bg-black aspect-video">
-                                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${schedule}</div>
-                                        <img src="${imgSrc}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-white mb-2">${track.title}</h3>
+                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${track.description || ''}</p>
                                     </div>
-                                    <div class="p-6 sm:p-8 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
-                                        <div>
-                                            <div class="text-xs text-brandYellow font-semibold mb-2 uppercase tracking-wide">${schedule}</div>
-                                            <h3 class="text-2xl font-bold text-white mb-3">${title}</h3>
-                                            <p class="text-zinc-400 text-sm mb-6 leading-relaxed">${desc}</p>
-                                        </div>
-                                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                                            <span class="text-xs text-zinc-500">Active Track</span>
-                                            <a href="https://wa.me/254715836373" target="_blank" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all">
-                                                Join Session &rarr;
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `
-                        }
-                    })
-
-                    activeContainer.innerHTML = activeHTML || '<p class="text-zinc-400 col-span-full">No active teaching tracks found.</p>'
-                    archiveContainer.innerHTML = archiveHTML || '<p class="text-zinc-400 col-span-full">No archived tracks found.</p>'
-                } else {
-                    activeContainer.innerHTML = '<p class="text-zinc-400 col-span-full">No teaching tracks published in Sanity CMS yet.</p>'
-                    archiveContainer.innerHTML = '<p class="text-zinc-400 col-span-full">No archives found.</p>'
-                }
-
-                if (posts && posts.length > 0) {
-                    articlesContainer.innerHTML = ''
-                    posts.forEach(post => {
-                        const title = post.title || 'Untitled Article'
-                        const slug = post.slug?.current || '#'
-                        const introText = post.excerpt || post.summary || post.description || post.subtitle || post.intro || post.leadText || post.overview || 'Read full theological insights and notes.'
-                        const dateValue = new Date(post.publishedAt || post._createdAt).toLocaleDateString()
-                        const author = post.authorName || 'Stay Alive Fellowship'
-
-                        const card = `
-                            <div class="bg-cardBg p-6 sm:p-8 rounded-xl border border-zinc-800 flex flex-col justify-between group hover:border-brandYellow/50 transition-all">
-                                <div>
-                                    <div class="flex items-center justify-between mb-3">
-                                        <span class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/25">Reflection</span>
-                                        <span class="text-zinc-500 text-xs">${dateValue}</span>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brandYellow transition-colors">${title}</h3>
-                                    <p class="text-zinc-400 text-sm leading-relaxed mb-6">${introText}</p>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-zinc-400 mb-4 font-medium">Written by <span class="text-white">${author}</span></div>
-                                    <a href="article.html?slug=${slug}" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider hover:underline">
-                                        Read Full Reflection &rarr;
-                                    </a>
                                 </div>
                             </div>
-                        `
-                        articlesContainer.innerHTML += card
-                    })
-                } else {
-                    articlesContainer.innerHTML = '<p class="text-zinc-400">No reflections published yet.</p>'
+                        `).join('');
+                    }
+                }
+
+                // Render Archive Section
+                const archiveContainer = document.getElementById('archive-tracks-container');
+                if (archiveContainer) {
+                    if (archivedTracks.length === 0) {
+                        archiveContainer.innerHTML = "<p class='text-zinc-500 text-sm col-span-full'>No past series archived yet.</p>";
+                    } else {
+                        archiveContainer.innerHTML = archivedTracks.map(track => `
+                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
+                                <div class="relative w-full h-48 overflow-hidden bg-black flex items-center justify-center">
+                                    <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Archive'}</div>
+                                    <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                </div>
+                                <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
+                                    <div>
+                                        <h3 class="text-lg font-bold text-white mb-2">${track.title}</h3>
+                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed line-clamp-2">${track.description || ''}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
                 }
 
             } catch (err) {
-                console.error("Sanity fetch error:", err)
-                document.getElementById('active-tracks-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load tracks from CMS.</p>'
-                document.getElementById('articles-container').innerHTML = '<p class="text-red-400 col-span-full">Failed to load articles from CMS.</p>'
+                console.error("Error fetching series tracks:", err);
             }
         }
 
-        fetchTracksAndArticles()
+        fetchSeriesTracks();
     </script>
-
 </body>
 </html>
