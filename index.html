@@ -36,8 +36,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <!-- Logo / Brand -->
             <a href="index.html" class="flex items-center gap-3">
-                <img src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
-                <span class="font-bold tracking-wider text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
+                <img id="nav-logo" src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
+                <span id="nav-title" class="font-bold tracking-wider text-lg uppercase text-white">Stay Alive <span class="text-brandYellow">Youth</span></span>
             </a>
            
             <!-- Desktop Nav Links -->
@@ -79,11 +79,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Deep Faith & Consistent Prayer</span>
-                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white mt-6 mb-6 leading-none">
+                    <span id="hero-badge" class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Deep Faith & Consistent Prayer</span>
+                    <h1 id="hero-heading" class="text-4xl sm:text-6xl font-black tracking-tight text-white mt-6 mb-6 leading-none">
                         Know Christ More <span class="text-brandYellow">Deeply.</span>
                     </h1>
-                    <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-8">
+                    <p id="hero-desc" class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-8">
                         We exist to know Christ more deeply and make Him known more clearly. The Bible is God’s authoritative, sufficient, and life-giving Word. Our goal is transformation—minds renewed and lives shaped by the Gospel.
                     </p>
                     <div class="flex flex-wrap gap-4">
@@ -93,7 +93,7 @@
                 </div>
                 <div class="relative flex justify-center">
                     <div class="relative w-full max-w-md rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl bg-cardBg p-2">
-                        <img src="Banner%20images%20and%20logo/youth%20being%20in%20the%20bible%20study.jpg" alt="Youth Fellowship Session" class="rounded-xl w-full h-72 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                        <img id="hero-img" src="Banner%20images%20and%20logo/youth%20being%20in%20the%20bible%20study.jpg" alt="Youth Fellowship Session" class="rounded-xl w-full h-72 object-cover opacity-80 hover:opacity-100 transition-opacity">
                         <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-md p-4 rounded-lg border border-zinc-800">
                             <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">Active Community</p>
                             <p class="text-sm font-medium text-white">Rooted in Scripture, Centered on the Gospel.</p>
@@ -131,19 +131,16 @@
         </div>
     </section>
 
-    <!-- DUAL TRACK SERIES SPOTLIGHT (Dynamic from Sanity) -->
+    <!-- ONGOING SESSION SPOTLIGHT SECTION (Dynamic from Sanity Home Settings) -->
     <section class="py-20 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                <div>
-                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Active Teaching Tracks</span>
-                    <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
-                </div>
-                <a href="series.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View Full Curriculum &rarr;</a>
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Active Curriculum & Notes</span>
+                <h2 class="text-3xl font-black tracking-tight text-white mt-2">Current Ongoing Series</h2>
             </div>
-            <!-- Dynamic container pulled from Sanity -->
-            <div id="tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                <p class="text-zinc-500 text-sm col-span-full">Loading current tracks...</p>
+            <!-- Dynamic container pulled from Sanity Home Settings -->
+            <div id="tracks-container" class="flex justify-center">
+                <p class="text-zinc-500 text-sm">Loading ongoing session...</p>
             </div>
         </div>
     </section>
@@ -183,7 +180,7 @@
     <!-- FOOTER -->
     <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+            <p id="footer-text">&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
         </div>
     </footer>
 
@@ -207,50 +204,75 @@
             useCdn: true
         })
 
-        // Fetch Dynamic Ongoing Tracks from Sanity Studio
-        async function fetchTracks() {
+        // Fetch Global Settings and Homepage ongoing series from Sanity
+        async function fetchHomeSettings() {
             try {
-                const query = `*[_type == "teachingTrack"] | order(_createdAt desc)[0...2]{
-                    title, 
-                    schedule, 
-                    description, 
-                    "imageUrl": coalesce(trackFlyer.asset->url, image.asset->url)
+                const query = `*[_type == "homeSettings"][0]{
+                    siteTitle,
+                    "siteLogoUrl": siteLogo.asset->url,
+                    heroBadge,
+                    heroTitle,
+                    heroHighlight,
+                    heroDescription,
+                    "heroImgUrl": heroImage.asset->url,
+                    featuredTitle,
+                    featuredBadge,
+                    featuredDescription,
+                    "featuredFlyerUrl": featuredFlyer.asset->url,
+                    buttonText,
+                    buttonUrl,
+                    footerText
                 }`
-                const tracks = await client.fetch(query)
-                const tracksContainer = document.getElementById('tracks-container')
+                const data = await client.fetch(query)
 
-                if (tracksContainer && tracks) {
-                    if (tracks.length === 0) {
-                        tracksContainer.innerHTML = "<p class='text-zinc-400 col-span-full'>No active tracks at the moment.</p>";
-                        return;
+                if (data) {
+                    // Update global text/branding if set in Studio
+                    if (data.heroBadge) document.getElementById('hero-badge').innerText = data.heroBadge;
+                    if (data.heroTitle && data.heroHighlight) {
+                        document.getElementById('hero-heading').innerHTML = `${data.heroTitle} <span class="text-brandYellow">${data.heroHighlight}</span>`;
                     }
+                    if (data.heroDescription) document.getElementById('hero-desc').innerText = data.heroDescription;
+                    if (data.heroImgUrl) document.getElementById('hero-img').src = data.heroImgUrl;
+                    if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
+                    if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
-                    tracksContainer.innerHTML = tracks.map(track => {
-                        const title = track.title || 'Teaching Track';
-                        const badge = track.schedule || 'Active Fellowship';
-                        const description = track.description || '';
-                        const imageUrl = track.imageUrl || 'blog%20images/WHY.jpg';
+                    // Render Ongoing Session Card
+                    const tracksContainer = document.getElementById('tracks-container');
+                    if (tracksContainer) {
+                        if (!data.featuredTitle) {
+                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm'>No ongoing series set in Home Settings yet.</p>";
+                            return;
+                        }
 
-                        return `
-                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
+                        const title = data.featuredTitle;
+                        const badge = data.featuredBadge || 'Current Study';
+                        const description = data.featuredDescription || '';
+                        const imageUrl = data.featuredFlyerUrl || 'Banner%20images%20and%20logo/bible%20study%20logo.jpg';
+                        const btnText = data.buttonText || 'Get Study Materials';
+                        const btnUrl = data.buttonUrl || 'series.html';
+
+                        tracksContainer.innerHTML = `
+                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group max-w-md w-full shadow-2xl">
                                 <div class="relative w-full aspect-[4/5] overflow-hidden bg-black flex items-center justify-center">
-                                    <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${badge}</div>
+                                    <div class="absolute top-4 left-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${badge}</div>
                                     <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                                 <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
                                     <div>
-                                        <div class="text-xs text-brandYellow font-semibold mb-1">Current Study</div>
+                                        <div class="text-xs text-brandYellow font-semibold mb-1">Ongoing Session</div>
                                         <h3 class="text-xl font-bold text-white mb-2">${title}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${description}</p>
+                                        <p class="text-zinc-400 text-sm mb-6 leading-relaxed">${description}</p>
                                     </div>
-                                    <a href="series.html" class="inline-flex items-center text-xs font-bold text-brandYellow uppercase tracking-wider">Explore Track &rarr;</a>
+                                    <a href="${btnUrl}" target="_blank" rel="noopener noreferrer" class="w-full bg-brandYellow text-black text-center font-bold py-3 px-4 rounded text-xs uppercase tracking-wider hover:bg-yellow-400 transition-all block">
+                                        ${btnText} &rarr;
+                                    </a>
                                 </div>
                             </div>
                         `;
-                    }).join('');
+                    }
                 }
             } catch (err) {
-                console.error("Sanity tracks fetch error:", err);
+                console.error("Sanity home settings fetch error:", err);
             }
         }
 
@@ -270,7 +292,7 @@
 
                 if (eventsContainer && events) {
                     if (events.length === 0) {
-                        eventsContainer.innerHTML = "<p class='text-zinc-400 col-span-full'>No upcoming events available.</p>";
+                        eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
                         return;
                     }
 
@@ -317,7 +339,7 @@
 
                 if (articlesContainer && posts) {
                     if (posts.length === 0) {
-                        articlesContainer.innerHTML = "<p class='text-zinc-400 col-span-full'>No reflections published yet.</p>";
+                        articlesContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No reflections published yet.</p>";
                         return;
                     }
 
@@ -355,8 +377,8 @@
             }
         }
 
-        // Initialize all fetches on page load
-        fetchTracks();
+        // Initialize fetches
+        fetchHomeSettings();
         fetchEvents();
         fetchLatestArticles();
     </script>
