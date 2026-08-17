@@ -142,7 +142,7 @@
         </div>
     </section>
 
-    <!-- ONGOING SESSION SPOTLIGHT SECTION (Dynamic Grid with Skeleton Loaders) -->
+    <!-- ONGOING SESSION SPOTLIGHT SECTION (Dynamic Grid with Fallbacks & Cards) -->
     <section class="py-20 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-left max-w-2xl mb-12">
@@ -150,19 +150,30 @@
                 <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
             </div>
             <div id="tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-                <!-- Instant skeleton loader -->
-                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 p-6 lg:p-8 animate-pulse">
-                    <div class="w-full aspect-[4/5] bg-zinc-900 rounded-lg mb-6"></div>
-                    <div class="h-4 bg-zinc-900 rounded w-1/3 mb-4"></div>
-                    <div class="h-8 bg-zinc-900 rounded w-3/4 mb-4"></div>
-                    <div class="h-4 bg-zinc-900 rounded w-full mb-8"></div>
-                    <div class="h-12 bg-zinc-900 rounded w-full"></div>
+                <!-- Instant fallback card if Sanity data is empty or loading -->
+                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col justify-between p-6 lg:p-8 shadow-2xl">
+                    <div>
+                        <div class="relative w-full aspect-[4/5] overflow-hidden bg-black rounded-lg flex items-center justify-center border border-zinc-800 mb-6">
+                            <div class="absolute top-4 left-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">Current Series</div>
+                            <img src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Stay Alive Fellowship" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex items-center justify-between text-xs mb-4 pb-3 border-b border-zinc-800">
+                            <span class="text-zinc-400 font-medium">Thursdays & Sundays</span>
+                            <span class="text-brandYellow font-semibold">5:00 PM EAT</span>
+                        </div>
+                        <div class="text-xs text-brandYellow font-semibold mb-1 uppercase tracking-wider">Ongoing Session</div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Youth Bible Study Track</h3>
+                        <p class="text-zinc-400 text-sm mb-8 leading-relaxed">Join us weekly as we dive deep into expositional study of the Scriptures, fellowship together, and apply the Gospel to our everyday lives.</p>
+                    </div>
+                    <a href="resources.html" class="w-full bg-brandYellow text-black text-center font-bold py-3.5 px-4 rounded text-xs uppercase tracking-wider hover:bg-yellow-400 transition-all block">
+                        Get Study Materials &rarr;
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- UPCOMING EVENTS SECTION (Dynamic with Skeleton Loaders) -->
+    <!-- UPCOMING EVENTS SECTION (Dynamic with Fallbacks & Cards) -->
     <section class="py-16 bg-zinc-950 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
@@ -173,17 +184,29 @@
                 <a href="events.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View All Events &rarr;</a>
             </div>
             <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Instant skeleton loader -->
-                <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 animate-pulse">
-                    <div class="w-full h-40 bg-zinc-900 rounded-lg mb-4"></div>
-                    <div class="h-6 bg-zinc-900 rounded w-3/4 mb-2"></div>
-                    <div class="h-4 bg-zinc-900 rounded w-full"></div>
+                <!-- Instant fallback card -->
+                <div class="bg-cardBg rounded-xl border border-zinc-800 hover:border-brandYellow/50 transition-all flex flex-col justify-between overflow-hidden group">
+                    <div>
+                        <div class="relative w-full h-40 bg-zinc-900 overflow-hidden">
+                            <img src="Banner%20images%20and%20logo/youth%20being%20in%20the%20bible%20study.jpg" alt="Weekly Fellowship" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800">Gathering</div>
+                        </div>
+                        <div class="p-6 pb-2">
+                            <div class="text-zinc-500 text-xs font-medium mb-2">Every Thursday & Sunday</div>
+                            <h3 class="text-lg font-bold text-white mb-2">Weekly Fellowship Gathering</h3>
+                            <p class="text-zinc-400 text-sm mb-4 leading-relaxed">Come together with other youth for deep scriptural exploration, prayer, and uplifting community.</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
+                        <span>Check Schedule</span>
+                        <a href="events.html" class="text-brandYellow font-bold hover:underline">Details &rarr;</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- LATEST THEOLOGICAL REFLECTIONS SECTION (Dynamic with Skeleton Loaders) -->
+    <!-- LATEST THEOLOGICAL REFLECTIONS SECTION (Dynamic with Fallbacks & Cards) -->
     <section class="py-16 bg-zinc-950 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
@@ -194,11 +217,23 @@
                 <a href="articles.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View All Essays &rarr;</a>
             </div>
             <div id="latest-articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Instant skeleton loader -->
-                <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 animate-pulse">
-                    <div class="w-full h-48 bg-zinc-900 rounded-lg mb-4"></div>
-                    <div class="h-6 bg-zinc-900 rounded w-3/4 mb-2"></div>
-                    <div class="h-4 bg-zinc-900 rounded w-full"></div>
+                <!-- Instant fallback card -->
+                <div class="bg-cardBg rounded-xl border border-zinc-800 flex flex-col justify-between overflow-hidden group hover:border-brandYellow/50 transition-all shadow-xl">
+                    <div>
+                        <div class="relative w-full h-48 bg-zinc-900 overflow-hidden">
+                            <img src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Theological Reflection" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800">Theological Reflection</div>
+                        </div>
+                        <div class="p-6 pb-2">
+                            <div class="text-zinc-500 text-xs font-medium mb-2">August 2026</div>
+                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-brandYellow transition-colors line-clamp-2">Rooted in Christ: The Foundation of Youth Faith</h3>
+                            <p class="text-zinc-400 text-sm mb-4 leading-relaxed line-clamp-3">Exploring what it truly means to build your life on the solid rock of Scripture during your youth years.</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+                        <span class="text-zinc-400 font-medium">By <span class="text-white">Antony Mutahi</span></span>
+                        <a href="resources.html" class="text-brandYellow font-bold hover:underline uppercase tracking-wider">Read Full Article &rarr;</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,10 +266,10 @@
             useCdn: true
         })
 
-        // Fetch Global Settings and Homepage ongoing series array from Sanity (Using siteSettings schema)
+        // Fetch Global Settings and Homepage ongoing series array from Sanity
         async function fetchHomeSettings() {
             try {
-                const query = `*[_type == "siteSettings"][0]{
+                const query = `*[_type == "homeSettings"][0]{
                     siteTitle,
                     "siteLogoUrl": siteLogo.asset->url,
                     heroBadge,
@@ -280,14 +315,9 @@
                         }
                     }
 
-                    // Render Multiple Ongoing Session Cards in Grid with Fallback to Resources Page
+                    // Render Multiple Ongoing Session Cards in Grid with Fallback
                     const tracksContainer = document.getElementById('tracks-container');
-                    if (tracksContainer) {
-                        if (!data.ongoingStudies || data.ongoingStudies.length === 0) {
-                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No ongoing series added in Site Settings yet.</p>";
-                            return;
-                        }
-
+                    if (tracksContainer && data.ongoingStudies && data.ongoingStudies.length > 0) {
                         tracksContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-8 w-full";
                         tracksContainer.innerHTML = data.ongoingStudies.map(study => {
                             const title = study.featuredTitle || 'Untitled Study';
@@ -323,7 +353,7 @@
                     }
                 }
             } catch (err) {
-                console.error("Sanity site settings fetch error:", err);
+                console.error("Sanity home settings fetch error:", err);
             }
         }
 
@@ -341,12 +371,7 @@
                 const events = await client.fetch(query)
                 const eventsContainer = document.getElementById('events-container')
 
-                if (eventsContainer && events) {
-                    if (events.length === 0) {
-                        eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
-                        return;
-                    }
-
+                if (eventsContainer && events && events.length > 0) {
                     eventsContainer.innerHTML = events.map(event => {
                         return `
                             <div class="bg-cardBg rounded-xl border border-zinc-800 hover:border-brandYellow/50 transition-all flex flex-col justify-between overflow-hidden group">
@@ -390,12 +415,7 @@
                 const posts = await client.fetch(query)
                 const articlesContainer = document.getElementById('latest-articles-container')
 
-                if (articlesContainer && posts) {
-                    if (posts.length === 0) {
-                        articlesContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No reflections published yet.</p>";
-                        return;
-                    }
-
+                if (articlesContainer && posts && posts.length > 0) {
                     articlesContainer.innerHTML = posts.map(post => {
                         const dateVal = post.publishedAt || post._createdAt;
                         const formattedDate = dateVal ? new Date(dateVal).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
