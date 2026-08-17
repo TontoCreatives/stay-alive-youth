@@ -100,13 +100,17 @@
             useCdn: true
         })
 
-        // Helper to convert Sanity portable text blocks into HTML strings with formatting support
+        // Helper to convert Sanity portable text blocks into HTML strings with full bullet list and formatting support
         function renderPortableText(blocks) {
             if (!blocks || !Array.isArray(blocks)) return '';
-            return blocks.map(block => {
-                if (block._type !== 'block' || !block.children) return '';
-                
-                const textHtml = block.children.map(child => {
+            
+            let html = '';
+            let inList = false;
+
+            blocks.forEach((block, index) => {
+                if (block._type !== 'block') return;
+
+                const textHtml = (block.children || []).map(child => {
                     let t = child.text || '';
                     if (child.marks && child.marks.length > 0) {
                         if (child.marks.includes('strong')) t = `<strong class="text-white font-semibold">${t}</strong>`;
@@ -115,11 +119,34 @@
                     return t;
                 }).join('');
 
-                if (block.style === 'h3') {
-                    return `<h4 class="text-zinc-200 font-bold text-sm mt-2 mb-1">${textHtml}</h4>`;
+                // Handle bullet lists from Sanity
+                if (block.listItem === 'bullet') {
+                    if (!inList) {
+                        html += `<ul class="list-disc pl-4 space-y-1 my-2">`;
+                        inList = true;
+                    }
+                    html += `<li>${textHtml}</li>`;
+                    
+                    // Check if next block is NOT a bullet to close the list
+                    const nextBlock = blocks[index + 1];
+                    if (!nextBlock || nextBlock.listItem !== 'bullet') {
+                        html += `</ul>`;
+                        inList = false;
+                    }
+                } else {
+                    if (inList) {
+                        html += `</ul>`;
+                        inList = false;
+                    }
+                    if (block.style === 'h3') {
+                        html += `<h4 class="text-zinc-200 font-bold text-sm mt-2 mb-1">${textHtml}</h4>`;
+                    } else if (textHtml.trim() !== '') {
+                        html += `<p class="mb-2 last:mb-0">${textHtml}</p>`;
+                    }
                 }
-                return `<p class="mb-2 last:mb-0">${textHtml}</p>`;
-            }).join('');
+            });
+
+            return html;
         }
 
         async function fetchSeriesTracks() {
