@@ -231,10 +231,10 @@
             useCdn: true
         })
 
-        // Fetch Global Settings and Homepage ongoing series array from Sanity
+        // Fetch Global Settings and Homepage ongoing series array from Sanity (Using siteSettings schema)
         async function fetchHomeSettings() {
             try {
-                const query = `*[_type == "homeSettings"][0]{
+                const query = `*[_type == "siteSettings"][0]{
                     siteTitle,
                     "siteLogoUrl": siteLogo.asset->url,
                     heroBadge,
@@ -284,7 +284,7 @@
                     const tracksContainer = document.getElementById('tracks-container');
                     if (tracksContainer) {
                         if (!data.ongoingStudies || data.ongoingStudies.length === 0) {
-                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No ongoing series added in Home & Site Settings yet.</p>";
+                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No ongoing series added in Site Settings yet.</p>";
                             return;
                         }
 
@@ -323,7 +323,7 @@
                     }
                 }
             } catch (err) {
-                console.error("Sanity home settings fetch error:", err);
+                console.error("Sanity site settings fetch error:", err);
             }
         }
 
