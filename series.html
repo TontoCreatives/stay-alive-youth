@@ -47,31 +47,31 @@
     </header>
 
     <!-- PAGE HEADER -->
-    <section class="py-16 border-b border-zinc-900 bg-zinc-950">
+    <section class="py-10 border-b border-zinc-900 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl font-black tracking-tight text-white mb-3">Series Tracks & Archives</h1>
-            <p class="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto">Dive deeper into our active verse-by-verse studies and explore our previous seasonal foundations.</p>
+            <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white mb-2">Series Tracks & Archives</h1>
+            <p class="text-zinc-400 text-sm max-w-xl mx-auto">Dive deeper into our active verse-by-verse studies and explore our previous seasonal foundations.</p>
         </div>
     </section>
 
     <!-- ACTIVE TEACHING TRACKS SECTION -->
-    <section class="py-16 bg-darkBg">
+    <section class="py-10 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-10">
+            <div class="mb-6">
                 <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Current Curriculum</span>
                 <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">Active Teaching Tracks</h2>
             </div>
             <!-- Container for Active Tracks -->
-            <div id="active-tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div id="active-tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
                 <p class="text-zinc-500 text-sm col-span-full">Loading active tracks...</p>
             </div>
         </div>
     </section>
 
     <!-- PAST SERIES ARCHIVES SECTION -->
-    <section class="py-16 bg-zinc-950 border-t border-zinc-900">
+    <section class="py-10 bg-zinc-950 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-10">
+            <div class="mb-6">
                 <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">History & Legacy</span>
                 <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">Past Series Archives</h2>
             </div>
@@ -83,13 +83,13 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center">
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-6 text-sm text-zinc-500 text-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
         </div>
     </footer>
 
-    <!-- Sanity Client & Separate Fetch Script -->
+    <!-- Sanity Fetch Script -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client'
 
@@ -100,16 +100,36 @@
             useCdn: true
         })
 
+        // Helper to convert Sanity portable text blocks into HTML strings with formatting support
+        function renderPortableText(blocks) {
+            if (!blocks || !Array.isArray(blocks)) return '';
+            return blocks.map(block => {
+                if (block._type !== 'block' || !block.children) return '';
+                
+                const textHtml = block.children.map(child => {
+                    let t = child.text || '';
+                    if (child.marks && child.marks.length > 0) {
+                        if (child.marks.includes('strong')) t = `<strong class="text-white font-semibold">${t}</strong>`;
+                        if (child.marks.includes('em')) t = `<em>${t}</em>`;
+                    }
+                    return t;
+                }).join('');
+
+                if (block.style === 'h3') {
+                    return `<h4 class="text-zinc-200 font-bold text-sm mt-2 mb-1">${textHtml}</h4>`;
+                }
+                return `<p class="mb-2 last:mb-0">${textHtml}</p>`;
+            }).join('');
+        }
+
         async function fetchSeriesTracks() {
             try {
-                // 1. Fetch Active tracks (where isArchived is not true)
                 const activeQuery = `*[_type == "teachingTrack" && !isArchived] | order(_createdAt desc){
-                    title, schedule, description, "imageUrl": coalesce(mainImage.asset->url, trackFlyer.asset->url, image.asset->url)
+                    title, headingTag, titleColor, schedule, description, "imageUrl": coalesce(mainImage.asset->url, trackFlyer.asset->url, image.asset->url)
                 }`;
                 
-                // 2. Fetch Archived tracks (where isArchived is true)
                 const archiveQuery = `*[_type == "teachingTrack" && isArchived == true] | order(_createdAt desc){
-                    title, schedule, description, "imageUrl": coalesce(mainImage.asset->url, trackFlyer.asset->url, image.asset->url)
+                    title, headingTag, titleColor, schedule, description, "imageUrl": coalesce(mainImage.asset->url, trackFlyer.asset->url, image.asset->url)
                 }`;
 
                 const activeTracks = await client.fetch(activeQuery);
@@ -121,20 +141,27 @@
                     if (activeTracks.length === 0) {
                         activeContainer.innerHTML = "<p class='text-zinc-500 text-sm col-span-full'>No active teaching tracks published right now.</p>";
                     } else {
-                        activeContainer.innerHTML = activeTracks.map(track => `
-                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
-                                <div class="relative w-full aspect-[4/5] overflow-hidden bg-black flex items-center justify-center">
-                                    <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Fellowship'}</div>
-                                    <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                </div>
-                                <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
-                                    <div>
-                                        <h3 class="text-xl font-bold text-white mb-2">${track.title}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${track.description || ''}</p>
+                        activeContainer.innerHTML = activeTracks.map(track => {
+                            const tag = track.headingTag === 'h1' ? 'h1' : 'h3';
+                            const headingClass = track.headingTag === 'h1' ? 'text-xl font-black' : 'text-lg font-bold';
+                            const colorClass = track.titleColor || 'text-white';
+                            const formattedDescription = renderPortableText(track.description);
+
+                            return `
+                                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800/80 flex flex-col group shadow-lg">
+                                    <div class="relative w-full h-[380px] bg-black overflow-hidden flex items-center justify-center p-2">
+                                        <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Fellowship'}</div>
+                                        <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-500 rounded">
+                                    </div>
+                                    <div class="p-5 flex flex-col flex-grow justify-between border-t border-zinc-800/60 bg-cardBg">
+                                        <div>
+                                            <${tag} class="${headingClass} ${colorClass} mb-2">${track.title}</${tag}>
+                                            <div class="text-zinc-300 text-xs sm:text-sm leading-relaxed">${formattedDescription}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `).join('');
+                            `;
+                        }).join('');
                     }
                 }
 
@@ -144,20 +171,27 @@
                     if (archivedTracks.length === 0) {
                         archiveContainer.innerHTML = "<p class='text-zinc-500 text-sm col-span-full'>No past series archived yet.</p>";
                     } else {
-                        archiveContainer.innerHTML = archivedTracks.map(track => `
-                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col group">
-                                <div class="relative w-full h-48 overflow-hidden bg-black flex items-center justify-center">
-                                    <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Archive'}</div>
-                                    <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                </div>
-                                <div class="p-6 flex flex-col flex-grow justify-between border-t border-zinc-800/60">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-white mb-2">${track.title}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed line-clamp-2">${track.description || ''}</p>
+                        archiveContainer.innerHTML = archivedTracks.map(track => {
+                            const tag = track.headingTag === 'h1' ? 'h1' : 'h3';
+                            const headingClass = track.headingTag === 'h1' ? 'text-lg font-black' : 'text-base font-bold';
+                            const colorClass = track.titleColor || 'text-white';
+                            const formattedDescription = renderPortableText(track.description);
+
+                            return `
+                                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800/80 flex flex-col group shadow-md">
+                                    <div class="relative w-full h-44 bg-black overflow-hidden flex items-center justify-center p-2">
+                                        <div class="absolute top-2.5 left-2.5 bg-black/80 backdrop-blur-md px-2.5 py-0.5 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Archive'}</div>
+                                        <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-500 rounded">
+                                    </div>
+                                    <div class="p-4 flex flex-col flex-grow justify-between border-t border-zinc-800/60 bg-cardBg">
+                                        <div>
+                                            <${tag} class="${headingClass} ${colorClass} mb-1.5">${track.title}</${tag}>
+                                            <div class="text-zinc-300 text-xs leading-relaxed line-clamp-3">${formattedDescription}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `).join('');
+                            `;
+                        }).join('');
                     }
                 }
 

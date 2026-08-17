@@ -8,5 +8,18 @@ import event from './event'
 import dnaPillar from './dnaPillar'
 import homeSettings from './homeSettings'
 import resource from './resource'
+import prayerRequest from './prayerRequest'
 
-export const schemaTypes = [post, author, category, blockContent, siteSettings, teachingTrack, event, dnaPillar, homeSettings, resource]
+export const schemaTypes = [
+  post, 
+  author, 
+  category, 
+  blockContent, 
+  siteSettings, 
+  teachingTrack, 
+  event, 
+  dnaPillar, 
+  homeSettings, 
+  resource, 
+  prayerRequest
+]
