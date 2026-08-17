@@ -76,6 +76,15 @@
         </div>
     </header>
 
+    <!-- WEEKLY MEMORY VERSE BANNER -->
+    <div id="memory-verse-banner" class="bg-zinc-950 border-b border-zinc-900 py-3 px-4 text-center hidden">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-2 text-xs sm:text-sm">
+            <span class="bg-brandYellow/10 text-brandYellow font-bold px-2.5 py-0.5 rounded border border-brandYellow/25 uppercase tracking-wider">Weekly Memory Verse</span>
+            <span id="memory-verse-text" class="text-zinc-300 italic"></span>
+            <span id="memory-verse-ref" class="text-brandYellow font-semibold"></span>
+        </div>
+    </div>
+
     <!-- HERO SECTION -->
     <section class="relative py-20 lg:py-32 overflow-hidden border-b border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -233,6 +242,8 @@
                     heroHighlight,
                     heroDescription,
                     "heroImgUrl": heroImage.asset->url,
+                    weeklyMemoryVerse,
+                    verseReference,
                     ongoingStudies[]{
                         featuredTitle,
                         featuredBadge,
@@ -256,6 +267,18 @@
                     if (data.heroImgUrl) document.getElementById('hero-img').src = data.heroImgUrl;
                     if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
                     if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
+
+                    // Render Weekly Memory Verse Banner if fields are present
+                    if (data.weeklyMemoryVerse && data.verseReference) {
+                        const banner = document.getElementById('memory-verse-banner');
+                        const textElem = document.getElementById('memory-verse-text');
+                        const refElem = document.getElementById('memory-verse-ref');
+                        if (banner && textElem && refElem) {
+                            textElem.innerText = `"${data.weeklyMemoryVerse}"`;
+                            refElem.innerText = `— ${data.verseReference}`;
+                            banner.classList.remove('hidden');
+                        }
+                    }
 
                     // Render Multiple Ongoing Session Cards in Grid with Fallback to Resources Page
                     const tracksContainer = document.getElementById('tracks-container');
@@ -354,7 +377,16 @@
         // Fetch Dynamic Articles from Sanity Studio
         async function fetchLatestArticles() {
             try {
-                const query = `*[_type == "post"] | order(publishedAt desc)[0...3]{title, slug, publishedAt, _createdAt, excerpt, "imageUrl": mainImage.asset->url, "authorName": author->name}`
+                const query = `*[_type == "post"] | order(publishedAt desc)[0...3]{
+                    title, 
+                    slug, 
+                    publishedAt, 
+                    _createdAt, 
+                    excerpt, 
+                    "imageUrl": mainImage.asset->url, 
+                    "authorName": author->name,
+                    "categories": categories[]->title
+                }`
                 const posts = await client.fetch(query)
                 const articlesContainer = document.getElementById('latest-articles-container')
 
@@ -371,13 +403,14 @@
                         const author = post.authorName || 'Antony Mutahi';
                         const excerpt = post.excerpt || 'Read full theological insights and notes.';
                         const slug = post.slug?.current || '#';
+                        const categoryBadge = (post.categories && post.categories.length > 0) ? post.categories[0] : 'Theological Reflection';
 
                         return `
                             <div class="bg-cardBg rounded-xl border border-zinc-800 flex flex-col justify-between overflow-hidden group hover:border-brandYellow/50 transition-all shadow-xl">
                                 <div>
                                     <div class="relative w-full h-48 bg-zinc-900 overflow-hidden">
                                         <img src="${imageUrl}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                        <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800">Theological Reflection</div>
+                                        <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800">${categoryBadge}</div>
                                     </div>
                                     <div class="p-6 pb-2">
                                         <div class="text-zinc-500 text-xs font-medium mb-2">${formattedDate}</div>
