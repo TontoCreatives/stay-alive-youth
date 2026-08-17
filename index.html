@@ -31,6 +31,52 @@
 </head>
 <body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
 
+    <!-- START GLASS CRACK INTRO (Delete everything between START and END to easily remove this effect) -->
+    <div id="glass-intro" class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center bg-black/90 transition-opacity">
+        <div class="relative w-full h-full flex items-center justify-center overflow-hidden">
+            <svg class="absolute inset-0 w-full h-full stroke-brandYellow/80 stroke-[1.5] fill-none opacity-90 animate-crack-draw" viewBox="0 0 1440 900" preserveAspectRatio="none">
+                <path d="M720,0 L700,250 L750,400 L680,600 L730,900" stroke-dasharray="1500" stroke-dashoffset="1500" class="path-crack" />
+                <path d="M750,400 L950,350 L1100,380" stroke-dasharray="800" stroke-dashoffset="800" class="path-crack-sub" />
+                <path d="M700,250 L500,200 L350,150" stroke-dasharray="800" stroke-dashoffset="800" class="path-crack-sub" />
+            </svg>
+            <div class="z-10 text-center px-4 animate-fade-in-out">
+                <p class="text-xs font-bold uppercase tracking-widest text-brandYellow mb-2">Pieces of Me</p>
+                <h2 class="text-2xl sm:text-4xl font-black tracking-tight text-white">Shattered to be Shaped.</h2>
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes drawCrack {
+            0% { stroke-dashoffset: 1500; opacity: 1; }
+            70% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 0; }
+        }
+        @keyframes fadeOutIntro {
+            0% { opacity: 1; visibility: visible; }
+            60% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        @keyframes fadeInText {
+            0% { opacity: 0; transform: scale(0.95); }
+            20% { opacity: 1; transform: scale(1); }
+            75% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .animate-crack-draw .path-crack {
+            animation: drawCrack 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-crack-draw .path-crack-sub {
+            animation: drawCrack 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        }
+        #glass-intro {
+            animation: fadeOutIntro 3.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fade-in-out {
+            animation: fadeInText 2.8s ease-in-out forwards;
+        }
+    </style>
+    <!-- END GLASS CRACK INTRO -->
+
     <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -142,7 +188,7 @@
         </div>
     </section>
 
-    <!-- ONGOING SESSION SPOTLIGHT SECTION (Dynamic Grid with Skeleton Loaders) -->
+    <!-- ONGOING SESSION SPOTLIGHT SECTION -->
     <section class="py-20 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-left max-w-2xl mb-12">
@@ -162,7 +208,7 @@
         </div>
     </section>
 
-    <!-- UPCOMING EVENTS SECTION (Dynamic with Skeleton Loaders) -->
+    <!-- UPCOMING EVENTS SECTION -->
     <section class="py-16 bg-zinc-950 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
@@ -183,7 +229,7 @@
         </div>
     </section>
 
-    <!-- LATEST THEOLOGICAL REFLECTIONS SECTION (Dynamic with Skeleton Loaders) -->
+    <!-- LATEST THEOLOGICAL REFLECTIONS SECTION -->
     <section class="py-16 bg-zinc-950 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
@@ -231,7 +277,6 @@
             useCdn: true
         })
 
-        // Fetch Site Settings for Memory Verse using correct schema field "weeklyVerse"
         async function fetchSiteSettings() {
             try {
                 const query = `*[_type == "siteSettings"][0]{
@@ -254,7 +299,6 @@
             }
         }
 
-        // Fetch Global Settings and Homepage ongoing series array from Sanity
         async function fetchHomeSettings() {
             try {
                 const query = `*[_type == "homeSettings"][0]{
@@ -289,7 +333,6 @@
                     if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
                     if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
-                    // Render Multiple Ongoing Session Cards in Grid with Fallback to Resources Page
                     const tracksContainer = document.getElementById('tracks-container');
                     if (tracksContainer) {
                         if (!data.ongoingStudies || data.ongoingStudies.length === 0) {
@@ -336,7 +379,6 @@
             }
         }
 
-        // Fetch Dynamic Events from Sanity Studio
         async function fetchEvents() {
             try {
                 const query = `*[_type == "event"] | order(_createdAt desc)[0...3]{
@@ -383,7 +425,6 @@
             }
         }
 
-        // Fetch Dynamic Articles from Sanity Studio
         async function fetchLatestArticles() {
             try {
                 const query = `*[_type == "post"] | order(publishedAt desc)[0...3]{
@@ -440,7 +481,6 @@
             }
         }
 
-        // Initialize fetches
         fetchSiteSettings();
         fetchHomeSettings();
         fetchEvents();
