@@ -131,16 +131,16 @@
         </div>
     </section>
 
-    <!-- ONGOING SESSION SPOTLIGHT SECTION (Dynamic from Sanity Home Settings - Side by Side Layout) -->
+    <!-- ONGOING SESSION SPOTLIGHT SECTION (Dynamic Multiple Cards Grid) -->
     <section class="py-20 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-left max-w-2xl mb-12">
                 <span class="text-brandYellow text-xs font-bold uppercase tracking-widest">Active Curriculum & Notes</span>
                 <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
             </div>
-            <!-- Dynamic container left-aligned with side-by-side design -->
-            <div id="tracks-container" class="flex justify-start">
-                <p class="text-zinc-500 text-sm">Loading ongoing session...</p>
+            <!-- Dynamic multi-column grid supporting multiple ongoing study cards -->
+            <div id="tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                <p class="text-zinc-500 text-sm">Loading ongoing sessions...</p>
             </div>
         </div>
     </section>
@@ -204,7 +204,7 @@
             useCdn: true
         })
 
-        // Fetch Global Settings and Homepage ongoing series from Sanity
+        // Fetch Global Settings and Homepage ongoing series array from Sanity
         async function fetchHomeSettings() {
             try {
                 const query = `*[_type == "homeSettings"][0]{
@@ -215,14 +215,16 @@
                     heroHighlight,
                     heroDescription,
                     "heroImgUrl": heroImage.asset->url,
-                    featuredTitle,
-                    featuredBadge,
-                    featuredDate,
-                    featuredTime,
-                    featuredDescription,
-                    "featuredFlyerUrl": featuredFlyer.asset->url,
-                    buttonText,
-                    buttonUrl,
+                    ongoingStudies[]{
+                        featuredTitle,
+                        featuredBadge,
+                        featuredDate,
+                        featuredTime,
+                        featuredDescription,
+                        "featuredFlyerUrl": featuredFlyer.asset->url,
+                        buttonText,
+                        buttonUrl
+                    },
                     footerText
                 }`
                 const data = await client.fetch(query)
@@ -237,31 +239,32 @@
                     if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
                     if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
-                    // Render Ongoing Session Card (Side-by-Side Layout)
+                    // Render Multiple Ongoing Session Cards in Grid
                     const tracksContainer = document.getElementById('tracks-container');
                     if (tracksContainer) {
-                        if (!data.featuredTitle) {
-                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm'>No ongoing series title provided in Home & Site Settings.</p>";
+                        if (!data.ongoingStudies || data.ongoingStudies.length === 0) {
+                            tracksContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No ongoing series added in Home & Site Settings yet.</p>";
                             return;
                         }
 
-                        const title = data.featuredTitle;
-                        const badge = data.featuredBadge || 'Current Study';
-                        const dateText = data.featuredDate ? data.featuredDate : '';
-                        const timeText = data.featuredTime ? data.featuredTime : '';
-                        const description = data.featuredDescription || '';
-                        const imageUrl = data.featuredFlyerUrl || 'Banner%20images%20and%20logo/bible%20study%20logo.jpg';
-                        const btnText = data.buttonText || 'Get Study Materials';
-                        const btnUrl = data.buttonUrl || '#';
+                        tracksContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-8 w-full";
+                        tracksContainer.innerHTML = data.ongoingStudies.map(study => {
+                            const title = study.featuredTitle || 'Untitled Study';
+                            const badge = study.featuredBadge || 'Current Study';
+                            const dateText = study.featuredDate || '';
+                            const timeText = study.featuredTime || '';
+                            const description = study.featuredDescription || '';
+                            const imageUrl = study.featuredFlyerUrl || 'Banner%20images%20and%20logo/bible%20study%20logo.jpg';
+                            const btnText = study.buttonText || 'Get Study Materials';
+                            const btnUrl = study.buttonUrl || '#';
 
-                        tracksContainer.innerHTML = `
-                            <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 lg:p-8 max-w-4xl w-full shadow-2xl mr-auto items-center">
-                                <div class="relative w-full aspect-[4/5] overflow-hidden bg-black rounded-lg flex items-center justify-center border border-zinc-800">
-                                    <div class="absolute top-4 left-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${badge}</div>
-                                    <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex flex-col justify-between h-full">
+                            return `
+                                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col justify-between p-6 lg:p-8 shadow-2xl">
                                     <div>
+                                        <div class="relative w-full aspect-[4/5] overflow-hidden bg-black rounded-lg flex items-center justify-center border border-zinc-800 mb-6">
+                                            <div class="absolute top-4 left-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${badge}</div>
+                                            <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover">
+                                        </div>
                                         <div class="flex items-center justify-between text-xs mb-4 pb-3 border-b border-zinc-800">
                                             <span class="text-zinc-400 font-medium">${dateText}</span>
                                             <span class="text-brandYellow font-semibold">${timeText}</span>
@@ -274,8 +277,8 @@
                                         ${btnText} &rarr;
                                     </a>
                                 </div>
-                            </div>
-                        `;
+                            `;
+                        }).join('');
                     }
                 }
             } catch (err) {
