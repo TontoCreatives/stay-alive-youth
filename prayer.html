@@ -132,7 +132,7 @@
             dataset: 'production',
             useCdn: false, 
             apiVersion: '2024-01-01',
-            token: 'YOUR_SANITY_WRITE_TOKEN' // <-- Replace this with your Sanity API write token from your Sanity project dashboard
+            token: 'skavACcZFPak5bTsnbX1tsWzMw4ZtMF7hXjp3fNbiUM21ZbHdxOoKSD1M2hCDIL91qzXcFeQZKYfNtNBV13Hy64dnGnTZQrlFfgUkS3c2pdG4ZVStXyyU3VvhESJ9R7PZtkoyDSIbpvcmIkVTN0XuUjXmCwaScdgYnPJbIJRJV1g37WemXXD'
         });
 
         const form = document.getElementById('prayer-form');
@@ -162,7 +162,7 @@
                 successBox.classList.remove('hidden');
             } catch (err) {
                 console.error("Submission failed:", err);
-                alert("Failed to submit request. Please check your connection or token setup and try again.");
+                alert("Failed to submit request. Please check your connection and try again.");
                 submitBtn.innerText = 'Submit Confidential Request →';
                 submitBtn.disabled = false;
             }
