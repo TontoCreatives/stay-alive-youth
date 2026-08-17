@@ -127,12 +127,12 @@
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client';
 
-        // NOTE: Make sure your Sanity dataset allows mutations or use a token if private datasets require write permissions
         const client = createClient({
             projectId: 'y4q1h6a9',
             dataset: 'production',
-            useCdn: false, // Must be false for writing documents
-            apiVersion: '2024-01-01'
+            useCdn: false, 
+            apiVersion: '2024-01-01',
+            token: 'YOUR_SANITY_WRITE_TOKEN' // <-- Replace this with your Sanity API write token from your Sanity project dashboard
         });
 
         const form = document.getElementById('prayer-form');
@@ -162,7 +162,7 @@
                 successBox.classList.remove('hidden');
             } catch (err) {
                 console.error("Submission failed:", err);
-                alert("Failed to submit request. Please check your connection and try again.");
+                alert("Failed to submit request. Please check your connection or token setup and try again.");
                 submitBtn.innerText = 'Submit Confidential Request →';
                 submitBtn.disabled = false;
             }
