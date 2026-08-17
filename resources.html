@@ -20,6 +20,11 @@
             }
         }
     </script>
+    <!-- PDF.js Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
@@ -87,25 +92,40 @@
     <!-- INTERACTIVE E-READER MODAL -->
     <div id="reader-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-6">
         <div class="bg-cardBg border border-zinc-800 w-full max-w-4xl h-[90vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+            
             <!-- Modal Header -->
             <div class="p-4 sm:p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-950 shrink-0">
                 <div>
                     <span id="modal-category" class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-widest">E-Reader</span>
                     <h2 id="modal-title" class="text-lg sm:text-xl font-bold text-white mt-1">Resource Title</h2>
                 </div>
-                <button id="close-modal" class="text-zinc-400 hover:text-white p-2 text-3xl font-bold focus:outline-none">&times;</button>
+                <div class="flex items-center gap-4">
+                    <!-- PDF Page Counter (Hidden if Sanity text notes) -->
+                    <div id="pdf-pagination-info" class="hidden text-xs text-zinc-400">
+                        Page <span id="current-page-num" class="text-brandYellow font-bold">1</span> of <span id="total-page-num">--</span>
+                    </div>
+                    <button id="close-modal" class="text-zinc-400 hover:text-white p-2 text-3xl font-bold focus:outline-none">&times;</button>
+                </div>
             </div>
 
-            <!-- Modal Body (Dynamic Container for Notes or PDF Viewer) -->
+            <!-- Modal Body (Dynamic Container for Sanity Notes or PDF.js Canvas) -->
             <div id="modal-body" class="p-6 sm:p-10 overflow-y-auto flex-grow space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed">
                 <!-- Injected via Script -->
             </div>
 
-            <!-- Modal Footer (Optional Download Button) -->
-            <div id="modal-footer" class="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-950 flex justify-end gap-3 shrink-0 hidden">
-                <a id="modal-download-btn" href="#" target="_blank" class="bg-brandYellow text-black font-bold px-5 py-2.5 rounded text-xs hover:bg-yellow-400 transition-all flex items-center gap-2">
-                    <span>Download Document</span> &rarr;
-                </a>
+            <!-- Modal Footer (Controls for PDF pagination or Download button) -->
+            <div id="modal-footer" class="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-950 flex items-center justify-between shrink-0 hidden">
+                <!-- PDF Navigation Controls -->
+                <div id="pdf-controls" class="hidden flex items-center gap-3">
+                    <button id="prev-page" class="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition-colors">&larr; Previous</button>
+                    <span class="text-xs text-brandYellow font-medium hidden sm:inline" id="save-status">Progress auto-saved</span>
+                    <button id="next-page" class="bg-brandYellow hover:bg-yellow-400 text-black px-4 py-2 rounded-lg text-xs font-bold transition-colors">Next &rarr;</button>
+                </div>
+                <div class="ml-auto flex items-center gap-3">
+                    <a id="modal-download-btn" href="#" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold px-4 py-2 rounded text-xs transition-all flex items-center gap-2 hidden">
+                        <span>Download PDF</span> &darr;
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -122,7 +142,7 @@
         </div>
     </footer>
 
-    <!-- SANITY FETCH & E-READER SCRIPT -->
+    <!-- SANITY FETCH & PDF.JS E-READER SCRIPT -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client';
 
@@ -132,6 +152,13 @@
             useCdn: true,
             apiVersion: '2024-01-01'
         });
+
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 1.3,
+            currentBookKey = '';
 
         function blocksToHtml(blocks) {
             if (!blocks || !Array.isArray(blocks)) return '<p class="text-zinc-400">No content available for reading.</p>';
@@ -155,7 +182,8 @@
                     mode,
                     fullContent,
                     "pdfUrl": pdfFile.asset->url,
-                    allowDownload
+                    allowDownload,
+                    _id
                 }`;
                 const resources = await client.fetch(query);
 
@@ -192,6 +220,7 @@
 
         fetchResources();
 
+        // Open Reader Modal (Handles both PDF via PDF.js and Sanity block text)
         window.openEreaderModal = function(index) {
             const res = window.appResources[index];
             if (!res) return;
@@ -201,37 +230,114 @@
 
             const modalBody = document.getElementById('modal-body');
             const modalFooter = document.getElementById('modal-footer');
+            const pdfControls = document.getElementById('pdf-controls');
+            const paginationInfo = document.getElementById('pdf-pagination-info');
             const downloadBtn = document.getElementById('modal-download-btn');
 
+            modalFooter.classList.remove('hidden');
+
             if (res.mode === 'PDF_Viewer' && res.pdfUrl) {
+                // Setup canvas container for PDF.js
                 modalBody.innerHTML = `
-                    <div class="w-full h-full min-h-[65vh] flex flex-col bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800">
-                        <iframe src="${res.pdfUrl}#toolbar=0&navpanes=0" class="w-full h-full flex-grow border-0" title="${res.title}"></iframe>
+                    <div class="w-full h-full min-h-[65vh] bg-zinc-900/60 rounded-xl border border-zinc-800 flex items-center justify-center p-4 overflow-auto">
+                        <canvas id="pdf-canvas" class="shadow-2xl rounded max-w-full"></canvas>
                     </div>
                 `;
+                pdfControls.classList.remove('hidden');
+                paginationInfo.classList.remove('hidden');
+
+                // Initialize PDF tracking and rendering
+                currentBookKey = `saf_progress_${res._id || index}`;
+                const savedPage = localStorage.getItem(currentBookKey);
+                pageNum = savedPage ? parseInt(savedPage, 10) : 1;
+
+                pdfjsLib.getDocument(res.pdfUrl).promise.then(function(pdfDoc_) {
+                    pdfDoc = pdfDoc_;
+                    document.getElementById('total-page-num').textContent = pdfDoc.numPages;
+                    if (pageNum > pdfDoc.numPages) pageNum = 1;
+                    renderPage(pageNum);
+                });
+
             } else {
+                // Render Sanity block text notes
                 modalBody.innerHTML = blocksToHtml(res.fullContent);
+                pdfControls.classList.add('hidden');
+                paginationInfo.classList.add('hidden');
+                pdfDoc = null;
             }
 
+            // Handle optional downloads
             if (res.allowDownload && res.pdfUrl) {
                 downloadBtn.href = res.pdfUrl;
-                modalFooter.classList.remove('hidden');
+                downloadBtn.classList.remove('hidden');
             } else {
-                modalFooter.classList.add('hidden');
+                downloadBtn.classList.add('hidden');
             }
 
             document.getElementById('reader-modal').classList.remove('hidden');
         };
 
-        document.getElementById('close-modal').addEventListener('click', () => {
+        function renderPage(num) {
+            if (!pdfDoc) return;
+            pageRendering = true;
+            pdfDoc.getPage(num).then(function(page) {
+                const canvas = document.getElementById('pdf-canvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                const renderTask = page.render(renderContext);
+
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+
+            document.getElementById('current-page-num').textContent = num;
+            localStorage.setItem(currentBookKey, num);
+        }
+
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (!pdfDoc || pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        });
+
+        document.getElementById('next-page').addEventListener('click', () => {
+            if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        });
+
+        function closeModal() {
             document.getElementById('reader-modal').classList.add('hidden');
             document.getElementById('modal-body').innerHTML = '';
-        });
+            pdfDoc = null;
+        }
+
+        document.getElementById('close-modal').addEventListener('click', closeModal);
 
         document.getElementById('reader-modal').addEventListener('click', (e) => {
             if (e.target.id === 'reader-modal') {
-                document.getElementById('reader-modal').classList.add('hidden');
-                document.getElementById('modal-body').innerHTML = '';
+                closeModal();
             }
         });
     </script>
