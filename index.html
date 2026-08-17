@@ -231,11 +231,11 @@
             useCdn: true
         })
 
-        // Fetch Site Settings for Memory Verse
+        // Fetch Site Settings for Memory Verse using correct schema field "weeklyVerse"
         async function fetchSiteSettings() {
             try {
                 const query = `*[_type == "siteSettings"][0]{
-                    weeklyMemoryVerse,
+                    "weeklyMemoryVerse": weeklyVerse,
                     verseReference
                 }`
                 const data = await client.fetch(query)
