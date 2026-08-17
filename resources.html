@@ -26,6 +26,15 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Mobile PDF Canvas Fixes - Ensures crisp rendering and prevents layout overflow */
+        #pdf-scroll-container canvas {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
 
@@ -109,7 +118,7 @@
             </div>
 
             <!-- Modal Body -->
-            <div id="modal-body" class="p-6 sm:p-10 overflow-y-auto flex-grow space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed">
+            <div id="modal-body" class="p-4 sm:p-10 overflow-y-auto flex-grow space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed">
                 <!-- Injected via Script -->
             </div>
 
@@ -151,7 +160,7 @@
         });
 
         let pdfDoc = null,
-            scale = 1.3,
+            scale = window.innerWidth < 768 ? 1.0 : 1.3, // Automatically use a mobile-friendly render scale on phones
             currentBookKey = '',
             isRestoringScroll = false;
 
@@ -231,7 +240,7 @@
 
             if (res.mode === 'PDF_Viewer' && res.pdfUrl) {
                 modalBody.innerHTML = `
-                    <div id="pdf-scroll-container" class="w-full h-full min-h-[65vh] bg-zinc-900/60 rounded-xl border border-zinc-800 flex flex-col items-center p-4 overflow-y-auto space-y-6">
+                    <div id="pdf-scroll-container" class="w-full h-full min-h-[65vh] bg-zinc-900/60 rounded-xl border border-zinc-800 flex flex-col items-center p-2 sm:p-4 overflow-y-auto space-y-6">
                         <div class="text-zinc-400 text-sm py-12">Loading document pages...</div>
                     </div>
                 `;
@@ -248,7 +257,7 @@
 
                     for (let i = 1; i <= pdfDoc.numPages; i++) {
                         const pageWrapper = document.createElement('div');
-                        pageWrapper.className = 'flex flex-col items-center relative shadow-2xl rounded bg-white overflow-hidden shrink-0';
+                        pageWrapper.className = 'flex flex-col items-center relative shadow-2xl rounded bg-white overflow-hidden shrink-0 w-full max-w-full';
                         pageWrapper.dataset.pageNum = i;
 
                         const canvas = document.createElement('canvas');
@@ -260,8 +269,8 @@
                         
                         canvas.height = viewport.height;
                         canvas.width = viewport.width;
-                        canvas.style.width = `${viewport.width / scale}px`;
-                        canvas.style.height = `${viewport.height / scale}px`;
+                        canvas.style.width = '100%';
+                        canvas.style.height = 'auto';
 
                         await page.render({
                             canvasContext: canvas.getContext('2d'),
