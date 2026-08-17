@@ -66,9 +66,9 @@
     <section class="py-16 border-b border-zinc-900 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
             <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Intercession & Support</span>
-            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Confidential Prayer Requests</h1>
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Let Us Pray With You</h1>
             <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                Share your burdens securely with our leadership team. All requests remain strictly confidential and are received directly into our private intercession desk.
+                We want to pray with you and stand beside you in faith. Share your prayer items safely with our leadership team—every request is handled with complete confidentiality and care.
             </p>
         </div>
     </section>
@@ -94,7 +94,7 @@
                     </div>
 
                     <button type="submit" id="submit-btn" class="w-full bg-brandYellow text-black font-bold py-3.5 rounded text-sm hover:bg-yellow-400 transition-all shadow-lg">
-                        Submit Confidential Request &rarr;
+                        Submit Prayer Request &rarr;
                     </button>
                 </form>
 
@@ -163,7 +163,7 @@
             } catch (err) {
                 console.error("Submission failed:", err);
                 alert("Failed to submit request. Please check your connection and try again.");
-                submitBtn.innerText = 'Submit Confidential Request →';
+                submitBtn.innerText = 'Submit Prayer Request →';
                 submitBtn.disabled = false;
             }
         });
@@ -172,7 +172,7 @@
             form.reset();
             successBox.classList.add('hidden');
             form.classList.remove('hidden');
-            submitBtn.innerText = 'Submit Confidential Request →';
+            submitBtn.innerText = 'Submit Prayer Request →';
             submitBtn.disabled = false;
         }
     </script>
