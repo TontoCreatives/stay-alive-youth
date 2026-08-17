@@ -142,7 +142,7 @@
         </div>
     </section>
 
-    <!-- ONGOING SESSION SPOTLIGHT SECTION (Dynamic Grid with Fallbacks & Cards) -->
+    <!-- ONGOING SESSION SPOTLIGHT SECTION -->
     <section class="py-20 bg-darkBg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-left max-w-2xl mb-12">
@@ -150,7 +150,7 @@
                 <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
             </div>
             <div id="tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-                <!-- Instant fallback card if Sanity data is empty or loading -->
+                <!-- Instant fallback card if data is loading -->
                 <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col justify-between p-6 lg:p-8 shadow-2xl">
                     <div>
                         <div class="relative w-full aspect-[4/5] overflow-hidden bg-black rounded-lg flex items-center justify-center border border-zinc-800 mb-6">
@@ -173,7 +173,7 @@
         </div>
     </section>
 
-    <!-- UPCOMING EVENTS SECTION (Dynamic with Fallbacks & Cards) -->
+    <!-- UPCOMING EVENTS SECTION -->
     <section class="py-16 bg-zinc-950 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
@@ -206,7 +206,7 @@
         </div>
     </section>
 
-    <!-- LATEST THEOLOGICAL REFLECTIONS SECTION (Dynamic with Fallbacks & Cards) -->
+    <!-- LATEST THEOLOGICAL REFLECTIONS SECTION -->
     <section class="py-16 bg-zinc-950 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
@@ -266,94 +266,40 @@
             useCdn: true
         })
 
-        // Fetch Global Settings and Homepage ongoing series array from Sanity
-        async function fetchHomeSettings() {
+        // Fetch Global Settings from Sanity (matching your siteSettings schema)
+        async function fetchSiteSettings() {
             try {
-                const query = `*[_type == "homeSettings"][0]{
+                const query = `*[_type == "siteSettings"][0]{
                     siteTitle,
-                    "siteLogoUrl": siteLogo.asset->url,
-                    heroBadge,
-                    heroTitle,
-                    heroHighlight,
-                    heroDescription,
-                    "heroImgUrl": heroImage.asset->url,
-                    weeklyMemoryVerse,
+                    "siteLogoUrl": logo.asset->url,
+                    brandAccentColor,
+                    whatsappNumber,
+                    weeklyVerse,
                     verseReference,
-                    ongoingStudies[]{
-                        featuredTitle,
-                        featuredBadge,
-                        featuredDate,
-                        featuredTime,
-                        featuredDescription,
-                        "featuredFlyerUrl": featuredFlyer.asset->url,
-                        buttonText,
-                        buttonUrl
-                    },
-                    footerText
+                    currentSeries
                 }`
                 const data = await client.fetch(query)
 
                 if (data) {
-                    if (data.heroBadge) document.getElementById('hero-badge').innerText = data.heroBadge;
-                    if (data.heroTitle && data.heroHighlight) {
-                        document.getElementById('hero-heading').innerHTML = `${data.heroTitle} <span class="text-brandYellow">${data.heroHighlight}</span>`;
+                    if (data.siteLogoUrl) {
+                        const logoEl = document.getElementById('nav-logo');
+                        if (logoEl) logoEl.src = data.siteLogoUrl;
                     }
-                    if (data.heroDescription) document.getElementById('hero-desc').innerText = data.heroDescription;
-                    if (data.heroImgUrl) document.getElementById('hero-img').src = data.heroImgUrl;
-                    if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
-                    if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
-                    // Render Weekly Memory Verse Banner if fields are present
-                    if (data.weeklyMemoryVerse && data.verseReference) {
+                    // Render Weekly Memory Verse Banner using your exact schema fields
+                    if (data.weeklyVerse && data.verseReference) {
                         const banner = document.getElementById('memory-verse-banner');
                         const textElem = document.getElementById('memory-verse-text');
                         const refElem = document.getElementById('memory-verse-ref');
                         if (banner && textElem && refElem) {
-                            textElem.innerText = `"${data.weeklyMemoryVerse}"`;
+                            textElem.innerText = `"${data.weeklyVerse}"`;
                             refElem.innerText = `— ${data.verseReference}`;
                             banner.classList.remove('hidden');
                         }
                     }
-
-                    // Render Multiple Ongoing Session Cards in Grid with Fallback
-                    const tracksContainer = document.getElementById('tracks-container');
-                    if (tracksContainer && data.ongoingStudies && data.ongoingStudies.length > 0) {
-                        tracksContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-8 w-full";
-                        tracksContainer.innerHTML = data.ongoingStudies.map(study => {
-                            const title = study.featuredTitle || 'Untitled Study';
-                            const badge = study.featuredBadge || 'Current Study';
-                            const dateText = study.featuredDate || '';
-                            const timeText = study.featuredTime || '';
-                            const description = study.featuredDescription || '';
-                            const imageUrl = study.featuredFlyerUrl || 'Banner%20images%20and%20logo/bible%20study%20logo.jpg';
-                            const btnText = study.buttonText || 'Get Study Materials';
-                            const btnUrl = (study.buttonUrl && study.buttonUrl !== '#') ? study.buttonUrl : 'resources.html';
-
-                            return `
-                                <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800 flex flex-col justify-between p-6 lg:p-8 shadow-2xl">
-                                    <div>
-                                        <div class="relative w-full aspect-[4/5] overflow-hidden bg-black rounded-lg flex items-center justify-center border border-zinc-800 mb-6">
-                                            <div class="absolute top-4 left-4 bg-black/85 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${badge}</div>
-                                            <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover">
-                                        </div>
-                                        <div class="flex items-center justify-between text-xs mb-4 pb-3 border-b border-zinc-800">
-                                            <span class="text-zinc-400 font-medium">${dateText}</span>
-                                            <span class="text-brandYellow font-semibold">${timeText}</span>
-                                        </div>
-                                        <div class="text-xs text-brandYellow font-semibold mb-1 uppercase tracking-wider">Ongoing Session</div>
-                                        <h3 class="text-2xl font-bold text-white mb-4">${title}</h3>
-                                        <p class="text-zinc-400 text-sm mb-8 leading-relaxed">${description}</p>
-                                    </div>
-                                    <a href="${btnUrl}" class="w-full bg-brandYellow text-black text-center font-bold py-3.5 px-4 rounded text-xs uppercase tracking-wider hover:bg-yellow-400 transition-all block">
-                                        ${btnText} &rarr;
-                                    </a>
-                                </div>
-                            `;
-                        }).join('');
-                    }
                 }
             } catch (err) {
-                console.error("Sanity home settings fetch error:", err);
+                console.error("Sanity siteSettings fetch error:", err);
             }
         }
 
@@ -377,7 +323,7 @@
                             <div class="bg-cardBg rounded-xl border border-zinc-800 hover:border-brandYellow/50 transition-all flex flex-col justify-between overflow-hidden group">
                                 <div>
                                     <div class="relative w-full h-40 bg-zinc-900 overflow-hidden">
-                                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <img src="${event.imageUrl || 'Banner%20images%20and%20logo/youth%20being%20in%20the%20bible%20study.jpg'}" alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                         <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800">${event.badge || 'Gathering'}</div>
                                     </div>
                                     <div class="p-6 pb-2">
@@ -419,7 +365,7 @@
                     articlesContainer.innerHTML = posts.map(post => {
                         const dateVal = post.publishedAt || post._createdAt;
                         const formattedDate = dateVal ? new Date(dateVal).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
-                        const imageUrl = post.imageUrl || 'blog%20images/WHY.jpg';
+                        const imageUrl = post.imageUrl || 'Banner%20images%20and%20logo/bible%20study%20logo.jpg';
                         const author = post.authorName || 'Antony Mutahi';
                         const excerpt = post.excerpt || 'Read full theological insights and notes.';
                         const slug = post.slug?.current || '#';
@@ -452,7 +398,7 @@
         }
 
         // Initialize fetches
-        fetchHomeSettings();
+        fetchSiteSettings();
         fetchEvents();
         fetchLatestArticles();
     </script>
