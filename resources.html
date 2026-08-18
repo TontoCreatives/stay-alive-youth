@@ -103,6 +103,16 @@
                 <button data-category="adulting" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Adulting & Discipleship</button>
             </div>
 
+            <!-- Search Bar -->
+            <div class="mb-8 max-w-md mx-auto">
+                <div class="relative">
+                    <input type="text" id="resource-search" placeholder="Search resources by title, description..." class="w-full bg-zinc-900/80 border border-zinc-800 rounded-xl px-4 py-3 pl-10 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-brandYellow transition-all">
+                    <svg class="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
             <!-- Resources Grid Container -->
             <div id="resources-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="text-center text-zinc-500 py-12 col-span-full">Loading library catalog...</div>
@@ -176,7 +186,8 @@
             currentBookKey = '',
             isRestoringScroll = false,
             allResources = [],
-            activeFilter = 'all';
+            activeFilter = 'all',
+            searchQuery = '';
 
         function blocksToHtml(blocks) {
             if (!blocks || !Array.isArray(blocks)) return '<p class="text-zinc-400">No content available for reading.</p>';
@@ -200,11 +211,33 @@
             }
         }
 
+        function filterAndRenderResources() {
+            let filtered = allResources;
+
+            // Apply category filter
+            if (activeFilter !== 'all') {
+                filtered = filtered.filter(r => r.category === activeFilter);
+            }
+
+            // Apply search query filter
+            if (searchQuery.trim() !== '') {
+                const query = searchQuery.toLowerCase();
+                filtered = filtered.filter(r => {
+                    const titleMatch = r.title && r.title.toLowerCase().includes(query);
+                    const descMatch = r.shortDescription && r.shortDescription.toLowerCase().includes(query);
+                    const trackMatch = r.trackName && r.trackName.toLowerCase().includes(query);
+                    return titleMatch || descMatch || trackMatch;
+                });
+            }
+
+            renderResources(filtered);
+        }
+
         function renderResources(resourcesToRender) {
             const container = document.getElementById('resources-container');
             
             if (!resourcesToRender || resourcesToRender.length === 0) {
-                container.innerHTML = `<div class="text-center text-zinc-500 py-12 col-span-full">No resources found in this category yet.</div>`;
+                container.innerHTML = `<div class="text-center text-zinc-500 py-12 col-span-full">No resources found matching your search or filter.</div>`;
                 return;
             }
 
@@ -259,7 +292,7 @@
                 allResources = await client.fetch(query);
                 window.appResources = allResources;
 
-                renderResources(allResources);
+                filterAndRenderResources();
             } catch (err) {
                 console.error("Error fetching library resources:", err);
                 container.innerHTML = `<div class="text-center text-red-400 py-12 col-span-full">Failed to connect to library.</div>`;
@@ -267,6 +300,12 @@
         }
 
         fetchResources();
+
+        // Search bar event listener
+        document.getElementById('resource-search').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            filterAndRenderResources();
+        });
 
         // Filter button event listeners setup
         document.querySelectorAll('.category-btn').forEach(btn => {
@@ -279,12 +318,7 @@
                 e.target.classList.add('bg-brandYellow', 'text-black');
 
                 activeFilter = e.target.dataset.category;
-                if (activeFilter === 'all') {
-                    renderResources(allResources);
-                } else {
-                    const filtered = allResources.filter(r => r.category === activeFilter);
-                    renderResources(filtered);
-                }
+                filterAndRenderResources();
             });
         });
 
