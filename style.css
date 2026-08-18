@@ -1,4 +1,21 @@
 /* ==========================================
+   START: Global Variables & Theme Config
+   ========================================== */
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --card-bg: #121212;
+    --border-color: #27272a;
+}
+
+body.light-mode {
+    --bg-color: #f4f4f4;
+    --text-color: #121212;
+    --card-bg: #ffffff;
+    --border-color: #e4e4e7;
+}
+
+/* ==========================================
    START: Global Reset & Smooth Scrolling
    ========================================== */
 html {
@@ -8,6 +25,9 @@ html {
 body {
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ==========================================
@@ -19,7 +39,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #09090b;
+    background: var(--bg-color);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -37,4 +57,23 @@ body {
 img {
     max-width: 100%;
     height: auto;
+}
+
+/* ==========================================
+   START: Theme Toggle Button Styling
+   ========================================== */
+.theme-btn {
+    background: transparent;
+    border: 1px solid #c9a000;
+    color: #c9a000;
+    padding: 6px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.theme-btn:hover {
+    background: #c9a000;
+    color: #000000;
 }
