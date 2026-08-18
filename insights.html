@@ -170,10 +170,7 @@
             if (activeFilter !== 'all') {
                 filtered = filtered.filter(a => {
                     if (!a.category) return false;
-                    if (Array.isArray(a.category)) {
-                        return a.category.includes(activeFilter);
-                    }
-                    return a.category === activeFilter;
+                    return a.category.toLowerCase().trim() === activeFilter.toLowerCase().trim();
                 });
             }
 
@@ -202,7 +199,7 @@
                 const originalIndex = allArticles.findIndex(a => a._id === article._id);
                 const formattedDate = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
                 
-                const displayCategory = Array.isArray(article.category) ? (article.category[0] || 'Essay') : (article.category || 'Essay');
+                const displayCategory = article.category || 'Essay';
 
                 return `
                     <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
@@ -240,7 +237,7 @@
                 const query = `*[_type == "post"] | order(publishedAt desc){
                     title,
                     slug,
-                    "category": categories[]->title,
+                    "category": categories,
                     publishedAt,
                     "author": author->name,
                     excerpt,
@@ -283,8 +280,7 @@
             const article = window.appArticles[index];
             if (!article) return;
 
-            const modalCategory = Array.isArray(article.category) ? (article.category[0] || 'Essay') : (article.category || 'Essay');
-            document.getElementById('modal-category').innerText = modalCategory;
+            document.getElementById('modal-category').innerText = article.category || 'Essay';
             document.getElementById('modal-title').innerText = article.title;
             const formattedDate = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
             document.getElementById('modal-meta').innerText = `By ${article.author || 'Stay Alive Fellowship'} • ${formattedDate}`;
