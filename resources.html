@@ -69,7 +69,8 @@
                 </button>
             </div>
         </div>
-<div id="mobile-menu" class="hidden md:hidden bg-[#121214]/80 backdrop-blur-xl border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
+        <!-- Slightly Transparent Mobile Menu Box -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#121214]/85 backdrop-blur-xl border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
             <a href="index.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Home</a>
             <a href="series.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Series Tracks</a>
              <a href="insights.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Articles</a>
@@ -97,6 +98,8 @@
             <!-- Category Filter Bar -->
             <div id="filter-container" class="flex flex-wrap items-center justify-center gap-2 mb-12">
                 <button data-category="all" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-brandYellow text-black transition-all">All Resources</button>
+                <button data-category="sunday-study" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Sunday Book Study</button>
+                <button data-category="thursday-midweek" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Thursday Midweek & Prayer</button>
                 <button data-category="theological" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Theological Foundations</button>
                 <button data-category="gospels" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Books of the Gospel</button>
                 <button data-category="relationships" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Relationships & Marriage</button>
@@ -204,6 +207,8 @@
 
         function formatCategoryName(catVal) {
             switch(catVal) {
+                case 'sunday-study': return 'Sunday Book Study';
+                case 'thursday-midweek': return 'Thursday Midweek & Prayer';
                 case 'theological': return 'Theological Foundation';
                 case 'gospels': return 'Books of the Gospel';
                 case 'relationships': return 'Relationships & Marriage';
