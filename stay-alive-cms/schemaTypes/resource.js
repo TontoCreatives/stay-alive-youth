@@ -10,6 +10,8 @@ export default {
       type: 'string',
       options: {
         list: [
+          { title: 'Sunday Book Study (10 AM - 12 PM)', value: 'sunday-study' },
+          { title: 'Thursday Midweek Study & Prayer (6 PM - 8 PM)', value: 'thursday-midweek' },
           { title: 'Theological & Doctrinal Foundations', value: 'theological' },
           { title: 'Books of the Gospel & Commentary', value: 'gospels' },
           { title: 'Relationships & Covenant Life', value: 'relationships' },
