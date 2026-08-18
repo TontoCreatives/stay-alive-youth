@@ -4,6 +4,22 @@ export default {
   type: 'document',
   fields: [
     { name: 'title', title: 'Resource Title', type: 'string' },
+    { 
+      name: 'category', 
+      title: 'Resource Category', 
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Theological & Doctrinal Foundations', value: 'theological' },
+          { title: 'Books of the Gospel & Commentary', value: 'gospels' },
+          { title: 'Relationships & Covenant Life', value: 'relationships' },
+          { title: 'Apologetics & Cultural Engagement', value: 'apologetics' },
+          { title: 'Adulting & Practical Discipleship', value: 'adulting' }
+        ],
+        layout: 'dropdown'
+      },
+      initialValue: 'theological'
+    },
     { name: 'categoryLabel', title: 'Category Tag (e.g. PDF Guide, E-Book)', type: 'string' },
     { name: 'trackName', title: 'Associated Track (e.g. Matthew 24 Track)', type: 'string' },
     { name: 'shortDescription', title: 'Short Description for Card', type: 'text' },
