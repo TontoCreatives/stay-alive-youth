@@ -35,9 +35,19 @@ export default defineType({
     }),
     defineField({
       name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{type: 'reference', to: {type: 'category'}}],
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Theological Reflection', value: 'Theological Reflection' },
+          { title: 'Scripture Study', value: 'Scripture Study' },
+          { title: 'Relationships & Marriage', value: 'Relationships & Marriage' },
+          { title: 'Discipleship', value: 'Discipleship' },
+          { title: 'Essay', value: 'Essay' }
+        ],
+        layout: 'dropdown',
+      },
+      validation: Rule => Rule.required(),
     }),
     defineField({
       name: 'publishedAt',
@@ -68,10 +78,16 @@ export default defineType({
       title: 'title',
       author: 'author.name',
       media: 'mainImage',
+      category: 'categories',
     },
     prepare(selection) {
-      const {author} = selection
-      return {...selection, subtitle: author && `by ${author}`}
+      const {author, category} = selection
+      const authorText = author ? `by ${author}` : ''
+      const categoryText = category ? `[${category}]` : ''
+      return {
+        ...selection, 
+        subtitle: [categoryText, authorText].filter(Boolean).join(' ')
+      }
     },
   },
 })
