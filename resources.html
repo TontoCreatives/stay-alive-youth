@@ -90,7 +90,7 @@
     </section>
 
     <!-- RESOURCES SECTION WITH CATEGORY FILTER TABS -->
-    <section class="py-16 bg-darkId bg-darkBg min-h-screen">
+    <section class="py-16 bg-darkBg min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
             
             <!-- Category Filter Bar -->
@@ -209,25 +209,31 @@
             }
 
             container.innerHTML = resourcesToRender.map((res) => {
-                // Find original index in global appResources array for modal opening mapping
                 const originalIndex = allResources.findIndex(r => r._id === res._id);
                 const categoryBadgeText = res.categoryLabel || formatCategoryName(res.category);
 
                 return `
-                    <div class="bg-cardBg p-6 rounded-xl border border-zinc-800 flex flex-col justify-between gap-4 hover:border-brandYellow/50 transition-all shadow-xl">
-                        <div>
-                            <div class="flex items-center justify-between gap-2 mb-3">
-                                <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
-                                ${res.trackName ? `<span class="text-zinc-500 text-xs">${res.trackName}</span>` : ''}
+                    <div class="bg-cardBg rounded-xl border border-zinc-800 overflow-hidden flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
+                        ${res.coverUrl ? `
+                            <div class="w-full h-48 bg-zinc-900 overflow-hidden relative border-b border-zinc-800">
+                                <img src="${res.coverUrl}" alt="${res.title}" class="w-full h-full object-cover object-center">
                             </div>
-                            <h3 class="text-lg font-bold text-white mb-2">${res.title}</h3>
-                            <p class="text-zinc-400 text-sm leading-relaxed line-clamp-3">${res.shortDescription || ''}</p>
-                        </div>
-                        <div class="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
-                            <span class="text-xs text-zinc-500 uppercase tracking-wider">${res.mode === 'PDF_Viewer' ? 'PDF E-Book' : 'Rich Text Notes'}</span>
-                            <button onclick="openEreaderModal(${originalIndex})" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all whitespace-nowrap">
-                                Read Online &rarr;
-                            </button>
+                        ` : ''}
+                        <div class="p-6 flex flex-col flex-grow justify-between gap-4">
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-3">
+                                    <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
+                                    ${res.trackName ? `<span class="text-zinc-500 text-xs">${res.trackName}</span>` : ''}
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">${res.title}</h3>
+                                <p class="text-zinc-400 text-sm leading-relaxed line-clamp-3">${res.shortDescription || ''}</p>
+                            </div>
+                            <div class="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
+                                <span class="text-xs text-zinc-500 uppercase tracking-wider">${res.mode === 'PDF_Viewer' ? 'PDF E-Book' : 'Rich Text Notes'}</span>
+                                <button onclick="openEreaderModal(${originalIndex})" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all whitespace-nowrap">
+                                    Read Online &rarr;
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -246,6 +252,7 @@
                     mode,
                     fullContent,
                     "pdfUrl": pdfFile.asset->url,
+                    "coverUrl": coverImage.asset->url,
                     allowDownload,
                     _id
                 }`;
