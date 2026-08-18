@@ -214,12 +214,10 @@
         function filterAndRenderResources() {
             let filtered = allResources;
 
-            // Apply category filter
             if (activeFilter !== 'all') {
                 filtered = filtered.filter(r => r.category === activeFilter);
             }
 
-            // Apply search query filter
             if (searchQuery.trim() !== '') {
                 const query = searchQuery.toLowerCase();
                 filtered = filtered.filter(r => {
@@ -246,27 +244,29 @@
                 const categoryBadgeText = res.categoryLabel || formatCategoryName(res.category);
 
                 return `
-                    <div class="bg-cardBg rounded-xl border border-zinc-800 overflow-hidden flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
-                        ${res.coverUrl ? `
-                            <div class="w-full h-48 bg-zinc-900 overflow-hidden relative border-b border-zinc-800">
-                                <img src="${res.coverUrl}" alt="${res.title}" class="w-full h-full object-cover object-center">
-                            </div>
-                        ` : ''}
-                        <div class="p-6 flex flex-col flex-grow justify-between gap-4">
-                            <div>
-                                <div class="flex items-center justify-between gap-2 mb-3">
-                                    <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
-                                    ${res.trackName ? `<span class="text-zinc-500 text-xs">${res.trackName}</span>` : ''}
+                    <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
+                        <div>
+                            <div class="flex items-start justify-between gap-4 mb-4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
+                                        ${res.trackName ? `<span class="text-zinc-500 text-xs">${res.trackName}</span>` : ''}
+                                    </div>
+                                    <h3 class="text-lg font-bold text-white mb-2">${res.title}</h3>
                                 </div>
-                                <h3 class="text-lg font-bold text-white mb-2">${res.title}</h3>
-                                <p class="text-zinc-400 text-sm leading-relaxed line-clamp-3">${res.shortDescription || ''}</p>
+                                ${res.coverUrl ? `
+                                    <div class="w-16 h-20 bg-zinc-950 rounded border border-zinc-800 overflow-hidden shrink-0 shadow-md">
+                                        <img src="${res.coverUrl}" alt="${res.title}" class="w-full h-full object-cover object-center">
+                                    </div>
+                                ` : ''}
                             </div>
-                            <div class="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
-                                <span class="text-xs text-zinc-500 uppercase tracking-wider">${res.mode === 'PDF_Viewer' ? 'PDF E-Book' : 'Rich Text Notes'}</span>
-                                <button onclick="openEreaderModal(${originalIndex})" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all whitespace-nowrap">
-                                    Read Online &rarr;
-                                </button>
-                            </div>
+                            <p class="text-zinc-400 text-sm leading-relaxed line-clamp-3 mb-4">${res.shortDescription || ''}</p>
+                        </div>
+                        <div class="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
+                            <span class="text-xs text-zinc-500 uppercase tracking-wider">${res.mode === 'PDF_Viewer' ? 'PDF E-Book' : 'Rich Text Notes'}</span>
+                            <button onclick="openEreaderModal(${originalIndex})" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all whitespace-nowrap">
+                                Read Online &rarr;
+                            </button>
                         </div>
                     </div>
                 `;
@@ -301,13 +301,11 @@
 
         fetchResources();
 
-        // Search bar event listener
         document.getElementById('resource-search').addEventListener('input', (e) => {
             searchQuery = e.target.value;
             filterAndRenderResources();
         });
 
-        // Filter button event listeners setup
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.category-btn').forEach(b => {
