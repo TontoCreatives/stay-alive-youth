@@ -21,6 +21,14 @@
         }
     </script>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Ensures images maintain clarity and correct bounds across active and archive views */
+        .track-card-img {
+            max-width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
 
@@ -207,7 +215,7 @@
                                 <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800/80 flex flex-col group shadow-lg">
                                     <div class="relative w-full h-[380px] bg-black overflow-hidden flex items-center justify-center p-2">
                                         <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Fellowship'}</div>
-                                        <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-500 rounded">
+                                        <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="track-card-img group-hover:scale-105 transition-transform duration-500 rounded">
                                     </div>
                                     <div class="p-5 flex flex-col flex-grow justify-between border-t border-zinc-800/60 bg-cardBg">
                                         <div>
@@ -237,7 +245,7 @@
                                 <div class="bg-cardBg rounded-xl overflow-hidden border border-zinc-800/80 flex flex-col group shadow-md">
                                     <div class="relative w-full h-44 bg-black overflow-hidden flex items-center justify-center p-2">
                                         <div class="absolute top-2.5 left-2.5 bg-black/80 backdrop-blur-md px-2.5 py-0.5 rounded text-xs font-bold text-brandYellow border border-zinc-800 z-10">${track.schedule || 'Archive'}</div>
-                                        <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-500 rounded">
+                                        <img src="${track.imageUrl || 'blog%20images/WHY.jpg'}" alt="${track.title}" class="track-card-img group-hover:scale-105 transition-transform duration-500 rounded">
                                     </div>
                                     <div class="p-4 flex flex-col flex-grow justify-between border-t border-zinc-800/60 bg-cardBg">
                                         <div>

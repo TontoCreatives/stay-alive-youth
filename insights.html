@@ -27,7 +27,7 @@
 <body class="bg-darkBg text-zinc-100 font-sans antialiased selection:bg-brandYellow selection:text-black">
 
     <!-- NAVIGATION BAR -->
-    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
+    <header class="sticky top-0 z-50 bg-darkBg/70 backdrop-blur-xl border-b border-zinc-800/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3">
                 <img src="Banner%20images%20and%20logo/bible%20study%20logo.jpg" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
+        <div id="mobile-menu" class="hidden md:hidden bg-cardBg/90 backdrop-blur-xl border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
             <a href="index.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Home</a>
             <a href="series.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Series Tracks</a>
             <a href="resources.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Resources</a>
@@ -69,7 +69,7 @@
     </header>
 
     <!-- PAGE HEADER -->
-    <section class="py-16 border-b border-zinc-900 bg-zinc-950">
+    <section class="py-16 border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
             <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Theological Insights & Essays</span>
             <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Articles Archive</h1>
@@ -202,7 +202,7 @@
                 const displayCategory = article.category || 'Essay';
 
                 return `
-                    <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
+                    <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
                         <div>
                             <div class="flex items-start justify-between gap-4 mb-4">
                                 <div>

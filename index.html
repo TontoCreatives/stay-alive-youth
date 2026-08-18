@@ -34,6 +34,11 @@
     <!-- START GLASS CRACK INTRO (Delete everything between START and END to easily remove this effect) -->
     <div id="glass-intro" class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center bg-black/90 transition-opacity">
         <div class="relative w-full h-full flex items-center justify-center overflow-hidden">
+            <!-- 
+                CRACK PATH CONTROLS: 
+                Modify the 'd' attribute values below to adjust the crack line trajectories. 
+                Each path starts with 'M' (Move to X, Y) and uses 'L' (Line to X, Y) coordinates relative to a 1440x900 viewport grid.
+            -->
             <svg class="absolute inset-0 w-full h-full stroke-brandYellow/80 stroke-[1.5] fill-none opacity-90 animate-crack-draw" viewBox="0 0 1440 900" preserveAspectRatio="none">
                 <path d="M720,0 L700,250 L750,400 L680,600 L730,900" stroke-dasharray="1500" stroke-dashoffset="1500" class="path-crack" />
                 <path d="M750,400 L950,350 L1100,380" stroke-dasharray="800" stroke-dashoffset="800" class="path-crack-sub" />
