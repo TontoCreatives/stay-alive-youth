@@ -21,6 +21,12 @@ export default {
       initialValue: 'theological'
     },
     { name: 'categoryLabel', title: 'Category Tag (e.g. PDF Guide, E-Book)', type: 'string' },
+    { 
+      name: 'coverImage', 
+      title: 'Book Cover / Thumbnail', 
+      type: 'image',
+      options: { hotspot: true } 
+    },
     { name: 'trackName', title: 'Associated Track (e.g. Matthew 24 Track)', type: 'string' },
     { name: 'shortDescription', title: 'Short Description for Card', type: 'text' },
     { 
