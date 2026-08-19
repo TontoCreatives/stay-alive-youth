@@ -17,7 +17,7 @@ export default {
     },
     {
       name: 'mediaType',
-      title: 'Media Type',
+      title: 'Media Type (Categorization)',
       type: 'string',
       options: {
         list: [
@@ -30,19 +30,17 @@ export default {
     },
     {
       name: 'mediaFile',
-      title: 'Upload Audio File (MP3)',
+      title: 'Direct File Upload (Audio or Video)',
       type: 'file',
-      options: {
-        accept: 'audio/*'
-      },
-      hidden: ({ document }) => document?.mediaType !== 'audio'
+      description: 'Upload a direct file here if you are not using a YouTube link.'
+      // HIDDEN logic removed so this is always visible
     },
     {
       name: 'youtubeUrl',
       title: 'YouTube Video URL',
       type: 'url',
-      description: 'Paste the full YouTube link for the video (e.g., https://www.youtube.com/watch?v=...)',
-      hidden: ({ document }) => document?.mediaType !== 'video'
+      description: 'Paste the full YouTube link here (e.g., https://www.youtube.com/watch?v=...)'
+      // HIDDEN logic removed so this is always visible
     },
     {
       name: 'description',
