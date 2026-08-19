@@ -9,6 +9,7 @@ import dnaPillar from './dnaPillar'
 import homeSettings from './homeSettings'
 import resource from './resource'
 import prayerRequest from './prayerRequest'
+import coordinator from './coordinator'
 
 export const schemaTypes = [
   post, 
@@ -21,5 +22,6 @@ export const schemaTypes = [
   dnaPillar, 
   homeSettings, 
   resource, 
-  prayerRequest
+  prayerRequest,
+  coordinator
 ]
