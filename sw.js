@@ -1,10 +1,8 @@
-const CACHE_NAME = 'stay-alive-v3'; // Bumped version to clear old broken cache
+const CACHE_NAME = 'stay-alive-v4'; // Bumped version to clear old cache
 const assetsToCache = [
   '/',
   '/index.html',
-  '/prayer.html',
-  '/resources.html',
-  '/style.css'
+  '/resources.html'
 ];
 
 // Install event - caches core files and forces skip waiting
@@ -44,11 +42,9 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
-        // If network succeeds, return the fresh file
         return networkResponse;
       })
       .catch(() => {
-        // If offline or network fails, safely fall back to the cache
         return caches.match(event.request);
       })
   );
@@ -60,8 +56,8 @@ self.addEventListener('push', (event) => {
   
   const options = {
     body: data.body,
-    icon: '/manifest.json',
-    badge: '/manifest.json',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
     vibrate: [200, 100, 200]
   };
 

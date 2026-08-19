@@ -23,7 +23,12 @@ export default {
           name: 'studyCard',
           title: 'Study Card',
           fields: [
-            { name: 'featuredTitle', title: 'Series Title', type: 'string' },
+            { 
+              name: 'featuredTitle', 
+              title: 'Series Title', 
+              type: 'string',
+              validation: Rule => Rule.required() 
+            },
             { name: 'featuredBadge', title: 'Badge Text (e.g. Current Study)', type: 'string', initialValue: 'Current Study' },
             { name: 'featuredDate', title: 'Date (e.g. Sunday 16th August 2026)', type: 'string' },
             { name: 'featuredTime', title: 'Time Slot (e.g. 10:00AM - 12:00PM)', type: 'string' },
@@ -31,7 +36,21 @@ export default {
             { name: 'featuredFlyer', title: 'Series Flyer / Poster Image', type: 'image', options: { hotspot: true } },
             { name: 'buttonText', title: 'Action Button Text', type: 'string', initialValue: 'Get Study Materials' },
             { name: 'buttonUrl', title: 'Action Button Link URL / Path', type: 'string' }
-          ]
+          ],
+          preview: {
+            select: {
+              title: 'featuredTitle',
+              subtitle: 'featuredBadge',
+              media: 'featuredFlyer'
+            },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || 'Untitled Study',
+                subtitle: subtitle || 'Study Card',
+                media: media
+              }
+            }
+          }
         }
       ]
     },
