@@ -240,6 +240,19 @@
             }
         }
 
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return '';
+            let videoId = '';
+            if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1]?.split('?')[0];
+            } else if (url.includes('watch?v=')) {
+                videoId = url.split('watch?v=')[1]?.split('&')[0];
+            } else if (url.includes('embed/')) {
+                videoId = url.split('embed/')[1]?.split('?')[0];
+            }
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+        }
+
         function filterAndRenderResources() {
             let filtered = allResources;
 
@@ -272,12 +285,17 @@
                 const originalIndex = allResources.findIndex(r => r._id === res._id);
                 const categoryBadgeText = res.categoryLabel || formatCategoryName(res.category);
 
-                // Render Media Item with Glassmorphic Player Card
+                // Render Media Item
                 if (res.itemType === 'media') {
                     const isAudio = res.mediaType === 'audio';
                     let playerHtml = '';
+                    const ytEmbed = getYouTubeEmbedUrl(res.youtubeUrl);
 
-                    if (res.fileUrl) {
+                    if (ytEmbed) {
+                        playerHtml = `<div class="mt-4 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 aspect-video">
+                                          <iframe src="${ytEmbed}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                      </div>`;
+                    } else if (res.fileUrl) {
                         playerHtml = isAudio 
                             ? `<div class="mt-4 bg-zinc-900/90 border border-zinc-800/80 p-3 rounded-xl flex items-center gap-3">
                                    <div class="w-10 h-10 rounded-lg bg-brandYellow/10 flex items-center justify-center text-brandYellow shrink-0">
@@ -289,7 +307,7 @@
                                    <video controls src="${res.fileUrl}" class="w-full max-h-52 object-cover"></video>
                                </div>`;
                     } else {
-                        playerHtml = `<div class="mt-4 bg-zinc-900/50 border border-zinc-800/60 p-3 rounded-xl text-xs text-zinc-500 italic">Media file is currently being uploaded or processed. Check back soon.</div>`;
+                        playerHtml = `<div class="mt-4 bg-zinc-900/50 border border-zinc-800/60 p-3 rounded-xl text-xs text-zinc-500 italic">No media file uploaded or YouTube link provided yet.</div>`;
                     }
 
                     return `
@@ -361,6 +379,7 @@
                         title,
                         "slug": slug.current,
                         mediaType,
+                        youtubeUrl,
                         "fileUrl": mediaFile.asset->url,
                         description,
                         publishedAt,
