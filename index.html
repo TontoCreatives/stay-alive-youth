@@ -498,42 +498,36 @@
                         const dateVal = post.publishedAt || post._createdAt;
                         const formattedDate = dateVal ? new Date(dateVal).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
                         const imageUrl = post.imageUrl || 'blog%20images/WHY.jpg';
-                        const author = post.authorName || 'Antony Mutahi';
+                        const author = post.authorName || 'Stay Alive Fellowship';
                         const excerpt = post.excerpt || 'Read full theological insights and notes.';
-                        const slug = post.slug?.current || '#';
-
+                        
                         return `
-                            <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 hover:border-brandYellow/50 transition-all flex flex-col justify-between overflow-hidden group">
+                            <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 hover:border-brandYellow/50 transition-all flex flex-col justify-between overflow-hidden group p-6">
                                 <div>
-                                    <div class="relative w-full h-48 bg-zinc-900 overflow-hidden">
+                                    <div class="w-full h-48 bg-zinc-900 rounded-lg overflow-hidden mb-4 border border-zinc-800">
                                         <img src="${imageUrl}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                     </div>
-                                    <div class="p-6 pb-2">
-                                        <div class="text-zinc-500 text-xs font-medium mb-2">${formattedDate} &bull; By ${author}</div>
-                                        <h3 class="text-lg font-bold text-white mb-2">${post.title || 'Untitled Article'}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${excerpt}</p>
-                                    </div>
+                                    <div class="text-zinc-500 text-xs font-medium mb-2">${formattedDate} • By ${author}</div>
+                                    <h3 class="text-lg font-bold text-white mb-2">${post.title}</h3>
+                                    <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${excerpt}</p>
                                 </div>
-                                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs">
-                                    <span class="text-zinc-500">Theological Reflection</span>
-                                    <a href="post.html?slug=${slug}" class="text-brandYellow font-bold hover:underline">Read Article &rarr;</a>
+                                <div class="pt-4 border-t border-zinc-800/80">
+                                    <a href="insights.html" class="text-brandYellow font-bold hover:underline text-xs uppercase tracking-wider">Read Article &rarr;</a>
                                 </div>
                             </div>
                         `;
                     }).join('');
                 }
             } catch (err) {
-                console.error("Sanity articles fetch error:", err);
+                console.error("Sanity latest articles fetch error:", err);
             }
         }
 
-        // Initialize all fetch requests on load
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchSiteSettings();
-            fetchHomeSettings();
-            fetchEvents();
-            fetchLatestArticles();
-        });
+        // Run all fetch functions on page load
+        fetchSiteSettings();
+        fetchHomeSettings();
+        fetchEvents();
+        fetchLatestArticles();
     </script>
 </body>
 </html>
