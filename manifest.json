@@ -1,0 +1,23 @@
+{
+  "name": "Stay Alive Youth",
+  "short_name": "StayAlive",
+  "description": "Stay Alive Youth Fellowship & Resource Library",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#FACC15",
+  "icons": [
+    {
+      "src": "/Banner images and logo/bible%20study%20logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Banner images and logo/bible%20study%20logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
