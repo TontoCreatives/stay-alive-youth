@@ -501,24 +501,22 @@
                         const author = post.authorName || 'Antony Mutahi';
                         const excerpt = post.excerpt || 'Read full theological insights and notes.';
                         const slug = post.slug?.current || '#';
-                        const categoryBadge = (post.categories && post.categories.length > 0) ? post.categories[0] : 'Theological Reflection';
 
                         return `
-                            <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 flex flex-col justify-between overflow-hidden group hover:border-brandYellow/50 transition-all shadow-xl">
+                            <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 hover:border-brandYellow/50 transition-all flex flex-col justify-between overflow-hidden group">
                                 <div>
                                     <div class="relative w-full h-48 bg-zinc-900 overflow-hidden">
                                         <img src="${imageUrl}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                        <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800">${categoryBadge}</div>
                                     </div>
                                     <div class="p-6 pb-2">
-                                        <div class="text-zinc-500 text-xs font-medium mb-2">${formattedDate}</div>
-                                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-brandYellow transition-colors line-clamp-2">${post.title}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed line-clamp-3">${excerpt}</p>
+                                        <div class="text-zinc-500 text-xs font-medium mb-2">${formattedDate} &bull; By ${author}</div>
+                                        <h3 class="text-lg font-bold text-white mb-2">${post.title || 'Untitled Article'}</h3>
+                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${excerpt}</p>
                                     </div>
                                 </div>
-                                <div class="px-6 pb-6 pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs">
-                                    <span class="text-zinc-400 font-medium">By <span class="text-white">${author}</span></span>
-                                    <a href="insights.html?slug=${slug}" class="text-brandYellow font-bold hover:underline uppercase tracking-wider">Read Full Article &rarr;</a>
+                                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+                                    <span class="text-zinc-500">Theological Reflection</span>
+                                    <a href="post.html?slug=${slug}" class="text-brandYellow font-bold hover:underline">Read Article &rarr;</a>
                                 </div>
                             </div>
                         `;
@@ -529,10 +527,13 @@
             }
         }
 
-        fetchSiteSettings();
-        fetchHomeSettings();
-        fetchEvents();
-        fetchLatestArticles();
+        // Initialize all fetch requests on load
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchSiteSettings();
+            fetchHomeSettings();
+            fetchEvents();
+            fetchLatestArticles();
+        });
     </script>
 </body>
 </html>
