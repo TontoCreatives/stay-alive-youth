@@ -9,7 +9,9 @@ import dnaPillar from './dnaPillar'
 import homeSettings from './homeSettings'
 import resource from './resource'
 import prayerRequest from './prayerRequest'
+import questionBox from './questionBox' // 1. Import it here
 import coordinator from './coordinator'
+import mediaItem from './mediaItem'
 
 export const schemaTypes = [
   post, 
@@ -23,5 +25,7 @@ export const schemaTypes = [
   homeSettings, 
   resource, 
   prayerRequest,
-  coordinator
+  questionBox, // 2. Add it to the array
+  coordinator,
+  mediaItem
 ]

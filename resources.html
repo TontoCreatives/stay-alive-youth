@@ -34,6 +34,15 @@
             display: block;
             margin: 0 auto;
         }
+        /* Custom sleek styling for audio/video cards */
+        audio {
+            filter: invert(90%) hue-rotate(180deg);
+            height: 36px;
+        }
+        .media-card-gradient {
+            background: linear-gradient(135deg, rgba(18, 18, 20, 0.95) 0%, rgba(9, 9, 11, 0.98) 100%);
+            backdrop-filter: blur(12px);
+        }
     </style>
     <!-- Vercel Web Analytics -->
     <script>
@@ -75,7 +84,7 @@
                 </button>
             </div>
         </div>
-        <!-- Slightly Transparent Mobile Menu Box -->
+        <!-- Mobile Menu Box -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#121214]/85 backdrop-blur-xl border-b border-zinc-800 px-4 pt-2 pb-6 space-y-3">
             <a href="index.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Home</a>
             <a href="about.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">About</a>
@@ -93,7 +102,7 @@
             <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Digital E-Reader & Study Room</span>
             <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Ministry Library</h1>
             <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                Explore curated e-books, study guides, and theological notes. Filter by topic to dive right into what you need.
+                Explore curated e-books, study guides, audio messages, and theological notes. Filter by topic to dive right into what you need.
             </p>
         </div>
     </section>
@@ -105,6 +114,7 @@
             <!-- Category Filter Bar -->
             <div id="filter-container" class="flex flex-wrap items-center justify-center gap-2 mb-12">
                 <button data-category="all" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-brandYellow text-black transition-all">All Resources</button>
+                <button data-category="media" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Audio & Video</button>
                 <button data-category="sunday-study" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Sunday Book Study</button>
                 <button data-category="thursday-midweek" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Thursday Midweek & Prayer</button>
                 <button data-category="theological" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Theological Foundations</button>
@@ -222,6 +232,7 @@
                 case 'relationships': return 'Relationships & Marriage';
                 case 'apologetics': return 'Apologetics';
                 case 'adulting': return 'Adulting & Discipleship';
+                case 'media': return 'Audio & Video Message';
                 default: return 'General Resource';
             }
         }
@@ -258,6 +269,38 @@
                 const originalIndex = allResources.findIndex(r => r._id === res._id);
                 const categoryBadgeText = res.categoryLabel || formatCategoryName(res.category);
 
+                // Render Media Player card format with Android/YouTube inspired transparent theme player
+                if (res.itemType === 'media' && res.fileUrl) {
+                    const isAudio = res.mediaType === 'audio';
+                    const playerHtml = isAudio 
+                        ? `<div class="mt-4 bg-zinc-900/90 border border-zinc-800/80 p-3 rounded-xl flex items-center gap-3">
+                               <div class="w-10 h-10 rounded-lg bg-brandYellow/10 flex items-center justify-center text-brandYellow shrink-0">
+                                   <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                               </div>
+                               <audio controls src="${res.fileUrl}" class="w-full"></audio>
+                           </div>`
+                        : `<div class="mt-4 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
+                               <video controls src="${res.fileUrl}" class="w-full max-h-52 object-cover"></video>
+                           </div>`;
+
+                    return `
+                        <div class="media-card-gradient rounded-2xl border border-zinc-800/80 p-6 flex flex-col justify-between hover:border-brandYellow/40 transition-all shadow-2xl">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded-full border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
+                                    <span class="text-zinc-500 text-xs">${res.publishedAt ? new Date(res.publishedAt).toLocaleDateString() : ''}</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2 tracking-tight">${res.title}</h3>
+                                <p class="text-zinc-400 text-sm leading-relaxed line-clamp-2">${res.shortDescription || ''}</p>
+                            </div>
+                            <div>
+                                ${playerHtml}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Default layout for regular text/PDF resources
                 return `
                     <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
                         <div>
@@ -291,20 +334,43 @@
         async function fetchResources() {
             const container = document.getElementById('resources-container');
             try {
-                const query = `*[_type == "resource"]{
-                    title,
-                    category,
-                    categoryLabel,
-                    trackName,
-                    shortDescription,
-                    mode,
-                    fullContent,
-                    "pdfUrl": pdfFile.asset->url,
-                    "coverUrl": coverImage.asset->url,
-                    allowDownload,
-                    _id
+                const query = `{
+                    "resources": *[_type == "resource"]{
+                        title,
+                        category,
+                        categoryLabel,
+                        trackName,
+                        shortDescription,
+                        mode,
+                        fullContent,
+                        "pdfUrl": pdfFile.asset->url,
+                        "coverUrl": coverImage.asset->url,
+                        allowDownload,
+                        _id
+                    },
+                    "media": *[_type == "mediaItem"]{
+                        title,
+                        "slug": slug.current,
+                        mediaType,
+                        "fileUrl": mediaFile.asset->url,
+                        description,
+                        publishedAt,
+                        _id
+                    }
                 }`;
-                allResources = await client.fetch(query);
+                
+                const data = await client.fetch(query);
+                
+                const formattedResources = (data.resources || []).map(r => ({ ...r, itemType: 'resource' }));
+                const formattedMedia = (data.media || []).map(m => ({ 
+                    ...m, 
+                    itemType: 'media', 
+                    category: 'media', 
+                    categoryLabel: m.mediaType === 'audio' ? 'Audio Message' : 'Video Message',
+                    shortDescription: m.description
+                }));
+
+                allResources = [...formattedResources, ...formattedMedia];
                 window.appResources = allResources;
 
                 filterAndRenderResources();
@@ -337,7 +403,7 @@
 
         window.openEreaderModal = function(index) {
             const res = window.appResources[index];
-            if (!res) return;
+            if (!res || res.itemType === 'media') return;
 
             document.getElementById('modal-category').innerText = res.categoryLabel || formatCategoryName(res.category);
             document.getElementById('modal-title').innerText = res.title;

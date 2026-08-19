@@ -77,3 +77,26 @@ img {
     background: #c9a000;
     color: #000000;
 }
+
+/* ==========================================
+   START: Media Library Card & Player Enhancements
+   ========================================== */
+.media-card-gradient {
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.95) 0%, rgba(9, 9, 11, 0.98) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+}
+
+body.light-mode .media-card-gradient {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(244, 244, 244, 0.98) 100%);
+}
+
+audio {
+    filter: invert(90%) hue-rotate(180deg);
+    height: 38px;
+    width: 100%;
+}
+
+body.light-mode audio {
+    filter: none;
+}

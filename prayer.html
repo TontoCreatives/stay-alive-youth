@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prayer Requests | Stay Alive Fellowship</title>
+    <title>Prayer & Q&A | Stay Alive Fellowship</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -44,7 +44,7 @@
                 <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
                 <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
                 <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
-                <a href="prayer.html" class="text-brandYellow transition-colors">Prayer</a>
+                <a href="prayer.html" class="text-brandYellow transition-colors">Prayer & Q&A</a>
             </nav>
 
             <div class="flex items-center gap-2">
@@ -68,39 +68,51 @@
             <a href="insights.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Articles</a>
             <a href="resources.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Resources</a>
             <a href="events.html" class="block text-zinc-300 hover:text-brandYellow font-medium py-2">Events</a>
-            <a href="prayer.html" class="block text-brandYellow font-medium py-2">Prayer</a>
+            <a href="prayer.html" class="block text-brandYellow font-medium py-2">Prayer & Q&A</a>
         </div>
     </header>
 
     <!-- PAGE HEADER -->
     <section class="py-16 border-b border-zinc-900 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/25">Intercession & Support</span>
-            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Let Us Pray With You</h1>
+            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/25">Intercession & Open Dialogue</span>
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Connect With Leadership</h1>
             <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                We want to pray with you and stand beside you in faith. Share your prayer items safely with our leadership team—every request is handled with complete confidentiality and care.
+                Share a confidential prayer request, or drop an anonymous question/suggestion for our weekly sessions. We are here to listen and walk with you.
             </p>
         </div>
     </section>
 
-    <!-- PRAYER FORM SECTION -->
+    <!-- SUBMISSION CONTAINER SECTION -->
     <section class="py-20 bg-darkBg">
         <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-cardBg p-8 sm:p-10 rounded-xl border border-zinc-800 shadow-2xl">
-                <form id="prayer-form" class="space-y-5">
+                
+                <!-- TAB SWITCHER -->
+                <div class="grid grid-cols-2 gap-2 p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg mb-8">
+                    <button id="tab-prayer" onclick="switchTab('prayer')" class="py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow">
+                        🙏 Prayer Request
+                    </button>
+                    <button id="tab-qa" onclick="switchTab('qa')" class="py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white">
+                        💬 Anonymous Q&A
+                    </button>
+                </div>
+
+                <!-- FORM -->
+                <form id="submission-form" class="space-y-5">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Name (Optional)</label>
-                        <input type="text" id="prayer-name" placeholder="Leave blank to remain anonymous" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
+                        <label id="label-name" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Name (Optional)</label>
+                        <input type="text" id="sub-name" placeholder="Leave blank to remain anonymous" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Contact Info (Optional)</label>
-                        <input type="text" id="prayer-contact" placeholder="Email or Phone if you want a response back" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
+                        <label id="label-contact" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Contact Info (Optional)</label>
+                        <input type="text" id="sub-contact" placeholder="Email or Phone if you want a response back" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Prayer Request <span class="text-brandYellow">*</span></label>
-                        <textarea id="prayer-text" rows="5" required placeholder="Type your prayer request or burden here..." class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all"></textarea>
+                        <label id="label-text" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Prayer Request <span class="text-brandYellow">*</span></label>
+                        <textarea id="sub-text" rows="5" required placeholder="Type your prayer request or burden here..." class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all"></textarea>
                     </div>
 
                     <button type="submit" id="submit-btn" class="w-full bg-brandYellow text-black font-bold py-3.5 rounded text-sm hover:bg-yellow-400 transition-all shadow-lg">
@@ -111,10 +123,10 @@
                 <!-- Success State Notice -->
                 <div id="success-box" class="hidden text-center py-8 space-y-4">
                     <div class="w-12 h-12 bg-brandYellow/10 border border-brandYellow/30 text-brandYellow rounded-full flex items-center justify-center mx-auto text-xl font-bold">✓</div>
-                    <h3 class="text-xl font-bold text-white">Prayer Request Received</h3>
-                    <p class="text-zinc-400 text-sm">Thank you for sharing. Our leadership team has received your burden securely and will stand with you in faith.</p>
+                    <h3 id="success-title" class="text-xl font-bold text-white">Prayer Request Received</h3>
+                    <p id="success-desc" class="text-zinc-400 text-sm">Thank you for sharing. Our leadership team has received your burden securely and will stand with you in faith.</p>
                     <button onclick="resetForm()" class="mt-4 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold px-4 py-2 rounded transition-all border border-zinc-700">
-                        Submit Another Request
+                        Submit Another Entry
                     </button>
                 </div>
             </div>
@@ -130,12 +142,12 @@
                 <a href="about.html" class="hover:text-zinc-300">About</a>
                 <a href="series.html" class="hover:text-zinc-300">Series</a>
                 <a href="insights.html" class="hover:text-zinc-300">Articles</a>
-                <a href="prayer.html" class="hover:text-zinc-300">Prayer</a>
+                <a href="prayer.html" class="hover:text-zinc-300">Prayer & Q&A</a>
             </div>
         </div>
     </footer>
 
-    <!-- SANITY SUBMISSION SCRIPT -->
+    <!-- LOGIC & SANITY SCRIPT -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client';
 
@@ -147,22 +159,52 @@
             token: 'skavACcZFPak5bTsnbX1tsWzMw4ZtMF7hXjp3fNbiUM21ZbHdxOoKSD1M2hCDIL91qzXcFeQZKYfNtNBV13Hy64dnGnTZQrlFfgUkS3c2pdG4ZVStXyyU3VvhESJ9R7PZtkoyDSIbpvcmIkVTN0XuUjXmCwaScdgYnPJbIJRJV1g37WemXXD'
         });
 
-        const form = document.getElementById('prayer-form');
+        let currentMode = 'prayer'; // 'prayer' or 'qa'
+
+        window.switchTab = function(mode) {
+            currentMode = mode;
+            const tabPrayer = document.getElementById('tab-prayer');
+            const tabQa = document.getElementById('tab-qa');
+            const labelText = document.getElementById('label-text');
+            const subText = document.getElementById('sub-text');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (mode === 'prayer') {
+                tabPrayer.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow";
+                tabQa.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white";
+                labelText.innerHTML = 'Your Prayer Request <span class="text-brandYellow">*</span>';
+                subText.placeholder = "Type your prayer request or burden here...";
+                submitBtn.innerText = "Submit Prayer Request →";
+            } else {
+                tabQa.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow";
+                tabPrayer.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white";
+                labelText.innerHTML = 'Your Question or Suggestion <span class="text-brandYellow">*</span>';
+                subText.placeholder = "Drop any anonymous question for our weekly Q&A or a ministry suggestion...";
+                submitBtn.innerText = "Submit Anonymous Question →";
+            }
+        }
+
+        const form = document.getElementById('submission-form');
         const successBox = document.getElementById('success-box');
         const submitBtn = document.getElementById('submit-btn');
+        const successTitle = document.getElementById('success-title');
+        const successDesc = document.getElementById('success-desc');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             submitBtn.innerText = 'Submitting securely...';
             submitBtn.disabled = true;
 
-            const name = document.getElementById('prayer-name').value.trim();
-            const contact = document.getElementById('prayer-contact').value.trim();
-            const requestText = document.getElementById('prayer-text').value.trim();
+            const name = document.getElementById('sub-name').value.trim();
+            const contact = document.getElementById('sub-contact').value.trim();
+            const requestText = document.getElementById('sub-text').value.trim();
+
+            // Routes to 'prayerRequest' or 'questionBox' based on the active tab
+            const docType = currentMode === 'prayer' ? 'prayerRequest' : 'questionBox';
 
             try {
                 await client.create({
-                    _type: 'prayerRequest',
+                    _type: docType,
                     name: name || 'Anonymous',
                     contact: contact || 'Not provided',
                     requestText: requestText,
@@ -171,11 +213,18 @@
                 });
 
                 form.classList.add('hidden');
+                if (currentMode === 'prayer') {
+                    successTitle.innerText = "Prayer Request Received";
+                    successDesc.innerText = "Thank you for sharing. Our leadership team has received your burden securely and will stand with you in faith.";
+                } else {
+                    successTitle.innerText = "Question / Suggestion Received";
+                    successDesc.innerText = "Thank you! Your anonymous input has been recorded and will help drive our upcoming weekly sessions.";
+                }
                 successBox.classList.remove('hidden');
             } catch (err) {
-                console.error("Submission failed:", err);
+                console.log("Submission failed:", err);
                 alert("Failed to submit request. Please check your connection and try again.");
-                submitBtn.innerText = 'Submit Prayer Request →';
+                submitBtn.innerText = currentMode === 'prayer' ? 'Submit Prayer Request →' : 'Submit Anonymous Question →';
                 submitBtn.disabled = false;
             }
         });
@@ -184,7 +233,7 @@
             form.reset();
             successBox.classList.add('hidden');
             form.classList.remove('hidden');
-            submitBtn.innerText = 'Submit Prayer Request →';
+            submitBtn.innerText = currentMode === 'prayer' ? 'Submit Prayer Request →' : 'Submit Anonymous Question →';
             submitBtn.disabled = false;
         }
     </script>
