@@ -22,7 +22,7 @@ export default {
       options: {
         list: [
           { title: 'Audio (MP3)', value: 'audio' },
-          { title: 'Video (MP4 / Embed)', value: 'video' }
+          { title: 'Video (YouTube / Embed)', value: 'video' }
         ],
         layout: 'radio'
       },
@@ -30,11 +30,19 @@ export default {
     },
     {
       name: 'mediaFile',
-      title: 'Upload Media File',
+      title: 'Upload Audio File (MP3)',
       type: 'file',
       options: {
-        accept: 'audio/*,video/*'
-      }
+        accept: 'audio/*'
+      },
+      hidden: ({ document }) => document?.mediaType !== 'audio'
+    },
+    {
+      name: 'youtubeUrl',
+      title: 'YouTube Video URL',
+      type: 'url',
+      description: 'Paste the full YouTube link for the video (e.g., https://www.youtube.com/watch?v=...)',
+      hidden: ({ document }) => document?.mediaType !== 'video'
     },
     {
       name: 'description',
