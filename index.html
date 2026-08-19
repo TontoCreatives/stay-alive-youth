@@ -511,5 +511,15 @@
     });
   }
 </script>
+<!-- PWA Update Banner (Hidden by default) -->
+<div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
+    <div>
+        <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
+        <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
+    </div>
+    <button onclick="window.location.reload()" class="bg-brandYellow text-black text-xs font-bold px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
+        Refresh
+    </button>
+</div>
 </body>
 </html>

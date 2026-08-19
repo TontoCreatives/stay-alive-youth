@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay-alive-v1';
+const CACHE_NAME = 'stay-alive-v2';
 const assetsToCache = [
   '/',
   '/index.html',
@@ -14,6 +14,24 @@ self.addEventListener('install', (event) => {
       return cache.addAll(assetsToCache);
     })
   );
+  // Forces the waiting service worker to become the active service worker
+  self.skipWaiting();
+});
+
+// Activate event - Cleans up old caches when the version changes
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
 });
 
 // Fetch event
