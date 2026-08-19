@@ -105,9 +105,23 @@
                         <input type="text" id="sub-name" placeholder="Leave blank to remain anonymous" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
                     </div>
 
+                    <!-- PREFERRED REPLY CHANNEL -->
                     <div>
-                        <label id="label-contact" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Contact Info (Optional)</label>
-                        <input type="text" id="sub-contact" placeholder="Email or Phone if you want a response back" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">How would you like us to reply? (Optional)</label>
+                        <div class="flex gap-6 mb-3 text-sm text-zinc-300">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="preferredChannel" value="whatsapp" checked onchange="toggleContactInput()" class="accent-brandYellow"> WhatsApp
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="preferredChannel" value="email" onchange="toggleContactInput()" class="accent-brandYellow"> Email
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- CONTACT INPUT -->
+                    <div>
+                        <label id="label-contact" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">WhatsApp Phone Number</label>
+                        <input type="text" id="sub-contact" placeholder="e.g., +254712345678" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
                     </div>
 
                     <div>
@@ -161,6 +175,21 @@
 
         let currentMode = 'prayer'; // 'prayer' or 'qa'
 
+        // Dynamic toggle function for contact type placeholder
+        window.toggleContactInput = function() {
+            const channel = document.querySelector('input[name="preferredChannel"]:checked').value;
+            const labelContact = document.getElementById('label-contact');
+            const subContact = document.getElementById('sub-contact');
+
+            if (channel === 'whatsapp') {
+                labelContact.innerText = 'WhatsApp Phone Number';
+                subContact.placeholder = 'e.g., +254712345678';
+            } else {
+                labelContact.innerText = 'Email Address';
+                subContact.placeholder = 'e.g., name@example.com';
+            }
+        }
+
         window.switchTab = function(mode) {
             currentMode = mode;
             const tabPrayer = document.getElementById('tab-prayer');
@@ -196,16 +225,17 @@
             submitBtn.disabled = true;
 
             const name = document.getElementById('sub-name').value.trim();
+            const preferredChannel = document.querySelector('input[name="preferredChannel"]:checked').value;
             const contact = document.getElementById('sub-contact').value.trim();
             const requestText = document.getElementById('sub-text').value.trim();
 
-            // Routes to 'prayerRequest' or 'questionBox' based on the active tab
             const docType = currentMode === 'prayer' ? 'prayerRequest' : 'questionBox';
 
             try {
                 await client.create({
                     _type: docType,
                     name: name || 'Anonymous',
+                    preferredChannel: preferredChannel,
                     contact: contact || 'Not provided',
                     requestText: requestText,
                     status: 'new',
@@ -231,6 +261,7 @@
 
         window.resetForm = function() {
             form.reset();
+            toggleContactInput();
             successBox.classList.add('hidden');
             form.classList.remove('hidden');
             submitBtn.innerText = currentMode === 'prayer' ? 'Submit Prayer Request →' : 'Submit Anonymous Question →';
