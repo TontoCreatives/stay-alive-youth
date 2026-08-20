@@ -178,6 +178,7 @@
             </div>
         </div>
     </section>
+
    <!-- DAILY OIA DEVOTIONAL SECTION -->
 <section id="devotional-section" class="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
     <div class="flex items-center justify-between mb-6">
@@ -223,7 +224,6 @@
             <p id="dev-prayer" class="text-xs text-zinc-300 mt-1 leading-relaxed"></p>
         </div>
     </div>
-
 </section>
 
     <!-- DNA SECTION -->
@@ -578,24 +578,28 @@
         fetchLatestDevotional();
 async function fetchLatestDevotional() {
     try {
-        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]';
+        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
         const dev = await client.fetch(query);
 
         if (dev) {
             document.getElementById('dev-date').textContent = dev.publishedAt || '';
             document.getElementById('dev-title').textContent = dev.title || '';
             document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
-            document.getElementById('dev-scripture-text').textContent = `"${dev.scriptureText || ''}"`;
+            
+            // Clean single-assignment without hardcoded extra quotes
+            document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
+            
             document.getElementById('dev-observation').textContent = dev.observation || '';
             document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
             document.getElementById('dev-application').textContent = dev.application || '';
             document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
 
-            // Handle image rendering safely if the image field exists
+            // Handle Featured Image display from Sanity CDN asset URL
             const imgElement = document.getElementById('dev-image');
-            if (imgElement && dev.mainImage) {
-                // If you want to build the image URL directly using Sanity's asset reference structure
-                // Alternatively, we can leave the image out for a second to ensure text stability
+            if (dev.imageUrl) {
+                imgElement.src = dev.imageUrl;
+                imgElement.classList.remove('hidden');
+            } else {
                 imgElement.classList.add('hidden');
             }
         } else {
@@ -606,6 +610,9 @@ async function fetchLatestDevotional() {
         document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
     }
 }
+
+// Ensure it runs on page load
+fetchLatestDevotional();
     </script>
 <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2">
