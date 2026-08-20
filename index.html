@@ -34,6 +34,16 @@
     <script defer src="/_vercel/insights/script.js"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FACC15">
+    <!-- OneSignal Web Push SDK -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignal = window.OneSignal || [];
+      OneSignal.push(function() {
+        OneSignal.init({
+          appId: "dd6ec3c5-2179-4e3a-af4f-ae6d6ef24d60",
+        });
+      });
+    </script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
 
