@@ -674,6 +674,34 @@ if (isStandalone || isInstalledFlag) {
     }
 }
 
+// Capture the native install prompt event
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
+
+// Hook up the install button click handler
+const installBtn = document.getElementById('install-btn');
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                localStorage.setItem('pwa_installed', 'true');
+                document.body.classList.add('pwa-installed');
+                if (installGate) {
+                    installGate.style.setProperty('display', 'none', 'important');
+                }
+            }
+            deferredPrompt = null;
+        } else {
+            alert('To install this app, tap your browser menu (three dots) and select "Add to Home Screen" or "Install App".');
+        }
+    });
+}
+
 // Fallback event listener if triggered live
 window.addEventListener('appinstalled', () => {
     localStorage.setItem('pwa_installed', 'true');
