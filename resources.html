@@ -582,16 +582,16 @@
     </button>
 </div>
 <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
+<<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
     <ul class="grid grid-cols-4 gap-1 text-center">
         <li>
-            <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-brandYellow">
+            <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Home
             </a>
         </li>
         <li>
-            <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
+            <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-brandYellow">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                 Resources
             </a>
@@ -623,6 +623,23 @@
       bottomNav.style.setProperty('display', 'none', 'important');
     }
   }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const currentPath = window.location.pathname.split("/").pop() || "index.html";
+    const navLinks = document.querySelectorAll('.app-only-feature a, nav a'); // Adjust selector to match your bottom nav links
+    
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === currentPath || (currentPath === "" && href === "index.html")) {
+        link.classList.add('text-brandYellow', 'font-bold');
+        link.classList.remove('text-zinc-400', 'text-zinc-500');
+      } else {
+        link.classList.remove('text-brandYellow', 'font-bold');
+        link.classList.add('text-zinc-400'); // Your inactive text color
+      }
+    });
+  });
 </script>
 </body>
 </html>
