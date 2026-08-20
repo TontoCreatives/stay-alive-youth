@@ -54,7 +54,11 @@
     <script defer src="/_vercel/insights/script.js"></script>
     <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FACC15">
-
+<script>
+    if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === 'true') {
+        document.documentElement.classList.add('pwa-mode');
+    }
+</script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
 <!-- PWA Install Gate Overlay -->

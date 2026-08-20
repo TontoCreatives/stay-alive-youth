@@ -1,4 +1,14 @@
 /* ==========================================
+   START: Instant Pre-Render State Lock (Prevents Load Flash)
+   ========================================== */
+html:not(.pwa-mode) .app-only-feature {
+    display: none !important;
+}
+html.pwa-mode #pwa-install-gate {
+    display: none !important;
+}
+
+/* ==========================================
    START: Global Variables & Theme Config
    ========================================== */
 :root {
