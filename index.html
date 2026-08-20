@@ -175,18 +175,11 @@
                         <a href="prayer.html" class="border border-zinc-700/80 bg-zinc-900/40 backdrop-blur-md hover:border-brandYellow text-white font-semibold px-6 py-3 rounded text-sm transition-all">Send Prayer Request</a>
                     </div>
                 </div>
-                <div class="relative flex justify-center">
-                    <div class="relative w-full max-w-md rounded-2xl overflow-hidden border border-zinc-800/80 shadow-2xl bg-cardBg/80 backdrop-blur-md p-2">
-                        <img id="hero-img" src="Banner%20images%20and%20logo/youth%20being%20in%20the%20bible%20study.jpg" alt="Youth Fellowship Session" class="rounded-xl w-full h-72 object-cover opacity-80 hover:opacity-100 transition-opacity">
-                        <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-xl p-4 rounded-lg border border-zinc-800">
-                            <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">Active Community</p>
-                            <p class="text-sm font-medium text-white">Rooted in Scripture, Centered on the Gospel.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+               <!-- NFS MOST WANTED STYLE CAROUSEL -->
+<div class="relative flex justify-center">
+    <div id="hero-carousel-container" class="relative w-full max-w-md h-[360px] sm:h-[400px] rounded-2xl overflow-hidden border border-zinc-800/80 shadow-2xl bg-cardBg/80 backdrop-blur-md p-2 flex items-center justify-center">
+        <p class="text-xs text-zinc-500 animate-pulse">Loading cinematic visual...</p>
+       </div>
 
    <!-- DAILY OIA DEVOTIONAL SECTION -->
 <section id="devotional-section" class="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -765,5 +758,72 @@ window.addEventListener('appinstalled', () => {
     if (installGate) installGate.style.setProperty('display', 'none', 'important');
     if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
 });
+// NFS Hero Carousel Fade Loop
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].style.opacity = '0';
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].style.opacity = '1';
+        }, 4000);
+    }
+    async function loadDynamicHeroCarousel() {
+    const projectId = "y4q1h6a9"; // Your Sanity Project ID
+    const dataset = "production";
+    
+    const query = encodeURIComponent(`*[_type == "homeSettings"][0]{
+        heroCarousel[]{
+            "url": image.asset->url,
+            badge,
+            caption
+        }
+    }`);
+
+    const url = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=${query}`;
+
+    try {
+        const response = await fetch(url);
+        const { result } = await response.json();
+        
+        if (!result || !result.heroCarousel || result.heroCarousel.length === 0) return;
+
+        const container = document.getElementById('hero-carousel-container');
+        container.innerHTML = ''; 
+
+        result.heroCarousel.forEach((slide, index) => {
+            const opacityClass = index === 0 ? 'opacity-100' : 'opacity-0';
+            const slideHTML = `
+                <div class="absolute inset-2 transition-opacity duration-1000 ease-in-out ${opacityClass} hero-slide rounded-xl overflow-hidden">
+                    <img src="${slide.url}" alt="${slide.caption || 'Slide'}" class="w-full h-full object-cover">
+                    <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-xl p-4 rounded-lg border border-zinc-800">
+                        <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">${slide.badge || 'Active'}</p>
+                        <p class="text-sm font-medium text-white">${slide.caption || ''}</p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', slideHTML);
+        });
+
+        startHeroFadeLoop();
+
+    } catch (error) {
+        console.error("Failed to load hero slides from Sanity:", error);
+    }
+}
+
+function startHeroFadeLoop() {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length <= 1) return;
+    
+    let currentSlide = 0;
+    setInterval(() => {
+        slides[currentSlide].style.opacity = '0';
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].style.opacity = '1';
+    }, 4000);
+}
+
+document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
 </script>
 </html>

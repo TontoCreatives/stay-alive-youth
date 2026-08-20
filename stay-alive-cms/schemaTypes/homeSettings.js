@@ -9,7 +9,33 @@ export default {
     { name: 'heroTitle', title: 'Hero Main Title', type: 'string' },
     { name: 'heroHighlight', title: 'Hero Highlight Word (Yellow)', type: 'string' },
     { name: 'heroDescription', title: 'Hero Description Paragraph', type: 'text' },
-    { name: 'heroImage', title: 'Hero Banner Image', type: 'image', options: { hotspot: true } },
+    
+    // --- DYNAMIC HERO CAROUSEL (NFS FADE EFFECT) ---
+    {
+      name: 'heroCarousel',
+      title: 'Hero Image Carousel',
+      type: 'array',
+      description: 'Add multiple slides to create an auto-fading image carousel for the hero section.',
+      of: [
+        {
+          type: 'object',
+          name: 'slide',
+          title: 'Slide',
+          fields: [
+            { name: 'image', title: 'Slide Image', type: 'image', options: { hotspot: true }, validation: Rule => Rule.required() },
+            { name: 'badge', title: 'Badge Text (e.g. Active Community)', type: 'string', initialValue: 'Active Community' },
+            { name: 'caption', title: 'Caption / Description', type: 'string' }
+          ],
+          preview: {
+            select: {
+              title: 'badge',
+              subtitle: 'caption',
+              media: 'image'
+            }
+          }
+        }
+      ]
+    },
     
     // --- MULTIPLE ONGOING STUDIES / CURRICULUM SECTION ---
     {
