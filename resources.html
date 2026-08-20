@@ -58,17 +58,17 @@
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
 <!-- PWA Install Gate Overlay -->
-<div id="pwa-install-gate" style="display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000000; color: #ffffff; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; padding: 20px; text-align: center;">
+<div id="pwa-install-gate" style="display: none; flex-direction: column; justify-content: center; align-items: center; background: #000000; color: #ffffff; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; padding: 20px; text-align: center;">
     <div style="max-width: 400px; padding: 30px; background: #121212; border: 1px solid #27272a; border-radius: 16px;">
         <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #ffffff;">Install Stay Alive Fellowship</h2>
         <p style="font-size: 14px; color: #a1a1aa; margin-bottom: 24px; line-height: 1.5;">Please install our application to unlock full access to resources, prayers, and events.</p>
         
         <button id="install-btn" style="background: #c9a000; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 12px;">Install App Now</button>
         
-        <!-- Manual Fallback Instructions (Hidden by default) -->
+        <!-- Manual Fallback Instructions (Hidden by default, pops up on mobile when clicked) -->
         <div id="manual-instructions" style="display: none; text-align: left; background: #1a1a1e; padding: 14px; border-radius: 8px; border: 1px solid #3f3f46; font-size: 13px; color: #d4d4d8; margin-top: 10px;">
-            <p style="font-weight: bold; color: #c9a000; margin-bottom: 6px;">Automatic prompt blocked or unsupported:</p>
-            <p style="margin-bottom: 4px;">1. Tap your browser menu (the 3 dots $\vdots$ or menu icon).</p>
+            <p style="font-weight: bold; color: #c9a000; margin-bottom: 6px;">To install on this device:</p>
+            <p style="margin-bottom: 4px;">1. Tap your browser menu (the 3 dots or share icon).</p>
             <p>2. Select <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong>.</p>
         </div>
     </div>
@@ -637,15 +637,15 @@ const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
 const installGate = document.getElementById('pwa-install-gate');
 const bottomNav = document.querySelector('.app-only-feature');
 
+// If already installed, hide gate and show navigation
 if (isStandalone || isInstalledFlag) {
     document.body.classList.add('pwa-installed');
-    if (installGate) {
-        installGate.style.setProperty('display', 'none', 'important');
-    }
+    if (installGate) installGate.style.setProperty('display', 'none', 'important');
+    if (bottomNav) bottomNav.style.setProperty('display', 'flex', 'important');
 } else {
-    if (bottomNav) {
-        bottomNav.style.setProperty('display', 'none', 'important');
-    }
+    // If not installed, keep gate visible and hide navigation
+    if (installGate) installGate.style.setProperty('display', 'flex', 'important');
+    if (bottomNav) bottomNav.style.setProperty('display', 'none', 'important');
 }
 
 let deferredPrompt;
@@ -660,34 +660,30 @@ const manualInstructions = document.getElementById('manual-instructions');
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (deferredPrompt) {
+            // Trigger automatic prompt for browsers that support it (Chrome, Edge)
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 localStorage.setItem('pwa_installed', 'true');
                 document.body.classList.add('pwa-installed');
-                if (installGate) {
-                    installGate.style.setProperty('display', 'none', 'important');
-                }
-                // Try to force launch context reload
-                window.location.href = window.location.href;
+                if (installGate) installGate.style.setProperty('display', 'none', 'important');
+                if (bottomNav) bottomNav.style.setProperty('display', 'flex', 'important');
             }
             deferredPrompt = null;
         } else {
-            // Show manual steps for browsers like Samsung Internet, Brave, or Safari that block programmatic prompts
+            // Instantly reveal manual instructions for phones (Samsung Internet, Brave, iOS Safari)
             if (manualInstructions) {
-                manualInstructions.style.display = 'block';
+                manualInstructions.style.display = manualInstructions.style.display === 'block' ? 'none' : 'block';
             }
         }
     });
 }
 
-// When installation completes, lock in flag and reload into app mode
 window.addEventListener('appinstalled', () => {
     localStorage.setItem('pwa_installed', 'true');
     document.body.classList.add('pwa-installed');
-    if (installGate) {
-        installGate.style.setProperty('display', 'none', 'important');
-    }
+    if (installGate) installGate.style.setProperty('display', 'none', 'important');
+    if (bottomNav) bottomNav.style.setProperty('display', 'flex', 'important');
 });
 </script>
 </body>
