@@ -14,7 +14,7 @@ export default {
       type: 'date',
     },
     {
-      name: ' scriptureRef',
+      name: 'scriptureRef',
       title: 'Scripture Reference (e.g., Romans 12:1-2)',
       type: 'string',
     },
