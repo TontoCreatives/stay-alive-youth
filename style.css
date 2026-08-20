@@ -108,6 +108,7 @@ body.light-mode audio {
     display: none !important;
 }
 
+body.pwa-installed .app-only-feature,
 @media all and (display-mode: standalone), all and (display-mode: fullscreen) {
     .app-only-feature {
         display: block !important;
@@ -118,11 +119,15 @@ body.light-mode audio {
    START: PWA Install Gate Overlay
    ========================================== */
 #pwa-install-gate {
-    display: none;
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
 }
 
-@media (max-width: 768px) {
-    body:not(.pwa-installed) #pwa-install-gate {
-        display: flex !important;
-    }
+body.pwa-installed #pwa-install-gate {
+    display: none !important;
 }
