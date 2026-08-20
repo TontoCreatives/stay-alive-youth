@@ -57,20 +57,25 @@
 
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
-<script>
-  // Check if running as an installed PWA
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  
-  if (isStandalone) {
-    document.body.classList.add('pwa-installed');
-  } else {
-    // If viewed in a normal browser tab, also ensure the bottom nav is hidden
-    const bottomNav = document.querySelector('.app-only-feature');
-    if (bottomNav) {
-      bottomNav.style.setProperty('display', 'none', 'important');
-    }
-  }
-</script>
+<!-- MOBILE PWA INSTALL GATE OVERLAY -->
+<div id="pwa-install-gate" class="fixed inset-0 z-50 bg-[#09090b]/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center">
+    <div class="max-w-md w-full bg-[#121214] border border-zinc-800 rounded-2xl p-8 shadow-2xl space-y-6">
+        <div class="w-16 h-16 bg-brandYellow/10 text-brandYellow rounded-full flex items-center justify-center mx-auto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+        </div>
+        <div class="space-y-2">
+            <h2 class="text-xl font-bold text-white">App Installation Required</h2>
+            <p class="text-sm text-zinc-400">Stay Alive Fellowship is designed exclusively as a mobile app. Please add it to your home screen to access devotionals, resources, and community features.</p>
+        </div>
+        <div class="p-4 bg-zinc-900/80 rounded-xl border border-zinc-800/80 text-left space-y-2 text-xs text-zinc-300">
+            <p class="font-semibold text-brandYellow">How to install:</p>
+            <p>1. Tap your browser menu (<span class="font-bold">⋮</span> or <span class="font-bold">Share</span> button).</p>
+            <p>2. Select <span class="font-semibold text-white">"Add to Home Screen"</span> or <span class="font-semibold text-white">"Install App"</span>.</p>
+        </div>
+    </div>
+</div>
     <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
