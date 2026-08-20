@@ -466,35 +466,5 @@
         </li>
     </ul>
 </nav>
-<script>
-// Unified PWA installation and navigation state manager
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
-
-const installGate = document.getElementById('pwa-install-gate');
-const bottomNav = document.querySelector('.app-only-feature');
-
-if (isStandalone || isInstalledFlag) {
-    // App IS installed: Hide the install gate, unlock body class for navigation
-    document.body.classList.add('pwa-installed');
-    if (installGate) {
-        installGate.style.setProperty('display', 'none', 'important');
-    }
-} else {
-    // App is NOT installed (browser tab): Hide the bottom navigation so only the gate shows
-    if (bottomNav) {
-        bottomNav.style.setProperty('display', 'none', 'important');
-    }
-}
-
-// Fallback event listener if triggered live
-window.addEventListener('appinstalled', () => {
-    localStorage.setItem('pwa_installed', 'true');
-    document.body.classList.add('pwa-installed');
-    if (installGate) {
-        installGate.style.setProperty('display', 'none', 'important');
-    }
-});
-</script>
 </body>
 </html>
