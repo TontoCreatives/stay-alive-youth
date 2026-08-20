@@ -1,128 +1,230 @@
 /* ==========================================
+
    START: Global Variables & Theme Config
+
    ========================================== */
+
 :root {
+
     --bg-color: #000000;
+
     --text-color: #ffffff;
+
     --card-bg: #121212;
+
     --border-color: #27272a;
+
 }
+
+
 
 body.light-mode {
+
     --bg-color: #f4f4f4;
+
     --text-color: #121212;
+
     --card-bg: #ffffff;
+
     --border-color: #e4e4e7;
+
 }
 
+
+
 /* ==========================================
+
    START: Global Reset & Smooth Scrolling
+
    ========================================== */
+
 html {
+
     scroll-behavior: smooth;
+
 }
+
+
 
 body {
+
     -webkit-tap-highlight-color: transparent;
+
     overflow-x: hidden;
+
     background-color: var(--bg-color);
+
     color: var(--text-color);
+
     transition: background-color 0.3s ease, color 0.3s ease;
-    /* Native App Scroll Feel: Hide scrollbars and stop bounce */
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    overscroll-behavior-y: none;
-    /* Smooth Page Entrance Transition */
-    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
 }
 
-body::-webkit-scrollbar {
-    display: none;
-}
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 /* ==========================================
+
+   START: Custom Dark Scrollbar
+
+   ========================================== */
+
+::-webkit-scrollbar {
+
+    width: 8px;
+
+    height: 8px;
+
+}
+
+
+
+::-webkit-scrollbar-track {
+
+    background: var(--bg-color);
+
+}
+
+
+
+::-webkit-scrollbar-thumb {
+
+    background: #27272a;
+
+    border-radius: 4px;
+
+}
+
+
+
+::-webkit-scrollbar-thumb:hover {
+
+    background: #3f3f46;
+
+}
+
+
+
+/* ==========================================
+
    START: Utility & Component Tweaks
+
    ========================================== */
+
 img {
+
     max-width: 100%;
+
     height: auto;
+
 }
 
+
+
 /* ==========================================
+
    START: Theme Toggle Button Styling
+
    ========================================== */
+
 .theme-btn {
+
     background: transparent;
+
     border: 1px solid #c9a000;
+
     color: #c9a000;
+
     padding: 6px 10px;
+
     border-radius: 50%;
+
     cursor: pointer;
+
     font-size: 16px;
+
     transition: all 0.3s ease;
+
 }
+
+
 
 .theme-btn:hover {
+
     background: #c9a000;
+
     color: #000000;
+
 }
 
+
+
 /* ==========================================
+
    START: Media Library Card & Player Enhancements
+
    ========================================== */
+
 .media-card-gradient {
+
     background: linear-gradient(135deg, rgba(18, 18, 18, 0.95) 0%, rgba(9, 9, 11, 0.98) 100%);
+
     backdrop-filter: blur(12px);
+
     border: 1px solid var(--border-color);
+
 }
+
+
 
 body.light-mode .media-card-gradient {
+
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(244, 244, 244, 0.98) 100%);
+
 }
+
+
 
 audio {
+
     filter: invert(90%) hue-rotate(180deg);
+
     height: 38px;
+
     width: 100%;
+
 }
+
+
 
 body.light-mode audio {
+
     filter: none;
+
 }
 
+
+
 /* ==========================================
+
    START: PWA Installed-Only UI Controls
+
    ========================================== */
+
 .app-only-feature {
+
     display: none !important;
+
 }
+
+
 
 @media all and (display-mode: standalone), all and (display-mode: fullscreen) {
+
     .app-only-feature {
+
         display: block !important;
-    }
-}
 
-/* ==========================================
-   START: PWA Install Gate Overlay
-   ========================================== */
-#pwa-install-gate {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    body:not(.pwa-installed) #pwa-install-gate {
-        display: flex !important;
     }
-}
+
+} 
+
