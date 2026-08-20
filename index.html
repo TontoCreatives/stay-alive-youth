@@ -570,6 +570,7 @@
         fetchHomeSettings();
         fetchEvents();
         fetchLatestArticles();
+        fetchLatestDevotional();
         async function fetchLatestDevotional() {
     try {
         const query = '*[_type == "devotional"] | order(publishedAt desc)[0]';
