@@ -637,13 +637,13 @@ const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
 const installGate = document.getElementById('pwa-install-gate');
 const bottomNav = document.querySelector('.app-only-feature');
 
-// If already installed, hide gate and show navigation
+// Explicitly handle layout based on install state
 if (isStandalone || isInstalledFlag) {
     document.body.classList.add('pwa-installed');
     if (installGate) installGate.style.setProperty('display', 'none', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'flex', 'important');
+    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
 } else {
-    // If not installed, keep gate visible and hide navigation
+    document.body.classList.remove('pwa-installed');
     if (installGate) installGate.style.setProperty('display', 'flex', 'important');
     if (bottomNav) bottomNav.style.setProperty('display', 'none', 'important');
 }
@@ -660,18 +660,16 @@ const manualInstructions = document.getElementById('manual-instructions');
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (deferredPrompt) {
-            // Trigger automatic prompt for browsers that support it (Chrome, Edge)
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 localStorage.setItem('pwa_installed', 'true');
                 document.body.classList.add('pwa-installed');
                 if (installGate) installGate.style.setProperty('display', 'none', 'important');
-                if (bottomNav) bottomNav.style.setProperty('display', 'flex', 'important');
+                if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
             }
             deferredPrompt = null;
         } else {
-            // Instantly reveal manual instructions for phones (Samsung Internet, Brave, iOS Safari)
             if (manualInstructions) {
                 manualInstructions.style.display = manualInstructions.style.display === 'block' ? 'none' : 'block';
             }
@@ -679,11 +677,18 @@ if (installBtn) {
     });
 }
 
+// Fallback for Brave and privacy browsers that suppress the event
+setTimeout(() => {
+    if (!deferredPrompt && !isStandalone && !isInstalledFlag && manualInstructions) {
+        manualInstructions.style.display = 'block';
+    }
+}, 1500);
+
 window.addEventListener('appinstalled', () => {
     localStorage.setItem('pwa_installed', 'true');
     document.body.classList.add('pwa-installed');
     if (installGate) installGate.style.setProperty('display', 'none', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'flex', 'important');
+    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
 });
 </script>
 </body>
