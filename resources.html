@@ -597,5 +597,17 @@
         </li>
     </ul>
 </nav>
+<script>
+  // Check if running as an installed PWA
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  
+  if (!isStandalone) {
+    // If viewed in a normal browser tab, hide the bottom nav entirely
+    const bottomNav = document.querySelector('.app-only-feature');
+    if (bottomNav) {
+      bottomNav.style.setProperty('display', 'none', 'important');
+    }
+  }
+</script>
 </body>
 </html>
