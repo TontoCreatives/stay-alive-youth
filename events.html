@@ -62,7 +62,15 @@
     <div style="max-width: 400px; padding: 30px; background: #121212; border: 1px solid #27272a; border-radius: 16px;">
         <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #ffffff;">Install Stay Alive Fellowship</h2>
         <p style="font-size: 14px; color: #a1a1aa; margin-bottom: 24px; line-height: 1.5;">Please install our application to unlock full access to resources, prayers, and events.</p>
-        <button id="install-btn" style="background: #c9a000; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px;">Install App Now</button>
+        
+        <button id="install-btn" style="background: #c9a000; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 12px;">Install App Now</button>
+        
+        <!-- Manual Fallback Instructions (Hidden by default) -->
+        <div id="manual-instructions" style="display: none; text-align: left; background: #1a1a1e; padding: 14px; border-radius: 8px; border: 1px solid #3f3f46; font-size: 13px; color: #d4d4d8; margin-top: 10px;">
+            <p style="font-weight: bold; color: #c9a000; margin-bottom: 6px;">Automatic prompt blocked or unsupported:</p>
+            <p style="margin-bottom: 4px;">1. Tap your browser menu (the 3 dots $\vdots$ or menu icon).</p>
+            <p>2. Select <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong>.</p>
+        </div>
     </div>
 </div>
     <!-- NAVIGATION BAR -->
@@ -285,7 +293,6 @@
     </ul>
 </nav>
 <script>
-// Unified PWA installation and navigation state manager
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
 
@@ -293,27 +300,25 @@ const installGate = document.getElementById('pwa-install-gate');
 const bottomNav = document.querySelector('.app-only-feature');
 
 if (isStandalone || isInstalledFlag) {
-    // App IS installed: Hide the install gate, unlock body class for navigation
     document.body.classList.add('pwa-installed');
     if (installGate) {
         installGate.style.setProperty('display', 'none', 'important');
     }
 } else {
-    // App is NOT installed (browser tab): Hide the bottom navigation so only the gate shows
     if (bottomNav) {
         bottomNav.style.setProperty('display', 'none', 'important');
     }
 }
 
-// Capture the native install prompt event
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
 });
 
-// Hook up the install button click handler
 const installBtn = document.getElementById('install-btn');
+const manualInstructions = document.getElementById('manual-instructions');
+
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (deferredPrompt) {
@@ -325,15 +330,20 @@ if (installBtn) {
                 if (installGate) {
                     installGate.style.setProperty('display', 'none', 'important');
                 }
+                // Try to force launch context reload
+                window.location.href = window.location.href;
             }
             deferredPrompt = null;
         } else {
-            alert('To install this app, tap your browser menu (three dots) and select "Add to Home Screen" or "Install App".');
+            // Show manual steps for browsers like Samsung Internet, Brave, or Safari that block programmatic prompts
+            if (manualInstructions) {
+                manualInstructions.style.display = 'block';
+            }
         }
     });
 }
 
-// Fallback event listener if triggered live
+// When installation completes, lock in flag and reload into app mode
 window.addEventListener('appinstalled', () => {
     localStorage.setItem('pwa_installed', 'true');
     document.body.classList.add('pwa-installed');
