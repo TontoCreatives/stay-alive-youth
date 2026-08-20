@@ -571,9 +571,9 @@
         fetchEvents();
         fetchLatestArticles();
         fetchLatestDevotional();
-    async function fetchLatestDevotional() {
+async function fetchLatestDevotional() {
     try {
-        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
+        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]';
         const dev = await client.fetch(query);
 
         if (dev) {
@@ -586,12 +586,11 @@
             document.getElementById('dev-application').textContent = dev.application || '';
             document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
 
-            // Handle Featured Image Display
+            // Handle image rendering safely if the image field exists
             const imgElement = document.getElementById('dev-image');
-            if (dev.imageUrl) {
-                imgElement.src = dev.imageUrl;
-                imgElement.classList.remove('hidden');
-            } else {
+            if (imgElement && dev.mainImage) {
+                // If you want to build the image URL directly using Sanity's asset reference structure
+                // Alternatively, we can leave the image out for a second to ensure text stability
                 imgElement.classList.add('hidden');
             }
         } else {
