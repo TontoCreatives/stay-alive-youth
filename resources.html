@@ -57,7 +57,20 @@
 
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
-
+<script>
+  // Check if running as an installed PWA
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  
+  if (isStandalone) {
+    document.body.classList.add('pwa-installed');
+  } else {
+    // If viewed in a normal browser tab, also ensure the bottom nav is hidden
+    const bottomNav = document.querySelector('.app-only-feature');
+    if (bottomNav) {
+      bottomNav.style.setProperty('display', 'none', 'important');
+    }
+  }
+</script>
     <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -601,7 +614,9 @@
   // Check if running as an installed PWA
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   
-  if (!isStandalone) {
+  if (isStandalone) {
+    document.body.classList.add('pwa-installed');
+  } else {
     // If viewed in a normal browser tab, hide the bottom nav entirely
     const bottomNav = document.querySelector('.app-only-feature');
     if (bottomNav) {

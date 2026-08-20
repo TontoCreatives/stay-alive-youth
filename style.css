@@ -113,3 +113,16 @@ body.light-mode audio {
         display: block !important;
     }
 }
+
+/* ==========================================
+   START: PWA Install Gate Overlay
+   ========================================== */
+#pwa-install-gate {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    body:not(.pwa-installed) #pwa-install-gate {
+        display: flex !important;
+    }
+}
