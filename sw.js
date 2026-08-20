@@ -1,11 +1,13 @@
-const CACHE_NAME = 'stay-alive-v4'; // Bumped version to clear old cache
+const CACHE_NAME = 'stay-alive-v4';
+const SANITY_CACHE = 'stay-alive-sanity-v1';
+
 const assetsToCache = [
   '/',
   '/index.html',
   '/resources.html'
 ];
 
-// Install event - caches core files and forces skip waiting
+// Install event
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -15,13 +17,13 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate event - instantly wipes out old bugged caches
+// Activate event
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
+          if (cache !== CACHE_NAME && cache !== SANITY_CACHE) {
             console.log('Clearing old cache:', cache);
             return caches.delete(cache);
           }
@@ -32,9 +34,32 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - Always try network first for live code updates, fallback to cache if offline
+// Fetch event - Handles local app shell + Sanity API caching
 self.addEventListener('fetch', (event) => {
-  // Ignore non-GET requests or cross-origin calls (like Sanity/Google APIs)
+  const url = new URL(event.request.url);
+
+  // 1. Handle Sanity API requests (Cache-first or Stale-while-revalidate)
+  if (url.hostname.includes('api.sanity.io')) {
+    event.respondWith(
+      caches.open(SANITY_CACHE).then((cache) => {
+        return cache.match(event.request).then((cachedResponse) => {
+          const fetchPromise = fetch(event.request).then((networkResponse) => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          }).catch(() => {
+            // If offline and fetch fails, return cached response if available
+            return cachedResponse;
+          });
+
+          // Return cached data immediately if available, otherwise wait for network
+          return cachedResponse || fetchPromise;
+        });
+      })
+    );
+    return;
+  }
+
+  // 2. Handle normal local assets/pages
   if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
     return;
   }
@@ -42,6 +67,10 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
         return networkResponse;
       })
       .catch(() => {
@@ -56,8 +85,8 @@ self.addEventListener('push', (event) => {
   
   const options = {
     body: data.body,
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: '/Banner images and logo/bible%20study%20logo.png',
+    badge: '/Banner images and logo/bible%20study%20logo.png',
     vibrate: [200, 100, 200]
   };
 
@@ -66,7 +95,7 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Handle notification click (opens the app when tapped)
+// Handle notification click
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
