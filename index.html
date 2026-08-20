@@ -570,6 +570,28 @@
         fetchHomeSettings();
         fetchEvents();
         fetchLatestArticles();
+        async function fetchLatestDevotional() {
+    try {
+        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]';
+        const dev = await client.fetch(query);
+
+        if (dev) {
+            document.getElementById('dev-date').textContent = dev.publishedAt || '';
+            document.getElementById('dev-title').textContent = dev.title || '';
+            document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
+            document.getElementById('dev-scripture-text').textContent = `"${dev.scriptureText || ''}"`;
+            document.getElementById('dev-observation').textContent = dev.observation || '';
+            document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
+            document.getElementById('dev-application').textContent = dev.application || '';
+            document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
+        } else {
+            document.getElementById('dev-title').textContent = "No devotionals published yet.";
+        }
+    } catch (error) {
+        console.error("Error fetching devotional:", error);
+        document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
+    }
+}
     </script>
 <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2">
