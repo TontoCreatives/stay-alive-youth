@@ -100,3 +100,16 @@ audio {
 body.light-mode audio {
     filter: none;
 }
+
+/* ==========================================
+   START: PWA Installed-Only UI Controls
+   ========================================== */
+.app-only-feature {
+    display: none !important;
+}
+
+@media all and (display-mode: standalone), all and (display-mode: fullscreen) {
+    .app-only-feature {
+        display: block !important;
+    }
+}
