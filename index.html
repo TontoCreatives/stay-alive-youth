@@ -178,6 +178,48 @@
             </div>
         </div>
     </section>
+    <!-- DAILY OIA DEVOTIONAL SECTION -->
+<section id="devotional-section" class="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Daily Word</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-2">Today's OIA Devotional</h2>
+        </div>
+        <span id="dev-date" class="text-xs text-zinc-400 font-medium">Loading...</span>
+    </div>
+
+    <!-- Devotional Card Container -->
+    <div class="bg-cardBg/80 backdrop-blur-xl border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <!-- Scripture Banner -->
+        <div class="border-l-4 border-brandYellow pl-4 py-1">
+            <h3 id="dev-title" class="text-xl font-bold text-white mb-1">Loading devotional...</h3>
+            <p id="dev-scripture-ref" class="text-brandYellow text-sm font-semibold"></p>
+            <p id="dev-scripture-text" class="text-zinc-300 text-sm italic mt-2"></p>
+        </div>
+
+        <!-- OIA Breakdown Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80">
+            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">1. Observe</span>
+                <p id="dev-observation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+            </div>
+            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">2. Interpret</span>
+                <p id="dev-interpretation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+            </div>
+            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">3. Apply</span>
+                <p id="dev-application" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+            </div>
+        </div>
+
+        <!-- Closing Prayer -->
+        <div class="bg-brandYellow/5 p-4 rounded-xl border border-brandYellow/15">
+            <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">Closing Prayer</span>
+            <p id="dev-prayer" class="text-xs text-zinc-300 mt-1 leading-relaxed"></p>
+        </div>
+    </div>
+</section>
 
     <!-- DNA SECTION -->
     <section class="py-16 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900">

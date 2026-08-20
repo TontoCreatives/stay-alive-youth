@@ -12,6 +12,7 @@ import prayerRequest from './prayerRequest'
 import questionBox from './questionBox'
 import coordinator from './coordinator'
 import mediaItem from './media'
+import devotional from './devotional'
 
 export const schemaTypes = [
   post, 
@@ -27,5 +28,6 @@ export const schemaTypes = [
   prayerRequest,
   questionBox,
   coordinator,
-  mediaItem
+  mediaItem,
+  devotional
 ]
