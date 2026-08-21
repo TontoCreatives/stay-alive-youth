@@ -1,14 +1,4 @@
 /* ==========================================
-   START: Instant Pre-Render State Lock (Prevents Load Flash)
-   ========================================== */
-html:not(.pwa-mode) .app-only-feature {
-    display: none !important;
-}
-html.pwa-mode #pwa-install-gate {
-    display: none !important;
-}
-
-/* ==========================================
    START: Ambient Bokeh Glow Background (Gemini Style)
    ========================================== */
 body::before,
@@ -77,6 +67,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
+    padding-bottom: 70px; /* Prevents content from hiding behind fixed bottom nav */
 }
 
 /* ==========================================
@@ -151,53 +142,34 @@ body.light-mode audio {
 }
 
 /* ==========================================
-   START: PWA Installed-Only UI Controls & Nav Alignment
+   START: Persistent Bottom Navigation Bar
    ========================================== */
 .app-only-feature {
-    display: none !important;
-}
-
-body.pwa-installed .app-only-feature,
-@media all and (display-mode: standalone), all and (display-mode: fullscreen) {
-    .app-only-feature {
-        display: block !important;
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        background-color: rgba(18, 18, 18, 0.85) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border-top: 1px solid var(--border-color) !important;
-        z-index: 9998 !important;
-        padding: 8px 0 !important;
-        animation: fadeInNav 0.4s ease-in-out forwards;
-    }
-}
-
-@keyframes fadeInNav {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    display: block !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: rgba(18, 18, 20, 0.85) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-top: 1px solid rgba(39, 39, 42, 0.8) !important;
+    z-index: 9998 !important;
+    padding: 8px 0 !important;
 }
 
 .app-only-feature ul {
-    display: flex !important;
-    justify-content: space-around !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     align-items: center !important;
     width: 100% !important;
     list-style: none !important;
     margin: 0 !important;
     padding: 0 !important;
+    text-align: center !important;
 }
 
 .app-only-feature ul li {
-    flex: 1 !important;
     text-align: center !important;
 }
 
@@ -208,7 +180,7 @@ body.pwa-installed .app-only-feature,
     justify-content: center !important;
     text-decoration: none !important;
     color: #a1a1aa !important;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
     transition: color 0.2s ease;
 }
@@ -219,8 +191,8 @@ body.pwa-installed .app-only-feature,
 }
 
 .app-only-feature ul li a svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     margin-bottom: 4px;
     transition: transform 0.2s ease;
 }
@@ -244,4 +216,4 @@ body.pwa-installed .app-only-feature,
 
 body.pwa-installed #pwa-install-gate {
     display: none !important;
-}`+
+}
