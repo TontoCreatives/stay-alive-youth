@@ -31,7 +31,7 @@
     <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FACC15">
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation pb-20 md:pb-0">
 
     <!-- NAVIGATION BAR -->
     <header class="sticky top-0 z-50 bg-darkBg/70 backdrop-blur-xl border-b border-zinc-800/50">
@@ -141,6 +141,7 @@
             useCdn: true,
             apiVersion: '2024-01-01'
         });
+
         let allArticles = [];
         let activeFilter = 'all';
         let searchQuery = '';
@@ -189,10 +190,6 @@
             const streakData = JSON.parse(localStorage.getItem('saf_streak_data')) || { currentStreak: 0 };
             renderStreakUI(streakData.currentStreak);
         });
-
-        let allArticles = [];
-        let activeFilter = 'all';
-        let searchQuery = '';
 
         function blocksToHtml(blocks) {
             if (!blocks || !Array.isArray(blocks)) return '<p class="text-zinc-400">No content available for this article.</p>';
@@ -322,15 +319,9 @@
         window.openArticleModal = function(index) {
             const article = window.appArticles[index];
             if (!article) return;
-window.openArticleModal = function(index) {
-            const article = window.appArticles[index];
-            if (!article) return;
 
-            updateReadingStreak(); // <--- Drop it right here
+            updateReadingStreak(); // Trigger streak update
 
-            document.getElementById('modal-category').innerText = article.category || 'Essay';
-            document.getElementById('modal-title').innerText = article.title;
-            // ... rest of your code
             document.getElementById('modal-category').innerText = article.category || 'Essay';
             document.getElementById('modal-title').innerText = article.title;
             const formattedDate = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
