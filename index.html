@@ -560,29 +560,27 @@
                     if (events.length === 0) {
                         eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
                         return;
-                    }
-
-                    eventsContainer.innerHTML = events.map(event => {
-                        return `
-                            <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 hover:border-brandYellow/50 transition-all flex flex-col justify-between overflow-hidden group">
-                                <div>
-                                    <div class="relative w-full h-40 bg-zinc-900 overflow-hidden">
-                                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                        <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded text-xs font-bold text-brandYellow border border-zinc-800">${event.badge || 'Gathering'}</div>
-                                    </div>
-                                    <div class="p-6 pb-2">
-                                        <div class="text-zinc-500 text-xs font-medium mb-2">${event.dateText || ''}</div>
-                                        <h3 class="text-lg font-bold text-white mb-2">${event.title || 'Fellowship Event'}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
-                                    </div>
-                                </div>
-                                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
-                                    <span>${event.schedule || 'Check Schedule'}</span>
-                                    <a href="events.html" class="text-brandYellow font-bold hover:underline">Details &rarr;</a>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
+ eventsContainer.innerHTML = events.map(event => {
+        return `
+            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+                <div>
+                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
+                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
+                    </div>
+                    <div class="p-6 pb-2">
+                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
+                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
+                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
+                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
+                </div>
+            </div>
+        `;
+    }).join('');
                 }
             } catch (err) {
                 console.error("Sanity events fetch error:", err);
