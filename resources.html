@@ -124,17 +124,17 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative z-10">
             
             <!-- Category Filter Bar (Horizontally Scrollable) -->
-            <div id="filter-container" class="flex overflow-x-auto space-x-2 pb-3 mb-8 no-scrollbar px-1 whitespace-nowrap">
-                <button data-category="all" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-brandYellow text-black shadow-md transition-all">All Resources</button>
-                <button data-category="media" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Audio & Video</button>
-                <button data-category="sunday-study" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Sunday Book Study</button>
-                <button data-category="thursday-midweek" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Thursday Midweek & Prayer</button>
-                <button data-category="theological" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Theological Foundations</button>
-                <button data-category="gospels" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Books of the Gospel</button>
-                <button data-category="relationships" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Relationships & Marriage</button>
-                <button data-category="apologetics" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Apologetics</button>
-                <button data-category="adulting" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800 hover:border-brandYellow/50 transition-all">Adulting & Discipleship</button>
-            </div>
+           <div id="filter-container" class="flex overflow-x-auto space-x-2 pb-3 mb-8 no-scrollbar px-1 whitespace-nowrap">
+    <button data-category="all" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-brandYellow text-black shadow-lg shadow-brandYellow/10 backdrop-blur-md border border-brandYellow transition-all">All Resources</button>
+    <button data-category="media" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Audio & Video</button>
+    <button data-category="sunday-study" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Sunday Book Study</button>
+    <button data-category="thursday-midweek" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Thursday Midweek & Prayer</button>
+    <button data-category="theological" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Theological Foundations</button>
+    <button data-category="gospels" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Books of the Gospel</button>
+    <button data-category="relationships" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Relationships & Marriage</button>
+    <button data-category="apologetics" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Apologetics</button>
+    <button data-category="adulting" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Adulting & Discipleship</button>
+</div>
 
             <!-- Sleek Search Bar with Backdrop Blur -->
             <div class="mb-10 max-w-md mx-auto">
@@ -423,16 +423,15 @@
             searchQuery = e.target.value;
             filterAndRenderResources();
         });
-
-      document.querySelectorAll('.category-btn').forEach(btn => {
+document.querySelectorAll('.category-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         document.querySelectorAll('.category-btn').forEach(b => {
             b.classList.remove('bg-brandYellow', 'text-black', 'font-bold', 'shadow-lg', 'shadow-brandYellow/10', 'border-brandYellow');
-            b.classList.add('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800');
+            b.classList.add('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800/80', 'backdrop-blur-md');
         });
         
-        e.target.classList.remove('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800');
-        e.target.classList.add('bg-brandYellow', 'text-black', 'font-bold', 'shadow-lg', 'shadow-brandYellow/10', 'border', 'border-brandYellow');
+        e.target.classList.remove('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800/80');
+        e.target.classList.add('bg-brandYellow', 'text-black', 'font-bold', 'shadow-lg', 'shadow-brandYellow/10', 'border', 'border-brandYellow', 'backdrop-blur-md');
 
         activeFilter = e.target.dataset.category;
         filterAndRenderResources();
