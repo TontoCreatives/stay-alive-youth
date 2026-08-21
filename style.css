@@ -1,5 +1,14 @@
 /* ==========================================
-   START: Persistent Bottom Navigation Bar (Bulletproof)
+   START: Global Touch Fix & Mobile Polish
+   ========================================== */
+
+/* Kills the ugly mobile browser highlight box when tapping */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ==========================================
+   START: Persistent Bottom Navigation Bar (Bulletproof & Bouncy)
    ========================================== */
 .app-only-feature,
 nav.fixed.bottom-0 {
@@ -48,7 +57,8 @@ nav.fixed.bottom-0 ul li a {
     font-weight: 500;
     padding: 6px 0;
     border-radius: 9999px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* UPGRADED: Springier physics curve */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .app-only-feature ul li a:hover,
@@ -69,15 +79,16 @@ nav.fixed.bottom-0 ul li a svg {
     width: 20px;
     height: 20px;
     margin-bottom: 3px;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* UPGRADED: Dynamic bouncier icon transition */
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .app-only-feature ul li a:active,
 nav.fixed.bottom-0 ul li a:active {
-    transform: scale(0.92);
+    transform: scale(0.90); /* Deepened slightly for high-end feel */
 }
 
 .app-only-feature ul li a:active svg,
 nav.fixed.bottom-0 ul li a:active svg {
-    transform: scale(0.85);
+    transform: scale(0.80);
 }
