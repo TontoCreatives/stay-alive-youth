@@ -2,6 +2,15 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
+    <script>
+    // Instantly apply pwa-installed class if launched as PWA to prevent layout flash
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        document.documentElement.classList.add('pwa-mode');
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('pwa-installed');
+        });
+    }
+</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events | Stay Alive Fellowship</title>
     <!-- Tailwind CSS CDN -->
@@ -269,7 +278,7 @@
             </a>
         </li>
         <li>
-            <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+            <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors active">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 Events
             </a>
