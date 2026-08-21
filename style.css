@@ -187,15 +187,16 @@ body.light-mode audio {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Active and Hover States with WhatsApp-style pill highlight and bounce */
+/* Hover State */
 .app-only-feature ul li a:hover {
     color: #ffffff !important;
     background-color: rgba(255, 255, 255, 0.05);
 }
 
+/* Active State with Theme Yellow Pill Highlight */
 .app-only-feature ul li a.active {
     color: #c9a000 !important;
-    background-color: rgba(201, 160, 0, 0.12) !important;
+    background-color: rgba(201, 160, 0, 0.22) !important; /* Brighter gold tint */
     font-weight: 600;
 }
 
