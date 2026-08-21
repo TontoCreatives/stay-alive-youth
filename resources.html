@@ -121,7 +121,7 @@ if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getI
     </div>
 </section>
 
-<!-- SCRIPTURE SEARCH TOOL ADDED -->
+<!-- SCRIPTURE SEARCH TOOL -->
 <section class="py-8 bg-zinc-950/60 border-b border-zinc-900">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-6">
@@ -253,9 +253,8 @@ import { createClient } from 'https://esm.sh/@sanity/client';
 const client = createClient({
     projectId: 'y4q1h6a9',
     dataset: 'production',
-    useCdn: false,
-    apiVersion: '2024-01-01',
-    token: 'skavACcZFPak5bTsnbX1tsWzMw4ZtMF7hXjp3fNbiUM21ZbHdxOOKSD1M2hCDIL91qzXcFeQZKYfNtNBV13Hy64dnGnTZQrlFfgUkS3c2pdG4ZVStXyyU3VvhESJ9R7PZtkoyDSIbpvcmIkVTN0XuUjXmCwaScdgYnPJbIJRJV1g37WemXXD'
+    useCdn: true,
+    apiVersion: '2024-01-01'
 });
 
 let pdfDoc = null,
@@ -331,7 +330,6 @@ function renderResources(resourcesToRender) {
         const originalIndex = allResources.findIndex(r => r._id === res._id);
         const categoryBadgeText = res.categoryLabel || formatCategoryName(res.category);
         
-        // Render Media Item
         if (res.itemType === 'media') {
             const isAudio = res.mediaType === 'audio';
             let playerHtml = '';
@@ -368,7 +366,6 @@ function renderResources(resourcesToRender) {
             </div>`;
         }
 
-        // Default layout for regular text/PDF resources
         return `
         <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
             <div>
@@ -439,8 +436,8 @@ async function fetchResources() {
         window.appResources = allResources;
         filterAndRenderResources();
     } catch (err) {
-        console.error("Error fetching library resources:", err);
-        container.innerHTML = `<div class="text-center text-red-400 py-12 col-span-full">Failed to connect to library.</div>`;
+        console.error("Sanity connection error:", err);
+        container.innerHTML = `<div class="text-center text-red-400 py-12 col-span-full">Failed to connect to library: ${err.message}</div>`;
     }
 }
 fetchResources();
