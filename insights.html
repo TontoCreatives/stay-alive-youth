@@ -141,6 +141,54 @@
             useCdn: true,
             apiVersion: '2024-01-01'
         });
+        let allArticles = [];
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+        // --- STREAK TRACKER LOGIC ---
+        function updateReadingStreak() {
+            const today = new Date().toISOString().split('T')[0];
+            const streakData = JSON.parse(localStorage.getItem('saf_streak_data')) || {
+                currentStreak: 0,
+                lastActiveDate: null
+            };
+
+            if (streakData.lastActiveDate === today) {
+                renderStreakUI(streakData.currentStreak);
+                return;
+            }
+
+            if (streakData.lastActiveDate) {
+                const lastDate = new Date(streakData.lastActiveDate);
+                const currentDate = new Date(today);
+                const diffTime = Math.abs(currentDate - lastDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 1) {
+                    streakData.currentStreak += 1;
+                } else if (diffDays > 1) {
+                    streakData.currentStreak = 1;
+                }
+            } else {
+                streakData.currentStreak = 1;
+            }
+
+            streakData.lastActiveDate = today;
+            localStorage.setItem('saf_streak_data', JSON.stringify(streakData));
+            renderStreakUI(streakData.currentStreak);
+        }
+
+        function renderStreakUI(count) {
+            const streakCountEl = document.getElementById('streak-count');
+            if (streakCountEl) {
+                streakCountEl.innerText = count;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const streakData = JSON.parse(localStorage.getItem('saf_streak_data')) || { currentStreak: 0 };
+            renderStreakUI(streakData.currentStreak);
+        });
 
         let allArticles = [];
         let activeFilter = 'all';
@@ -274,7 +322,15 @@
         window.openArticleModal = function(index) {
             const article = window.appArticles[index];
             if (!article) return;
+window.openArticleModal = function(index) {
+            const article = window.appArticles[index];
+            if (!article) return;
 
+            updateReadingStreak(); // <--- Drop it right here
+
+            document.getElementById('modal-category').innerText = article.category || 'Essay';
+            document.getElementById('modal-title').innerText = article.title;
+            // ... rest of your code
             document.getElementById('modal-category').innerText = article.category || 'Essay';
             document.getElementById('modal-title').innerText = article.title;
             const formattedDate = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
