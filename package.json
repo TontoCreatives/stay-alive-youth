@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "sanity": "^6.10.1"
+  },
+  "dependencies": {
+    "web-push": "^3.6.7"
   }
 }
