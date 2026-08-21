@@ -424,19 +424,20 @@
             filterAndRenderResources();
         });
 
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.category-btn').forEach(b => {
-                    b.classList.remove('bg-brandYellow', 'text-black');
-                    b.classList.add('bg-zinc-900', 'text-zinc-300', 'border', 'border-zinc-800');
-                });
-                e.target.classList.remove('bg-zinc-900', 'text-zinc-300', 'border', 'border-zinc-800');
-                e.target.classList.add('bg-brandYellow', 'text-black');
-
-                activeFilter = e.target.dataset.category;
-                filterAndRenderResources();
-            });
+      document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.category-btn').forEach(b => {
+            b.classList.remove('bg-brandYellow', 'text-black', 'font-bold', 'shadow-lg', 'shadow-brandYellow/10', 'border-brandYellow');
+            b.classList.add('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800');
         });
+        
+        e.target.classList.remove('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800');
+        e.target.classList.add('bg-brandYellow', 'text-black', 'font-bold', 'shadow-lg', 'shadow-brandYellow/10', 'border', 'border-brandYellow');
+
+        activeFilter = e.target.dataset.category;
+        filterAndRenderResources();
+    });
+});
 
         window.openEreaderModal = function(index) {
             const res = window.appResources[index];
