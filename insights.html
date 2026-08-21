@@ -31,34 +31,34 @@
     <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FACC15">
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
-    <!-- NAVIGATION BAR -->
-    <!-- NAVIGATION BAR -->
-<header class="sticky top-0 z-50 bg-darkBg/70 backdrop-blur-xl border-b border-zinc-800/50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        
-        <!-- Logo / Brand -->
-        <a href="index.html" class="flex items-center gap-3">
-            <img id="nav-logo" src="Banner%20images%20and%20logo/bible%20study%20logo.png" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
-            <div class="flex flex-col">
-                <span class="font-bold tracking-tight text-sm uppercase text-white leading-tight">Stay Alive</span>
-                <span class="text-brandYellow text-[10px] tracking-widest uppercase font-medium">Bible Study</span>
-            </div>
-        </a>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 
-        <!-- Desktop Nav Links -->
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
-            <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
-            <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
-            <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
-            <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
-            <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
-            <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
-            <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
-        </nav>
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-darkBg/70 backdrop-blur-xl border-b border-zinc-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo / Brand -->
+            <a href="index.html" class="flex items-center gap-3">
+                <img id="nav-logo" src="Banner%20images%20and%20logo/bible%20study%20logo.png" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
+                <div class="flex flex-col">
+                    <span class="font-bold tracking-tight text-sm uppercase text-white leading-tight">Stay Alive</span>
+                    <span class="text-brandYellow text-[10px] tracking-widest uppercase font-medium">Bible Study</span>
+                </div>
+            </a>
 
-    </div>
-</header>
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+                <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
+                <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
+                <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+                <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
+                <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+                <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+                <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+            </nav>
+
+        </div>
+    </header>
 
     <!-- PAGE HEADER -->
     <section class="py-16 border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md">
@@ -113,7 +113,7 @@
                 <button id="close-modal" class="text-zinc-400 hover:text-white p-2 text-3xl font-bold focus:outline-none">&times;</button>
             </div>
             <div id="modal-body" class="p-6 sm:p-10 overflow-y-auto flex-grow space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed">
-                <!-- Content & Interactive Checklist injected here -->
+                <!-- Content injected here -->
             </div>
         </div>
     </div>
@@ -157,53 +157,7 @@
                 return `<p class="mb-4 text-zinc-300">${text}</p>`;
             }).join('');
 
-            // Append the Interactive Key Takeaways Checklist at the bottom of the article body
-            const checklistHtml = `
-                <div class="mt-12 pt-8 border-t border-zinc-800">
-                    <div class="bg-zinc-950/60 border border-zinc-800 rounded-xl p-6 sm:p-8 shadow-xl">
-                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-zinc-800">
-                            <div>
-                                <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/25">Interactive Study</span>
-                                <h3 class="text-xl font-bold text-white mt-2">Key Takeaways Checklist</h3>
-                            </div>
-                            <div class="text-right">
-                                <span id="progress-count" class="text-brandYellow font-bold text-lg">0 / 4</span>
-                                <p class="text-xs text-zinc-500 uppercase tracking-wider">Completed</p>
-                            </div>
-                        </div>
-
-                        <!-- Checklist Items -->
-                        <div id="takeaways-list" class="space-y-4">
-                            <label class="flex items-start gap-3 p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/80 cursor-pointer hover:border-zinc-700 transition-all">
-                                <input type="checkbox" class="takeaway-checkbox mt-1 w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-brandYellow focus:ring-brandYellow focus:ring-offset-darkBg">
-                                <span class="text-sm text-zinc-300 leading-relaxed">Recognize the historical and cultural context behind the authorial intent.</span>
-                            </label>
-                            
-                            <label class="flex items-start gap-3 p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/80 cursor-pointer hover:border-zinc-700 transition-all">
-                                <input type="checkbox" class="takeaway-checkbox mt-1 w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-brandYellow focus:ring-brandYellow focus:ring-offset-darkBg">
-                                <span class="text-sm text-zinc-300 leading-relaxed">Anchor personal reflection in the broader redemptive storyline of Scripture.</span>
-                            </label>
-
-                            <label class="flex items-start gap-3 p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/80 cursor-pointer hover:border-zinc-700 transition-all">
-                                <input type="checkbox" class="takeaway-checkbox mt-1 w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-brandYellow focus:ring-brandYellow focus:ring-offset-darkBg">
-                                <span class="text-sm text-zinc-300 leading-relaxed">Apply the foundational principles directly to daily youth ministry and life choices.</span>
-                            </label>
-
-                            <label class="flex items-start gap-3 p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/80 cursor-pointer hover:border-zinc-700 transition-all">
-                                <input type="checkbox" class="takeaway-checkbox mt-1 w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-brandYellow focus:ring-brandYellow focus:ring-offset-darkBg">
-                                <span class="text-sm text-zinc-300 leading-relaxed">Share insights or discuss key questions with your small group or fellowship circle.</span>
-                            </label>
-                        </div>
-
-                        <!-- Completion Message Banner -->
-                        <div id="completion-banner" class="hidden mt-6 p-4 rounded-lg bg-brandYellow/10 border border-brandYellow/30 text-center">
-                            <p class="text-brandYellow text-sm font-bold">🎉 Outstanding! You've mastered the core takeaways for this session.</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            return mainBody + checklistHtml;
+            return mainBody;
         }
 
         function filterAndRenderArticles() {
@@ -317,58 +271,6 @@
             });
         });
 
-        // Initialize the Interactive Checklist inside the Modal
-        function initChecklist(articleId) {
-            const checkboxes = document.querySelectorAll('.takeaway-checkbox');
-            const progressCount = document.getElementById('progress-count');
-            const completionBanner = document.getElementById('completion-banner');
-            
-            // Unique key per specific article ID so state doesn't overlap across posts
-            const storageKey = 'takeaways_' + articleId;
-
-            // Load saved state from localStorage
-            const savedState = JSON.parse(localStorage.getItem(storageKey)) || [];
-            checkboxes.forEach((checkbox, index) => {
-                if (savedState[index]) {
-                    checkbox.checked = true;
-                    checkbox.closest('label').classList.add('border-brandYellow/50', 'bg-brandYellow/5');
-                }
-            });
-
-            updateProgress();
-
-            // Listen for changes
-            checkboxes.forEach((checkbox, index) => {
-                checkbox.addEventListener('change', () => {
-                    const label = checkbox.closest('label');
-                    if (checkbox.checked) {
-                        label.classList.add('border-brandYellow/50', 'bg-brandYellow/5');
-                    } else {
-                        label.classList.remove('border-brandYellow/50', 'bg-brandYellow/5');
-                    }
-
-                    // Save state array
-                    const stateArray = Array.from(checkboxes).map(cb => cb.checked);
-                    localStorage.setItem(storageKey, JSON.stringify(stateArray));
-
-                    updateProgress();
-                });
-            });
-
-            function updateProgress() {
-                const total = checkboxes.length;
-                const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-                
-                if (progressCount) progressCount.innerText = `${checkedCount} / ${total}`;
-
-                if (checkedCount === total) {
-                    if (completionBanner) completionBanner.classList.remove('hidden');
-                } else {
-                    if (completionBanner) completionBanner.classList.add('hidden');
-                }
-            }
-        }
-
         window.openArticleModal = function(index) {
             const article = window.appArticles[index];
             if (!article) return;
@@ -378,11 +280,8 @@
             const formattedDate = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
             document.getElementById('modal-meta').innerText = `By ${article.author || 'Stay Alive Fellowship'} • ${formattedDate}`;
             
-            // Render body text + checklist
+            // Render body text only
             document.getElementById('modal-body').innerHTML = blocksToHtml(article.body);
-
-            // Bind the checklist logic to this specific article ID
-            initChecklist(article._id);
 
             document.getElementById('article-modal').classList.remove('hidden');
         };
@@ -396,59 +295,57 @@
             if (e.target.id === 'article-modal') closeModal();
         });
     </script>
-    <script>
-        const btn = document.getElementById('menu-btn');
-        const menu = document.getElementById('mobile-menu');
-        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-    </script>
+    
     <!-- PWA Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('Service Worker registered successfully!', reg))
-        .catch((err) => console.log('Service Worker registration failed:', err));
-    });
-  }
-</script>
-<!-- PWA Update Banner (Hidden by default) -->
-<div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
-    <div>
-        <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
-        <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => console.log('Service Worker registered successfully!', reg))
+            .catch((err) => console.log('Service Worker registration failed:', err));
+        });
+      }
+    </script>
+    
+    <!-- PWA Update Banner (Hidden by default) -->
+    <div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
+        <div>
+            <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
+            <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
+        </div>
+        <button onclick="window.location.reload()" class="bg-brandYellow text-black text-xs font-bold px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
+            Refresh
+        </button>
     </div>
-    <button onclick="window.location.reload()" class="bg-brandYellow text-black text-xs font-bold px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
-        Refresh
-    </button>
-</div>
-<!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2">
-    <ul class="grid grid-cols-4 gap-1 text-center">
-        <li>
-            <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-brandYellow">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                Home
-            </a>
-        </li>
-        <li>
-            <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                Resources
-            </a>
-        </li>
-        <li>
-            <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                Prayer
-            </a>
-        </li>
-        <li>
-            <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                Events
-            </a>
-        </li>
-    </ul>
-</nav>
+
+    <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2">
+        <ul class="grid grid-cols-4 gap-1 text-center">
+            <li>
+                <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    Resources
+                </a>
+            </li>
+            <li>
+                <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    Prayer
+                </a>
+            </li>
+            <li>
+                <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Events
+                </a>
+            </li>
+        </ul>
+    </nav>
 </body>
 </html>
