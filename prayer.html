@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prayer & Q&A | Stay Alive Fellowship</title>
+    <!-- PWA & iOS Specific Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Studio">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="theme-color" content="#FACC15">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -26,41 +34,14 @@
         window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FACC15">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    
-    <!-- PWA & iOS Specific Tags -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Studio">
-    <link rel="apple-touch-icon" href="icon-192.png">
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brandYellow: '#FACC15',
-                        cardBg: '#18181B'
-                    }
-                }
-            }
-        }
-    </script>
     <script>
     if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === 'true') {
         document.documentElement.classList.add('pwa-mode');
     }
-</script>
+    </script>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
+
 <!-- PWA Install Gate Overlay -->
 <div id="pwa-install-gate" style="display: none; flex-direction: column; justify-content: center; align-items: center; background: #000000; color: #ffffff; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; padding: 20px; text-align: center;">
     <div style="max-width: 400px; padding: 30px; background: #121212; border: 1px solid #27272a; border-radius: 16px;">
@@ -69,7 +50,7 @@
         
         <button id="install-btn" style="background: #c9a000; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 12px;">Install App Now</button>
         
-        <!-- Manual Fallback Instructions (Hidden by default, pops up on mobile when clicked) -->
+        <!-- Manual Fallback Instructions -->
         <div id="manual-instructions" style="display: none; text-align: left; background: #1a1a1e; padding: 14px; border-radius: 8px; border: 1px solid #3f3f46; font-size: 13px; color: #d4d4d8; margin-top: 10px;">
             <p style="font-weight: bold; color: #c9a000; margin-bottom: 6px;">To install on this device:</p>
             <p style="margin-bottom: 4px;">1. Tap your browser menu (the 3 dots or share icon).</p>
@@ -77,8 +58,8 @@
         </div>
     </div>
 </div>
-    <!-- NAVIGATION BAR -->
-   <!-- NAVIGATION BAR -->
+
+<!-- NAVIGATION BAR -->
 <header class="sticky top-0 z-50 bg-darkBg/70 backdrop-blur-xl border-b border-zinc-800/50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
@@ -105,231 +86,96 @@
     </div>
 </header>
 
-    <!-- PAGE HEADER -->
-    <section class="py-16 border-b border-zinc-900 bg-zinc-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/25">Intercession & Open Dialogue</span>
-            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Connect With Leadership</h1>
-            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                Share a confidential prayer request, or drop an anonymous question/suggestion for our weekly sessions. We are here to listen and walk with you.
-            </p>
-        </div>
-    </section>
-
-    <!-- SUBMISSION CONTAINER SECTION -->
-    <section class="py-20 bg-darkBg">
-        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-cardBg p-8 sm:p-10 rounded-xl border border-zinc-800 shadow-2xl">
-                
-                <!-- TAB SWITCHER -->
-                <div class="grid grid-cols-2 gap-2 p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg mb-8">
-                    <button id="tab-prayer" onclick="switchTab('prayer')" class="py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow">
-                        🙏 Prayer Request
-                    </button>
-                    <button id="tab-qa" onclick="switchTab('qa')" class="py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white">
-                        💬 Anonymous Q&A
-                    </button>
-                </div>
-
-                <!-- FORM -->
-                <form id="submission-form" class="space-y-5">
-                    <div>
-                        <label id="label-name" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Name (Optional)</label>
-                        <input type="text" id="sub-name" placeholder="Leave blank to remain anonymous" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
-                    </div>
-
-                    <!-- PREFERRED REPLY CHANNEL -->
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">How would you like us to reply? (Optional)</label>
-                        <div class="flex gap-6 mb-3 text-sm text-zinc-300">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="preferredChannel" value="whatsapp" checked onchange="toggleContactInput()" class="accent-brandYellow"> WhatsApp
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="preferredChannel" value="email" onchange="toggleContactInput()" class="accent-brandYellow"> Email
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- CONTACT INPUT -->
-                    <div>
-                        <label id="label-contact" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">WhatsApp Phone Number</label>
-                        <input type="text" id="sub-contact" placeholder="e.g., +254712345678" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
-                    </div>
-
-                    <div>
-                        <label id="label-text" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Prayer Request <span class="text-brandYellow">*</span></label>
-                        <textarea id="sub-text" rows="5" required placeholder="Type your prayer request or burden here..." class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all"></textarea>
-                    </div>
-
-                    <button type="submit" id="submit-btn" class="w-full bg-brandYellow text-black font-bold py-3.5 rounded text-sm hover:bg-yellow-400 transition-all shadow-lg">
-                        Submit Prayer Request &rarr;
-                    </button>
-                </form>
-
-                <!-- Success State Notice -->
-                <div id="success-box" class="hidden text-center py-8 space-y-4">
-                    <div class="w-12 h-12 bg-brandYellow/10 border border-brandYellow/30 text-brandYellow rounded-full flex items-center justify-center mx-auto text-xl font-bold">✓</div>
-                    <h3 id="success-title" class="text-xl font-bold text-white">Prayer Request Received</h3>
-                    <p id="success-desc" class="text-zinc-400 text-sm">Thank you for sharing. Our leadership team has received your burden securely and will stand with you in faith.</p>
-                    <button onclick="resetForm()" class="mt-4 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold px-4 py-2 rounded transition-all border border-zinc-700">
-                        Submit Another Entry
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
-            <div class="flex items-center gap-6">
-                <a href="index.html" class="hover:text-zinc-300">Home</a>
-                <a href="about.html" class="hover:text-zinc-300">About</a>
-                <a href="series.html" class="hover:text-zinc-300">Series</a>
-                <a href="insights.html" class="hover:text-zinc-300">Articles</a>
-                <a href="prayer.html" class="hover:text-zinc-300">Prayer & Q&A</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- LOGIC & SANITY SCRIPT -->
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@sanity/client';
-
-        const client = createClient({
-            projectId: 'y4q1h6a9',
-            dataset: 'production',
-            useCdn: false, 
-            apiVersion: '2024-01-01',
-            token: 'skavACcZFPak5bTsnbX1tsWzMw4ZtMF7hXjp3fNbiUM21ZbHdxOoKSD1M2hCDIL91qzXcFeQZKYfNtNBV13Hy64dnGnTZQrlFfgUkS3c2pdG4ZVStXyyU3VvhESJ9R7PZtkoyDSIbpvcmIkVTN0XuUjXmCwaScdgYnPJbIJRJV1g37WemXXD'
-        });
-
-        let currentMode = 'prayer'; // 'prayer' or 'qa'
-
-        // Dynamic toggle function for contact type placeholder
-        window.toggleContactInput = function() {
-            const channel = document.querySelector('input[name="preferredChannel"]:checked').value;
-            const labelContact = document.getElementById('label-contact');
-            const subContact = document.getElementById('sub-contact');
-
-            if (channel === 'whatsapp') {
-                labelContact.innerText = 'WhatsApp Phone Number';
-                subContact.placeholder = 'e.g., +254712345678';
-            } else {
-                labelContact.innerText = 'Email Address';
-                subContact.placeholder = 'e.g., name@example.com';
-            }
-        }
-
-        window.switchTab = function(mode) {
-            currentMode = mode;
-            const tabPrayer = document.getElementById('tab-prayer');
-            const tabQa = document.getElementById('tab-qa');
-            const labelText = document.getElementById('label-text');
-            const subText = document.getElementById('sub-text');
-            const submitBtn = document.getElementById('submit-btn');
-
-            if (mode === 'prayer') {
-                tabPrayer.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow";
-                tabQa.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white";
-                labelText.innerHTML = 'Your Prayer Request <span class="text-brandYellow">*</span>';
-                subText.placeholder = "Type your prayer request or burden here...";
-                submitBtn.innerText = "Submit Prayer Request →";
-            } else {
-                tabQa.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow";
-                tabPrayer.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white";
-                labelText.innerHTML = 'Your Question or Suggestion <span class="text-brandYellow">*</span>';
-                subText.placeholder = "Drop any anonymous question for our weekly Q&A or a ministry suggestion...";
-                submitBtn.innerText = "Submit Anonymous Question →";
-            }
-        }
-
-        const form = document.getElementById('submission-form');
-        const successBox = document.getElementById('success-box');
-        const submitBtn = document.getElementById('submit-btn');
-        const successTitle = document.getElementById('success-title');
-        const successDesc = document.getElementById('success-desc');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitBtn.innerText = 'Submitting securely...';
-            submitBtn.disabled = true;
-
-            const name = document.getElementById('sub-name').value.trim();
-            const preferredChannel = document.querySelector('input[name="preferredChannel"]:checked').value;
-            const contact = document.getElementById('sub-contact').value.trim();
-            const requestText = document.getElementById('sub-text').value.trim();
-
-            const docType = currentMode === 'prayer' ? 'prayerRequest' : 'questionBox';
-
-            try {
-                await client.create({
-                    _type: docType,
-                    name: name || 'Anonymous',
-                    preferredChannel: preferredChannel,
-                    contact: contact || 'Not provided',
-                    requestText: requestText,
-                    status: 'new',
-                    submittedAt: new Date().toISOString()
-                });
-
-                form.classList.add('hidden');
-                if (currentMode === 'prayer') {
-                    successTitle.innerText = "Prayer Request Received";
-                    successDesc.innerText = "Thank you for sharing. Our leadership team has received your burden securely and will stand with you in faith.";
-                } else {
-                    successTitle.innerText = "Question / Suggestion Received";
-                    successDesc.innerText = "Thank you! Your anonymous input has been recorded and will help drive our upcoming weekly sessions.";
-                }
-                successBox.classList.remove('hidden');
-            } catch (err) {
-                console.log("Submission failed:", err);
-                alert("Failed to submit request. Please check your connection and try again.");
-                submitBtn.innerText = currentMode === 'prayer' ? 'Submit Prayer Request →' : 'Submit Anonymous Question →';
-                submitBtn.disabled = false;
-            }
-        });
-
-        window.resetForm = function() {
-            form.reset();
-            toggleContactInput();
-            successBox.classList.add('hidden');
-            form.classList.remove('hidden');
-            submitBtn.innerText = currentMode === 'prayer' ? 'Submit Prayer Request →' : 'Submit Anonymous Question →';
-            submitBtn.disabled = false;
-        }
-    </script>
-
-    <script>
-        const btn = document.getElementById('menu-btn');
-        const menu = document.getElementById('mobile-menu');
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
-    <!-- PWA Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('Service Worker registered successfully!', reg))
-        .catch((err) => console.log('Service Worker registration failed:', err));
-    });
-  }
-</script>
-<!-- PWA Update Banner (Hidden by default) -->
-<div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
-    <div>
-        <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
-        <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
+<!-- PAGE HEADER -->
+<section class="py-16 border-b border-zinc-900 bg-zinc-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+        <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/25">Intercession & Open Dialogue</span>
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Connect With Leadership</h1>
+        <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+            Share a confidential prayer request, or drop an anonymous question/suggestion for our weekly sessions. We are here to listen and walk with you.
+        </p>
     </div>
-    <button onclick="window.location.reload()" class="bg-brandYellow text-black text-xs font-bold px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
-        Refresh
-    </button>
-</div>
-<<!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
+</section>
+
+<!-- SUBMISSION CONTAINER SECTION -->
+<section class="py-20 bg-darkBg flex-grow">
+    <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-cardBg p-8 sm:p-10 rounded-xl border border-zinc-800 shadow-2xl">
+            
+            <!-- TAB SWITCHER (Icons removed) -->
+            <div class="grid grid-cols-2 gap-2 p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg mb-8">
+                <button id="tab-prayer" onclick="switchTab('prayer')" class="py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow">
+                    Prayer Request
+                </button>
+                <button id="tab-qa" onclick="switchTab('qa')" class="py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white">
+                    Anonymous Q&A
+                </button>
+            </div>
+
+            <!-- FORM -->
+            <form id="submission-form" class="space-y-5">
+                <div>
+                    <label id="label-name" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Name (Optional)</label>
+                    <input type="text" id="sub-name" placeholder="Leave blank to remain anonymous" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
+                </div>
+
+                <!-- PREFERRED REPLY CHANNEL -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">How would you like us to reply? (Optional)</label>
+                    <div class="flex gap-6 mb-3 text-sm text-zinc-300">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="preferredChannel" value="whatsapp" checked onchange="toggleContactInput()" class="accent-brandYellow"> WhatsApp
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="preferredChannel" value="email" onchange="toggleContactInput()" class="accent-brandYellow"> Email
+                        </label>
+                    </div>
+                </div>
+
+                <!-- CONTACT INPUT -->
+                <div>
+                    <label id="label-contact" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">WhatsApp Phone Number</label>
+                    <input type="text" id="sub-contact" placeholder="e.g., +254712345678" class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all">
+                </div>
+
+                <div>
+                    <label id="label-text" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Your Prayer Request <span class="text-brandYellow">*</span></label>
+                    <textarea id="sub-text" rows="5" required placeholder="Type your prayer request or burden here..." class="w-full bg-zinc-900 border border-zinc-800 rounded px-4 py-3 text-white text-sm focus:outline-none focus:border-brandYellow transition-all"></textarea>
+                </div>
+
+                <button type="submit" id="submit-btn" class="w-full bg-brandYellow text-black font-bold py-3.5 rounded text-sm hover:bg-yellow-400 transition-all shadow-lg">
+                    Submit Prayer Request &rarr;
+                </button>
+            </form>
+
+            <!-- Success State Notice -->
+            <div id="success-box" class="hidden text-center py-8 space-y-4">
+                <div class="w-12 h-12 bg-brandYellow/10 border border-brandYellow/30 text-brandYellow rounded-full flex items-center justify-center mx-auto text-xl font-bold">✓</div>
+                <h3 id="success-title" class="text-xl font-bold text-white">Prayer Request Received</h3>
+                <p id="success-desc" class="text-zinc-400 text-sm">Thank you for sharing. Our leadership team has received your burden securely and will stand with you in faith.</p>
+                <button onclick="resetForm()" class="mt-4 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold px-4 py-2 rounded transition-all border border-zinc-700">
+                    Submit Another Entry
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+        <div class="flex items-center gap-6">
+            <a href="index.html" class="hover:text-zinc-300">Home</a>
+            <a href="about.html" class="hover:text-zinc-300">About</a>
+            <a href="series.html" class="hover:text-zinc-300">Series</a>
+            <a href="insights.html" class="hover:text-zinc-300">Articles</a>
+            <a href="prayer.html" class="hover:text-zinc-300">Prayer & Q&A</a>
+        </div>
+    </div>
+</footer>
+
+<!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
     <ul class="grid grid-cols-4 gap-1 text-center">
         <li>
@@ -358,6 +204,115 @@
         </li>
     </ul>
 </nav>
+
+<!-- LOGIC & SANITY SCRIPT -->
+<script type="module">
+    import { createClient } from 'https://esm.sh/@sanity/client';
+
+    const client = createClient({
+        projectId: 'y4q1h6a9',
+        dataset: 'production',
+        useCdn: false, 
+        apiVersion: '2024-01-01',
+        token: 'skavACcZFPak5bTsnbX1tsWzMw4ZtMF7hXjp3fNbiUM21ZbHdxOoKSD1M2hCDIL91qzXcFeQZKYfNtNBV13Hy64dnGnTZQrlFfgUkS3c2pdG4ZVStXyyU3VvhESJ9R7PZtkoyDSIbpvcmIkVTN0XuUjXmCwaScdgYnPJbIJRJV1g37WemXXD'
+    });
+
+    let currentMode = 'prayer'; 
+
+    window.toggleContactInput = function() {
+        const channel = document.querySelector('input[name="preferredChannel"]:checked').value;
+        const labelContact = document.getElementById('label-contact');
+        const subContact = document.getElementById('sub-contact');
+
+        if (channel === 'whatsapp') {
+            labelContact.innerText = 'WhatsApp Phone Number';
+            subContact.placeholder = 'e.g., +254712345678';
+        } else {
+            labelContact.innerText = 'Email Address';
+            subContact.placeholder = 'e.g., name@example.com';
+        }
+    }
+
+    window.switchTab = function(mode) {
+        currentMode = mode;
+        const tabPrayer = document.getElementById('tab-prayer');
+        const tabQa = document.getElementById('tab-qa');
+        const labelText = document.getElementById('label-text');
+        const subText = document.getElementById('sub-text');
+        const submitBtn = document.getElementById('submit-btn');
+
+        if (mode === 'prayer') {
+            tabPrayer.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow";
+            tabQa.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white";
+            labelText.innerHTML = 'Your Prayer Request <span class="text-brandYellow">*</span>';
+            subText.placeholder = "Type your prayer request or burden here...";
+            submitBtn.innerText = "Submit Prayer Request →";
+        } else {
+            tabQa.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all bg-brandYellow text-black shadow";
+            tabPrayer.className = "py-2.5 text-xs font-bold uppercase tracking-wider rounded-md transition-all text-zinc-400 hover:text-white";
+            labelText.innerHTML = 'Your Question or Suggestion <span class="text-brandYellow">*</span>';
+            subText.placeholder = "Drop any anonymous question for our weekly Q&A or a ministry suggestion...";
+            submitBtn.innerText = "Submit Anonymous Question →";
+        }
+    }
+
+    const form = document.getElementById('submission-form');
+    const successBox = document.getElementById('success-box');
+    const submitBtn = document.getElementById('submit-btn');
+    const successTitle = document.getElementById('success-title');
+    const successDesc = document.getElementById('success-desc');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitBtn.innerText = 'Submitting securely...';
+        submitBtn.disabled = true;
+
+        const name = document.getElementById('sub-name').value.trim();
+        const preferredChannel = document.querySelector('input[name="preferredChannel"]:checked').value;
+        const contact = document.getElementById('sub-contact').value.trim();
+        const requestText = document.getElementById('sub-text').value.trim();
+
+        const docType = currentMode === 'prayer' ? 'prayerRequest' : 'questionBox';
+
+        try {
+            await client.create({
+                _type: docType,
+                name: name || 'Anonymous',
+                preferredChannel: preferredChannel,
+                contact: contact || 'Not provided',
+                requestText: requestText,
+                status: 'new',
+                submittedAt: new Date().toISOString()
+            });
+
+            form.classList.add('hidden');
+            if (currentMode === 'prayer') {
+                successTitle.innerText = "Prayer Request Received";
+                successDesc.innerText = "Thank you for sharing. Our leadership team has received your burden securely and will stand with you in faith.";
+            } else {
+                successTitle.innerText = "Question / Suggestion Received";
+                successDesc.innerText = "Thank you! Your anonymous input has been recorded and will help drive our upcoming weekly sessions.";
+            }
+            successBox.classList.remove('hidden');
+        } catch (err) {
+            console.log("Submission failed:", err);
+            alert("Failed to submit request. Please check your connection and try again.");
+            submitBtn.innerText = currentMode === 'prayer' ? 'Submit Prayer Request →' : 'Submit Anonymous Question →';
+            submitBtn.disabled = false;
+        }
+    });
+
+    window.resetForm = function() {
+        form.reset();
+        toggleContactInput();
+        successBox.classList.add('hidden');
+        form.classList.remove('hidden');
+        submitBtn.innerText = currentMode === 'prayer' ? 'Submit Prayer Request →' : 'Submit Anonymous Question →';
+        submitBtn.disabled = false;
+    }
+</script>
+
+<!-- PWA Management Script -->
 <script>
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
@@ -365,7 +320,6 @@ const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
 const installGate = document.getElementById('pwa-install-gate');
 const bottomNav = document.querySelector('.app-only-feature');
 
-// Explicitly handle layout based on install state
 if (isStandalone || isInstalledFlag) {
     document.body.classList.add('pwa-installed');
     if (installGate) installGate.style.setProperty('display', 'none', 'important');
@@ -405,7 +359,6 @@ if (installBtn) {
     });
 }
 
-// Fallback for Brave and privacy browsers that suppress the event
 setTimeout(() => {
     if (!deferredPrompt && !isStandalone && !isInstalledFlag && manualInstructions) {
         manualInstructions.style.display = 'block';
@@ -418,5 +371,16 @@ window.addEventListener('appinstalled', () => {
     if (installGate) installGate.style.setProperty('display', 'none', 'important');
     if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
 });
+</script>
+
+<!-- Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('Service Worker registered successfully!', reg))
+        .catch((err) => console.log('Service Worker registration failed:', err));
+    });
+  }
 </script>
 </html>
