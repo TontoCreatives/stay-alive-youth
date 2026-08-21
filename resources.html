@@ -1,96 +1,94 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <script>
-    // Instantly apply pwa-installed class if launched as PWA to prevent layout flash
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-        document.documentElement.classList.add('pwa-mode');
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.classList.add('pwa-installed');
-        });
-    }
+<meta charset="UTF-8">
+<script>
+// Instantly apply pwa-installed class if launched as PWA to prevent layout flash
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    document.documentElement.classList.add('pwa-mode');
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('pwa-installed');
+});
 </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resources & E-Reader | Stay Alive Fellowship</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brandYellow: '#FACC15',
-                        darkBg: '#09090b',
-                        cardBg: '#121214'
-                    }
-                }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources & E-Reader | Stay Alive Fellowship</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: {
+                brandYellow: '#FACC15',
+                darkBg: '#09090b',
+                cardBg: '#121214'
             }
         }
-    </script>
-    <!-- PDF.js Library CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    </script>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Mobile PDF Canvas Fixes - Ensures crisp rendering and prevents layout overflow */
-        #pdf-scroll-container canvas {
-            max-width: 100% !important;
-            height: auto !important;
-            display: block;
-            margin: 0 auto;
-        }
-        /* Custom sleek styling for audio/video cards with glassmorphism */
-        audio {
-            filter: invert(90%) hue-rotate(180deg);
-            height: 36px;
-            width: 100%;
-        }
-        .media-card-glass {
-            background: rgba(18, 18, 20, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-    </style>
-    <!-- Vercel Web Analytics -->
-    <script>
-        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link rel="manifest" href="manifest.json">
+    }
+}
+</script>
+<!-- PDF.js Library CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+</script>
+<link rel="stylesheet" href="style.css">
+<style>
+/* Mobile PDF Canvas Fixes - Ensures crisp rendering and prevents layout overflow */
+#pdf-scroll-container canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+}
+/* Custom sleek styling for audio/video cards with glassmorphism */
+audio {
+    filter: invert(90%) hue-rotate(180deg);
+    height: 36px;
+    width: 100%;
+}
+.media-card-glass {
+    background: rgba(18, 18, 20, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+</style>
+<!-- Vercel Web Analytics -->
+<script>
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FACC15">
 <script>
-    if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === 'true') {
-        document.documentElement.classList.add('pwa-mode');
-    }
+if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === 'true') {
+    document.documentElement.classList.add('pwa-mode');
+}
 </script>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
+
 <!-- PWA Install Gate Overlay -->
 <div id="pwa-install-gate" style="display: none; flex-direction: column; justify-content: center; align-items: center; background: #000000; color: #ffffff; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; padding: 20px; text-align: center;">
     <div style="max-width: 400px; padding: 30px; background: #121212; border: 1px solid #27272a; border-radius: 16px;">
         <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #ffffff;">Install Stay Alive Fellowship</h2>
         <p style="font-size: 14px; color: #a1a1aa; margin-bottom: 24px; line-height: 1.5;">Please install our application to unlock full access to resources, prayers, and events.</p>
-        
-        <button id="install-btn" style="background: #c9a000; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 12px;">Install App Now</button>
-        
-        <!-- Manual Fallback Instructions (Hidden by default, pops up on mobile when clicked) -->
-        <div id="manual-instructions" style="display: none; text-align: left; background: #1a1a1e; padding: 14px; border-radius: 8px; border: 1px solid #3f3f46; font-size: 13px; color: #d4d4d8; margin-top: 10px;">
-            <p style="font-weight: bold; color: #c9a000; margin-bottom: 6px;">To install on this device:</p>
+        <button id="install-btn" style="background: #eab308; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 12px;">Install App Now</button>
+        <!-- Manual Fallback Instructions -->
+        <div id="manual-instructions" style="display: none; text-align: left; background: #18181b; padding: 14px; border-radius: 8px; border: 1px solid #3f3f46; font-size: 13px; color: #d4d4d8; margin-top: 10px;">
+            <p style="font-weight: bold; color: #eab308; margin-bottom: 6px;">To install on this device:</p>
             <p style="margin-bottom: 4px;">1. Tap your browser menu (the 3 dots or share icon).</p>
             <p>2. Select <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong>.</p>
         </div>
     </div>
 </div>
-   
-    <!-- NAVIGATION BAR -->
+
+<!-- NAVIGATION BAR -->
 <header class="sticky top-0 z-50 bg-darkBg/70 backdrop-blur-xl border-b border-zinc-800/50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        
         <!-- Logo / Brand -->
         <a href="index.html" class="flex items-center gap-3">
             <img id="nav-logo" src="Banner%20images%20and%20logo/bible%20study%20logo.png" alt="Stay Alive Fellowship Logo" class="h-10 w-10 object-contain rounded">
@@ -99,7 +97,6 @@
                 <span class="text-brandYellow text-[10px] tracking-widest uppercase font-medium">Bible Study</span>
             </div>
         </a>
-
         <!-- Desktop Nav Links -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
             <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
@@ -110,479 +107,507 @@
             <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
             <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
         </nav>
-
     </div>
 </header>
 
-    <!-- PAGE HEADER -->
-    <section class="py-16 border-b border-zinc-900 bg-zinc-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Digital E-Reader & Study Room</span>
-            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Ministry Library</h1>
-            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                Explore curated e-books, study guides, audio messages, and theological notes. Filter by topic to dive right into what you need.
-            </p>
+<!-- PAGE HEADER -->
+<section class="py-16 border-b border-zinc-900 bg-zinc-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+        <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Digital E-Reader & Study Room</span>
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mt-4 mb-4">Ministry Library</h1>
+        <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+            Explore curated e-books, study guides, audio messages, and theological notes. Filter by topic to dive right into what you need.
+        </p>
+    </div>
+</section>
+
+<!-- SCRIPTURE SEARCH TOOL ADDED -->
+<section class="py-8 bg-zinc-950/60 border-b border-zinc-900">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-6">
+            <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Digital Study Tool</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 mb-2 tracking-tight">Scripture Search</h2>
+            <p class="text-zinc-400 text-sm">Type any reference (e.g., <span class="text-brandYellow">John 3:16</span> or <span class="text-brandYellow">Psalm 23</span>) to read instantly.</p>
         </div>
-    </section>
 
-    <!-- RESOURCES SECTION WITH CATEGORY FILTER TABS -->
-    <section class="py-16 bg-darkBg min-h-screen relative overflow-hidden">
-        <!-- Ambient Bokeh Glow Effect -->
-        <div class="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-brandYellow/5 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative z-10">
-            
-            <!-- Category Filter Bar (Horizontally Scrollable) -->
-           <div id="filter-container" class="flex overflow-x-auto space-x-2 pb-3 mb-8 no-scrollbar px-1 whitespace-nowrap">
-    <button data-category="all" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-brandYellow text-black shadow-lg shadow-brandYellow/10 backdrop-blur-md border border-brandYellow transition-all">All Resources</button>
-    <button data-category="media" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Audio & Video</button>
-    <button data-category="sunday-study" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Sunday Book Study</button>
-    <button data-category="thursday-midweek" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Thursday Midweek & Prayer</button>
-    <button data-category="theological" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Theological Foundations</button>
-    <button data-category="gospels" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Books of the Gospel</button>
-    <button data-category="relationships" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Relationships & Marriage</button>
-    <button data-category="apologetics" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Apologetics</button>
-    <button data-category="adulting" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Adulting & Discipleship</button>
-</div>
-
-            <!-- Sleek Search Bar with Backdrop Blur -->
-            <div class="mb-10 max-w-md mx-auto">
-                <div class="relative">
-                    <input type="text" id="resource-search" placeholder="Search resources by title, description..." class="w-full bg-zinc-900/80 backdrop-blur-md border border-zinc-800/80 rounded-xl px-4 py-3 pl-11 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-brandYellow transition-all shadow-inner">
-                    <svg class="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Resources Grid Container -->
-            <div id="resources-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="text-center text-zinc-500 py-12 col-span-full">Loading library catalog...</div>
-            </div>
+        <!-- Search Form -->
+        <div class="bg-zinc-900/90 border border-zinc-800 p-4 rounded-2xl shadow-xl backdrop-blur-xl mb-6">
+            <form id="bible-form" class="flex gap-3">
+                <input 
+                    type="text" 
+                    id="bible-input" 
+                    placeholder="Enter reference (e.g. Romans 8:28)..." 
+                    class="flex-grow bg-zinc-950 border border-zinc-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-brandYellow text-sm font-medium"
+                    required
+                >
+                <button 
+                    type="submit" 
+                    id="search-btn"
+                    class="bg-brandYellow text-black font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors text-sm shadow-md"
+                >
+                    Search
+                </button>
+            </form>
         </div>
-    </section>
 
-    <!-- INTERACTIVE E-READER MODAL -->
-    <div id="reader-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-6">
-        <div class="bg-cardBg border border-zinc-800 w-full max-w-4xl h-[90vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl">
-            
-            <!-- Modal Header -->
-            <div class="p-4 sm:p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-950 shrink-0">
-                <div>
-                    <span id="modal-category" class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-widest">E-Reader</span>
-                    <h2 id="modal-title" class="text-lg sm:text-xl font-bold text-white mt-1">Resource Title</h2>
-                </div>
-                <div class="flex items-center gap-4">
-                    <!-- PDF Page Counter -->
-                    <div id="pdf-pagination-info" class="hidden text-xs text-zinc-400">
-                        Page <span id="current-page-num" class="text-brandYellow font-bold">1</span> of <span id="total-page-num">--</span>
-                    </div>
-                    <button id="close-modal" class="text-zinc-400 hover:text-white p-2 text-3xl font-bold focus:outline-none">&times;</button>
-                </div>
+        <!-- Results Display Box -->
+        <div id="bible-result-container" class="bg-zinc-900/50 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 backdrop-blur-md min-h-[220px] shadow-2xl">
+            <div id="bible-placeholder" class="text-center text-zinc-500 py-12">
+                <p class="text-sm">Your searched passage will appear here.</p>
             </div>
-
-            <!-- Modal Body -->
-            <div id="modal-body" class="p-4 sm:p-10 overflow-y-auto flex-grow space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed">
-                <!-- Injected via Script -->
-            </div>
-
-            <!-- Modal Footer -->
-            <div id="modal-footer" class="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-950 flex items-center justify-between shrink-0 hidden">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-zinc-400">Scroll down to read continuously. Progress is saved automatically.</span>
+            <div id="bible-content" class="hidden">
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-4 mb-6">
+                    <h3 id="passage-reference" class="text-xl font-bold text-brandYellow tracking-tight"></h3>
+                    <span class="text-xs uppercase bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded font-semibold">Scripture</span>
                 </div>
-                <div class="ml-auto flex items-center gap-3">
-                    <a id="modal-download-btn" href="#" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold px-4 py-2 rounded text-xs transition-all flex items-center gap-2 hidden">
-                        <span>Download PDF</span> &darr;
-                    </a>
-                </div>
+                <div id="passage-text" class="text-zinc-200 text-base sm:text-lg leading-relaxed space-y-4 font-normal"></div>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- FOOTER -->
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
-            <div class="flex items-center gap-6">
-                <a href="index.html" class="hover:text-zinc-300">Home</a>
-                <a href="about.html" class="hover:text-zinc-300">About</a>
-                <a href="series.html" class="hover:text-zinc-300">Series</a>
-                <a href="prayer.html" class="hover:text-zinc-300">Prayer</a>
+<!-- RESOURCES SECTION WITH CATEGORY FILTER TABS -->
+<section class="py-16 bg-darkBg min-h-screen relative overflow-hidden">
+    <!-- Ambient Bokeh Glow Effect -->
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-brandYellow/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative z-10">
+        <!-- Category Filter Bar (Horizontally Scrollable) -->
+        <div id="filter-container" class="flex overflow-x-auto space-x-2 pb-3 mb-8 no-scrollbar px-1 whitespace-nowrap">
+            <button data-category="all" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-brandYellow text-black shadow-lg shadow-brandYellow/10 backdrop-blur-md border border-brandYellow transition-all">All Resources</button>
+            <button data-category="media" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Audio & Video</button>
+            <button data-category="sunday-study" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Sunday Book Study</button>
+            <button data-category="thursday-midweek" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Thursday Midweek & Prayer</button>
+            <button data-category="theological" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Theological Foundations</button>
+            <button data-category="gospels" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Books of the Gospel</button>
+            <button data-category="relationships" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Relationships & Marriage</button>
+            <button data-category="apologetics" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Apologetics</button>
+            <button data-category="adulting" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-zinc-900/80 text-zinc-300 border border-zinc-800/80 hover:border-brandYellow/50 backdrop-blur-md transition-all">Adulting & Discipleship</button>
+        </div>
+        <!-- Sleek Search Bar with Backdrop Blur -->
+        <div class="mb-10 max-w-md mx-auto">
+            <div class="relative">
+                <input type="text" id="resource-search" placeholder="Search resources by title, description..." class="w-full bg-zinc-900/80 backdrop-blur-md border border-zinc-800/80 rounded-xl px-4 py-3 pl-11 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-brandYellow transition-all shadow-inner">
+                <svg class="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
             </div>
         </div>
-    </footer>
+        <!-- Resources Grid Container -->
+        <div id="resources-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="text-center text-zinc-500 py-12 col-span-full">Loading library catalog...</div>
+        </div>
+    </div>
+</section>
 
-    <!-- SANITY FETCH & PDF.JS E-READER SCRIPT -->
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@sanity/client';
+<!-- INTERACTIVE E-READER MODAL -->
+<div id="reader-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-6">
+    <div class="bg-cardBg border border-zinc-800 w-full max-w-4xl h-[90vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+        <!-- Modal Header -->
+        <div class="p-4 sm:p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-950 shrink-0">
+            <div>
+                <span id="modal-category" class="text-brandYellow text-xs font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-widest">E-Reader</span>
+                <h2 id="modal-title" class="text-lg sm:text-xl font-bold text-white mt-1">Resource Title</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <!-- PDF Page Counter -->
+                <div id="pdf-pagination-info" class="hidden text-xs text-zinc-400">
+                    Page <span id="current-page-num" class="text-brandYellow font-bold">1</span> of <span id="total-page-num">--</span>
+                </div>
+                <button id="close-modal" class="text-zinc-400 hover:text-white p-2 text-3xl font-bold focus:outline-none">&times;</button>
+            </div>
+        </div>
+        <!-- Modal Body -->
+        <div id="modal-body" class="p-4 sm:p-10 overflow-y-auto flex-grow space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed">
+            <!-- Injected via Script -->
+        </div>
+        <!-- Modal Footer -->
+        <div id="modal-footer" class="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-950 flex items-center justify-between shrink-0 hidden">
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-zinc-400">Scroll down to read continuously. Progress is saved automatically.</span>
+            </div>
+            <div class="ml-auto flex items-center gap-3">
+                <a id="modal-download-btn" href="#" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold px-4 py-2 rounded text-xs transition-all flex items-center gap-2 hidden">
+                    <span>Download PDF</span> &darr;
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-        const client = createClient({
-            projectId: 'y4q1h6a9',
-            dataset: 'production',
-            useCdn: false, 
-            apiVersion: '2024-01-01',
-            token: 'skavACcZFPak5bTsnbX1tsWzMw4ZtMF7hXjp3fNbiUM21ZbHdxOoKSD1M2hCDIL91qzXcFeQZKYfNtNBV13Hy64dnGnTZQrlFfgUkS3c2pdG4ZVStXyyU3VvhESJ9R7PZtkoyDSIbpvcmIkVTN0XuUjXmCwaScdgYnPJbIJRJV1g37WemXXD'
+<!-- FOOTER -->
+<footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+        <div class="flex items-center gap-6">
+            <a href="index.html" class="hover:text-zinc-300">Home</a>
+            <a href="about.html" class="hover:text-zinc-300">About</a>
+            <a href="series.html" class="hover:text-zinc-300">Series</a>
+            <a href="prayer.html" class="hover:text-zinc-300">Prayer</a>
+        </div>
+    </div>
+</footer>
+
+<!-- SANITY FETCH & PDF.JS E-READER SCRIPT -->
+<script type="module">
+import { createClient } from 'https://esm.sh/@sanity/client';
+const client = createClient({
+    projectId: 'y4q1h6a9',
+    dataset: 'production',
+    useCdn: false,
+    apiVersion: '2024-01-01',
+    token: 'skavACcZFPak5bTsnbX1tsWzMw4ZtMF7hXjp3fNbiUM21ZbHdxOOKSD1M2hCDIL91qzXcFeQZKYfNtNBV13Hy64dnGnTZQrlFfgUkS3c2pdG4ZVStXyyU3VvhESJ9R7PZtkoyDSIbpvcmIkVTN0XuUjXmCwaScdgYnPJbIJRJV1g37WemXXD'
+});
+
+let pdfDoc = null,
+    scale = window.innerWidth < 768 ? 1.0 : 1.3,
+    currentBookKey = '',
+    isRestoringScroll = false,
+    allResources = [],
+    activeFilter = 'all',
+    searchQuery = '';
+
+function blocksToHtml(blocks) {
+    if (!blocks || !Array.isArray(blocks)) return '<p class="text-zinc-400">No content available for reading.</p>';
+    return blocks.map(block => {
+        if (block._type !== 'block' || !block.children) return '';
+        const text = block.children.map(child => child.text).join('');
+        if (block.style === 'h2') return `<h2 class="text-2xl font-bold text-white mt-6 mb-3">${text}</h2>`;
+        if (block.style === 'h3') return `<h3 class="text-xl font-bold text-brandYellow mt-4 mb-2">${text}</h3>`;
+        return `<p class="mb-4 text-zinc-300">${text}</p>`;
+    }).join('');
+}
+
+function formatCategoryName(catVal) {
+    switch(catVal) {
+        case 'sunday-study': return 'Sunday Book Study';
+        case 'thursday-midweek': return 'Thursday Midweek & Prayer';
+        case 'theological': return 'Theological Foundation';
+        case 'gospels': return 'Books of the Gospel';
+        case 'relationships': return 'Relationships & Marriage';
+        case 'apologetics': return 'Apologetics';
+        case 'adulting': return 'Adulting & Discipleship';
+        case 'media': return 'Audio & Video Message';
+        default: return 'General Resource';
+    }
+}
+
+function getYouTubeEmbedUrl(url) {
+    if (!url) return '';
+    let videoId = '';
+    if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    } else if (url.includes('watch?v=')) {
+        videoId = url.split('watch?v=')[1]?.split('&')[0];
+    } else if (url.includes('embed/')) {
+        videoId = url.split('embed/')[1]?.split('?')[0];
+    }
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+}
+
+function filterAndRenderResources() {
+    let filtered = allResources;
+    if (activeFilter !== 'all') {
+        filtered = filtered.filter(r => r.category === activeFilter);
+    }
+    if (searchQuery.trim() !== '') {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(r => {
+            const titleMatch = r.title && r.title.toLowerCase().includes(query);
+            const descMatch = r.shortDescription && r.shortDescription.toLowerCase().includes(query);
+            const trackMatch = r.trackName && r.trackName.toLowerCase().includes(query);
+            return titleMatch || descMatch || trackMatch;
         });
+    }
+    renderResources(filtered);
+}
 
-        let pdfDoc = null,
-            scale = window.innerWidth < 768 ? 1.0 : 1.3,
-            currentBookKey = '',
-            isRestoringScroll = false,
-            allResources = [],
-            activeFilter = 'all',
-            searchQuery = '';
-
-        function blocksToHtml(blocks) {
-            if (!blocks || !Array.isArray(blocks)) return '<p class="text-zinc-400">No content available for reading.</p>';
-            return blocks.map(block => {
-                if (block._type !== 'block' || !block.children) return '';
-                const text = block.children.map(child => child.text).join('');
-                if (block.style === 'h2') return `<h2 class="text-2xl font-bold text-white mt-6 mb-3">${text}</h2>`;
-                if (block.style === 'h3') return `<h3 class="text-xl font-bold text-brandYellow mt-4 mb-2">${text}</h3>`;
-                return `<p class="mb-4 text-zinc-300">${text}</p>`;
-            }).join('');
-        }
-
-        function formatCategoryName(catVal) {
-            switch(catVal) {
-                case 'sunday-study': return 'Sunday Book Study';
-                case 'thursday-midweek': return 'Thursday Midweek & Prayer';
-                case 'theological': return 'Theological Foundation';
-                case 'gospels': return 'Books of the Gospel';
-                case 'relationships': return 'Relationships & Marriage';
-                case 'apologetics': return 'Apologetics';
-                case 'adulting': return 'Adulting & Discipleship';
-                case 'media': return 'Audio & Video Message';
-                default: return 'General Resource';
-            }
-        }
-
-        function getYouTubeEmbedUrl(url) {
-            if (!url) return '';
-            let videoId = '';
-            if (url.includes('youtu.be/')) {
-                videoId = url.split('youtu.be/')[1]?.split('?')[0];
-            } else if (url.includes('watch?v=')) {
-                videoId = url.split('watch?v=')[1]?.split('&')[0];
-            } else if (url.includes('embed/')) {
-                videoId = url.split('embed/')[1]?.split('?')[0];
-            }
-            return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
-        }
-
-        function filterAndRenderResources() {
-            let filtered = allResources;
-
-            if (activeFilter !== 'all') {
-                filtered = filtered.filter(r => r.category === activeFilter);
-            }
-
-            if (searchQuery.trim() !== '') {
-                const query = searchQuery.toLowerCase();
-                filtered = filtered.filter(r => {
-                    const titleMatch = r.title && r.title.toLowerCase().includes(query);
-                    const descMatch = r.shortDescription && r.shortDescription.toLowerCase().includes(query);
-                    const trackMatch = r.trackName && r.trackName.toLowerCase().includes(query);
-                    return titleMatch || descMatch || trackMatch;
-                });
-            }
-
-            renderResources(filtered);
-        }
-
-        function renderResources(resourcesToRender) {
-            const container = document.getElementById('resources-container');
-            
-            if (!resourcesToRender || resourcesToRender.length === 0) {
-                container.innerHTML = `<div class="text-center text-zinc-500 py-12 col-span-full">No resources found matching your search or filter.</div>`;
-                return;
-            }
-
-            container.innerHTML = resourcesToRender.map((res) => {
-                const originalIndex = allResources.findIndex(r => r._id === res._id);
-                const categoryBadgeText = res.categoryLabel || formatCategoryName(res.category);
-
-                // Render Media Item
-                if (res.itemType === 'media') {
-                    const isAudio = res.mediaType === 'audio';
-                    let playerHtml = '';
-                    const ytEmbed = getYouTubeEmbedUrl(res.youtubeUrl);
-
-                    if (ytEmbed) {
-                        playerHtml = `<div class="mt-4 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 aspect-video">
-                                          <iframe src="${ytEmbed}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                      </div>`;
-                    } else if (res.fileUrl) {
-                        playerHtml = isAudio 
-                            ? `<div class="mt-4 bg-zinc-900/90 border border-zinc-800/80 p-3 rounded-xl flex items-center gap-3">
-                                   <div class="w-10 h-10 rounded-lg bg-brandYellow/10 flex items-center justify-center text-brandYellow shrink-0">
-                                       <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-                                   </div>
-                                   <audio controls src="${res.fileUrl}" class="w-full"></audio>
-                               </div>`
-                            : `<div class="mt-4 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
-                                   <video controls src="${res.fileUrl}" class="w-full max-h-52 object-cover"></video>
-                               </div>`;
-                    } else {
-                        playerHtml = `<div class="mt-4 bg-zinc-900/50 border border-zinc-800/60 p-3 rounded-xl text-xs text-zinc-500 italic">No media file uploaded or YouTube link provided yet.</div>`;
-                    }
-
-                    return `
-                        <div class="media-card-glass rounded-2xl p-6 flex flex-col justify-between transition-all shadow-2xl hover:border-brandYellow/40">
-                            <div>
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded-full border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
-                                    <span class="text-zinc-500 text-xs">${res.publishedAt ? new Date(res.publishedAt).toLocaleDateString() : ''}</span>
-                                </div>
-                                <h3 class="text-lg font-bold text-white mb-2 tracking-tight">${res.title}</h3>
-                                <p class="text-zinc-400 text-sm leading-relaxed line-clamp-2">${res.shortDescription || ''}</p>
-                            </div>
-                            <div>
-                                ${playerHtml}
-                            </div>
+function renderResources(resourcesToRender) {
+    const container = document.getElementById('resources-container');
+    if (!resourcesToRender || resourcesToRender.length === 0) {
+        container.innerHTML = '<div class="text-center text-zinc-500 py-12 col-span-full">No resources found matching your search or filter.</div>';
+        return;
+    }
+    container.innerHTML = resourcesToRender.map((res) => {
+        const originalIndex = allResources.findIndex(r => r._id === res._id);
+        const categoryBadgeText = res.categoryLabel || formatCategoryName(res.category);
+        
+        // Render Media Item
+        if (res.itemType === 'media') {
+            const isAudio = res.mediaType === 'audio';
+            let playerHtml = '';
+            const ytEmbed = getYouTubeEmbedUrl(res.youtubeUrl);
+            if (ytEmbed) {
+                playerHtml = `<div class="mt-4 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 aspect-video">
+                    <iframe src="${ytEmbed}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>`;
+            } else if (res.fileUrl) {
+                playerHtml = isAudio
+                    ? `<div class="mt-4 bg-zinc-900/90 border border-zinc-800/80 p-3 rounded-xl flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-brandYellow/10 flex items-center justify-center text-brandYellow shrink-0">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
                         </div>
-                    `;
-                }
-
-                // Default layout for regular text/PDF resources
-                return `
-                    <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
-                        <div>
-                            <div class="flex items-start justify-between gap-4 mb-4">
-                                <div>
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
-                                        ${res.trackName ? `<span class="text-zinc-500 text-xs">${res.trackName}</span>` : ''}
-                                    </div>
-                                    <h3 class="text-lg font-bold text-white mb-2">${res.title}</h3>
-                                </div>
-                                ${res.coverUrl ? `
-                                    <div class="w-16 h-20 bg-zinc-950 rounded border border-zinc-800 overflow-hidden shrink-0 shadow-md">
-                                        <img src="${res.coverUrl}" alt="${res.title}" class="w-full h-full object-cover object-center">
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <p class="text-zinc-400 text-sm leading-relaxed line-clamp-3 mb-4">${res.shortDescription || ''}</p>
-                        </div>
-                        <div class="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
-                            <span class="text-xs text-zinc-500 uppercase tracking-wider">${res.mode === 'PDF_Viewer' ? 'PDF E-Book' : 'Rich Text Notes'}</span>
-                            <button onclick="openEreaderModal(${originalIndex})" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all whitespace-nowrap">
-                                Read Online &rarr;
-                            </button>
-                        </div>
+                        <audio controls src="${res.fileUrl}" class="w-full"></audio>
+                    </div>`
+                    : `<div class="mt-4 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
+                        <video controls src="${res.fileUrl}" class="w-full max-h-52 object-cover"></video>
+                    </div>`;
+            } else {
+                playerHtml = `<div class="mt-4 bg-zinc-900/50 border border-zinc-800/60 p-3 rounded-xl text-xs text-zinc-500 italic">No media file uploaded or YouTube link provided yet.</div>`;
+            }
+            return `
+            <div class="media-card-glass rounded-2xl p-6 flex flex-col justify-between transition-all shadow-2xl hover:border-brandYellow/40">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded-full border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
+                        <span class="text-zinc-500 text-xs">${res.publishedAt ? new Date(res.publishedAt).toLocaleDateString() : ''}</span>
                     </div>
-                `;
-            }).join('');
+                    <h3 class="text-lg font-bold text-white mb-2 tracking-tight">${res.title}</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed line-clamp-2">${res.shortDescription || ''}</p>
+                </div>
+                <div>${playerHtml}</div>
+            </div>`;
         }
 
-        async function fetchResources() {
-            const container = document.getElementById('resources-container');
-            try {
-                const query = `{
-                    "resources": *[_type == "resource"]{
-                        title,
-                        category,
-                        categoryLabel,
-                        trackName,
-                        shortDescription,
-                        mode,
-                        fullContent,
-                        "pdfUrl": pdfFile.asset->url,
-                        "coverUrl": coverImage.asset->url,
-                        allowDownload,
-                        _id
-                    },
-                    "media": *[_type == "mediaItem"]{
-                        title,
-                        "slug": slug.current,
-                        mediaType,
-                        youtubeUrl,
-                        "fileUrl": mediaFile.asset->url,
-                        description,
-                        publishedAt,
-                        _id
-                    }
-                }`;
-                
-                const data = await client.fetch(query);
-                
-                const formattedResources = (data.resources || []).map(r => ({ ...r, itemType: 'resource' }));
-                const formattedMedia = (data.media || []).map(m => ({ 
-                    ...m, 
-                    itemType: 'media', 
-                    category: 'media', 
-                    categoryLabel: m.mediaType === 'audio' ? 'Audio Message' : 'Video Message',
-                    shortDescription: m.description
-                }));
+        // Default layout for regular text/PDF resources
+        return `
+        <div class="bg-cardBg rounded-xl border border-zinc-800 p-6 flex flex-col justify-between hover:border-brandYellow/50 transition-all shadow-xl">
+            <div>
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-brandYellow text-[11px] font-semibold bg-brandYellow/10 px-2.5 py-0.5 rounded border border-brandYellow/20 uppercase tracking-wider">${categoryBadgeText}</span>
+                            ${res.trackName ? `<span class="text-zinc-500 text-xs">${res.trackName}</span>` : ''}
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">${res.title}</h3>
+                    </div>
+                    ${res.coverUrl ? `
+                    <div class="w-16 h-20 bg-zinc-950 rounded border border-zinc-800 overflow-hidden shrink-0 shadow-md">
+                        <img src="${res.coverUrl}" alt="${res.title}" class="w-full h-full object-cover object-center">
+                    </div>
+                    ` : ''}
+                </div>
+                <p class="text-zinc-400 text-sm leading-relaxed line-clamp-3 mb-4">${res.shortDescription || ''}</p>
+            </div>
+            <div class="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
+                <span class="text-xs text-zinc-500 uppercase tracking-wider">${res.mode === 'PDF_Viewer' ? 'PDF E-Book' : 'Rich Text Notes'}</span>
+                <button onclick="openEreaderModal(${originalIndex})" class="bg-brandYellow text-black font-bold px-4 py-2 rounded text-xs hover:bg-yellow-400 transition-all whitespace-nowrap">
+                    Read Online &rarr;
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+}
 
-                allResources = [...formattedResources, ...formattedMedia];
-                window.appResources = allResources;
-
-                filterAndRenderResources();
-            } catch (err) {
-                console.error("Error fetching library resources:", err);
-                container.innerHTML = `<div class="text-center text-red-400 py-12 col-span-full">Failed to connect to library.</div>`;
+async function fetchResources() {
+    const container = document.getElementById('resources-container');
+    try {
+        const query = `{
+            "resources": *[_type == "resource"]{
+                title,
+                category,
+                categoryLabel,
+                trackName,
+                shortDescription,
+                mode,
+                fullContent,
+                "pdfUrl": pdfFile.asset->url,
+                "coverUrl": coverImage.asset->url,
+                allowDownload,
+                _id
+            },
+            "media": *[_type == "mediaItem"]{
+                title,
+                "slug": slug.current,
+                mediaType,
+                youtubeUrl,
+                "fileUrl": mediaFile.asset->url,
+                description,
+                publishedAt,
+                _id
             }
-        }
+        }`;
+        const data = await client.fetch(query);
+        const formattedResources = (data.resources || []).map(r => ({ ...r, itemType: 'resource' }));
+        const formattedMedia = (data.media || []).map(m => ({
+            ...m,
+            itemType: 'media',
+            category: 'media',
+            categoryLabel: m.mediaType === 'audio' ? 'Audio Message' : 'Video Message',
+            shortDescription: m.description
+        }));
+        allResources = [...formattedResources, ...formattedMedia];
+        window.appResources = allResources;
+        filterAndRenderResources();
+    } catch (err) {
+        console.error("Error fetching library resources:", err);
+        container.innerHTML = `<div class="text-center text-red-400 py-12 col-span-full">Failed to connect to library.</div>`;
+    }
+}
+fetchResources();
 
-        fetchResources();
+document.getElementById('resource-search').addEventListener('input', (e) => {
+    searchQuery = e.target.value;
+    filterAndRenderResources();
+});
 
-        document.getElementById('resource-search').addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            filterAndRenderResources();
-        });
 document.querySelectorAll('.category-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         document.querySelectorAll('.category-btn').forEach(b => {
             b.classList.remove('bg-brandYellow', 'text-black', 'font-bold', 'shadow-lg', 'shadow-brandYellow/10', 'border-brandYellow');
             b.classList.add('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800/80', 'backdrop-blur-md');
         });
-        
         e.target.classList.remove('bg-zinc-900/80', 'text-zinc-300', 'font-semibold', 'border', 'border-zinc-800/80');
         e.target.classList.add('bg-brandYellow', 'text-black', 'font-bold', 'shadow-lg', 'shadow-brandYellow/10', 'border', 'border-brandYellow', 'backdrop-blur-md');
-
         activeFilter = e.target.dataset.category;
         filterAndRenderResources();
     });
 });
 
-        window.openEreaderModal = function(index) {
-            const res = window.appResources[index];
-            if (!res || res.itemType === 'media') return;
+window.openEreaderModal = function(index) {
+    const res = window.appResources[index];
+    if (!res || res.itemType === 'media') return;
+    document.getElementById('modal-category').innerText = res.categoryLabel || formatCategoryName(res.category);
+    document.getElementById('modal-title').innerText = res.title;
+    const modalBody = document.getElementById('modal-body');
+    const modalFooter = document.getElementById('modal-footer');
+    const paginationInfo = document.getElementById('pdf-pagination-info');
+    const downloadBtn = document.getElementById('modal-download-btn');
+    modalFooter.classList.remove('hidden');
 
-            document.getElementById('modal-category').innerText = res.categoryLabel || formatCategoryName(res.category);
-            document.getElementById('modal-title').innerText = res.title;
+    if (res.mode === 'PDF_Viewer' && res.pdfUrl) {
+        modalBody.innerHTML = `
+        <div id="pdf-scroll-container" class="w-full h-full min-h-[65vh] bg-zinc-900/60 rounded-xl border border-zinc-800 flex flex-col items-center p-2 sm:p-4 overflow-y-auto space-y-6">
+            <div class="text-zinc-400 text-sm py-12">Loading document pages...</div>
+        </div>
+        `;
+        paginationInfo.classList.remove('hidden');
+        currentBookKey = `saf_scroll_progress_${res._id || index}`;
+        pdfjsLib.getDocument(res.pdfUrl).promise.then(async function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('total-page-num').textContent = pdfDoc.numPages;
+            const scrollContainer = document.getElementById('pdf-scroll-container');
+            scrollContainer.innerHTML = '';
+            
+            for (let i = 1; i <= pdfDoc.numPages; i++) {
+                const pageWrapper = document.createElement('div');
+                pageWrapper.className = 'flex flex-col items-center relative shadow-2xl rounded bg-white overflow-hidden shrink-0 w-full max-w-full';
+                pageWrapper.dataset.pageNum = i;
+                const canvas = document.createElement('canvas');
+                pageWrapper.appendChild(canvas);
+                scrollContainer.appendChild(pageWrapper);
 
-            const modalBody = document.getElementById('modal-body');
-            const modalFooter = document.getElementById('modal-footer');
-            const paginationInfo = document.getElementById('pdf-pagination-info');
-            const downloadBtn = document.getElementById('modal-download-btn');
+                const page = await pdfDoc.getPage(i);
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                canvas.style.width = '100%';
+                canvas.style.height = 'auto';
+                await page.render({
+                    canvasContext: canvas.getContext('2d'),
+                    viewport: viewport
+                }).promise;
+            }
 
-            modalFooter.classList.remove('hidden');
+            isRestoringScroll = true;
+            const savedScroll = localStorage.getItem(currentBookKey);
+            if (savedScroll) {
+                scrollContainer.scrollTop = parseFloat(savedScroll);
+            }
+            setTimeout(() => { isRestoringScroll = false; }, 300);
 
-            if (res.mode === 'PDF_Viewer' && res.pdfUrl) {
-                modalBody.innerHTML = `
-                    <div id="pdf-scroll-container" class="w-full h-full min-h-[65vh] bg-zinc-900/60 rounded-xl border border-zinc-800 flex flex-col items-center p-2 sm:p-4 overflow-y-auto space-y-6">
-                        <div class="text-zinc-400 text-sm py-12">Loading document pages...</div>
-                    </div>
-                `;
-                paginationInfo.classList.remove('hidden');
-
-                currentBookKey = `saf_scroll_progress_${res._id || index}`;
-
-                pdfjsLib.getDocument(res.pdfUrl).promise.then(async function(pdfDoc_) {
-                    pdfDoc = pdfDoc_;
-                    document.getElementById('total-page-num').textContent = pdfDoc.numPages;
-                    
-                    const scrollContainer = document.getElementById('pdf-scroll-container');
-                    scrollContainer.innerHTML = ''; 
-
-                    for (let i = 1; i <= pdfDoc.numPages; i++) {
-                        const pageWrapper = document.createElement('div');
-                        pageWrapper.className = 'flex flex-col items-center relative shadow-2xl rounded bg-white overflow-hidden shrink-0 w-full max-w-full';
-                        pageWrapper.dataset.pageNum = i;
-
-                        const canvas = document.createElement('canvas');
-                        pageWrapper.appendChild(canvas);
-                        scrollContainer.appendChild(pageWrapper);
-
-                        const page = await pdfDoc.getPage(i);
-                        const viewport = page.getViewport({ scale: scale });
-                        
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        canvas.style.width = '100%';
-                        canvas.style.height = 'auto';
-
-                        await page.render({
-                            canvasContext: canvas.getContext('2d'),
-                            viewport: viewport
-                        }).promise;
+            scrollContainer.addEventListener('scroll', () => {
+                if (isRestoringScroll) return;
+                localStorage.setItem(currentBookKey, scrollContainer.scrollTop);
+                const pages = scrollContainer.querySelectorAll('[data-page-num]');
+                let activePage = 1;
+                pages.forEach(p => {
+                    const rect = p.getBoundingClientRect();
+                    const containerRect = scrollContainer.getBoundingClientRect();
+                    if (rect.top - containerRect.top <= containerRect.height / 2) {
+                        activePage = p.dataset.pageNum;
                     }
-
-                    isRestoringScroll = true;
-                    const savedScroll = localStorage.getItem(currentBookKey);
-                    if (savedScroll) {
-                        scrollContainer.scrollTop = parseFloat(savedScroll);
-                    }
-                    setTimeout(() => { isRestoringScroll = false; }, 300);
-
-                    scrollContainer.addEventListener('scroll', () => {
-                        if (isRestoringScroll) return;
-                        localStorage.setItem(currentBookKey, scrollContainer.scrollTop);
-
-                        const pages = scrollContainer.querySelectorAll('[data-page-num]');
-                        let activePage = 1;
-                        pages.forEach(p => {
-                            const rect = p.getBoundingClientRect();
-                            const containerRect = scrollContainer.getBoundingClientRect();
-                            if (rect.top - containerRect.top <= containerRect.height / 2) {
-                                activePage = p.dataset.pageNum;
-                            }
-                        });
-                        document.getElementById('current-page-num').textContent = activePage;
-                    });
                 });
-
-            } else {
-                modalBody.innerHTML = blocksToHtml(res.fullContent);
-                paginationInfo.classList.add('hidden');
-                pdfDoc = null;
-            }
-
-            if (res.allowDownload && res.pdfUrl) {
-                downloadBtn.href = res.pdfUrl;
-                downloadBtn.classList.remove('hidden');
-            } else {
-                downloadBtn.classList.add('hidden');
-            }
-
-            document.getElementById('reader-modal').classList.remove('hidden');
-        };
-
-        function closeModal() {
-            document.getElementById('reader-modal').classList.add('hidden');
-            document.getElementById('modal-body').innerHTML = '';
-            pdfDoc = null;
-        }
-
-        document.getElementById('close-modal').addEventListener('click', closeModal);
-
-        document.getElementById('reader-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'reader-modal') {
-                closeModal();
-            }
+                document.getElementById('current-page-num').textContent = activePage;
+            });
         });
-    </script>
+    } else {
+        modalBody.innerHTML = blocksToHtml(res.fullContent);
+        paginationInfo.classList.add('hidden');
+        pdfDoc = null;
+    }
 
-    <script>
-        const btn = document.getElementById('menu-btn');
-        const menu = document.getElementById('mobile-menu');
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
-    <!-- PWA Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('Service Worker registered successfully!', reg))
-        .catch((err) => console.log('Service Worker registration failed:', err));
-    });
-  }
+    if (res.allowDownload && res.pdfUrl) {
+        downloadBtn.href = res.pdfUrl;
+        downloadBtn.classList.remove('hidden');
+    } else {
+        downloadBtn.classList.add('hidden');
+    }
+    document.getElementById('reader-modal').classList.remove('hidden');
+};
+
+function closeModal() {
+    document.getElementById('reader-modal').classList.add('hidden');
+    document.getElementById('modal-body').innerHTML = '';
+    pdfDoc = null;
+}
+
+document.getElementById('close-modal').addEventListener('click', closeModal);
+document.getElementById('reader-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'reader-modal') {
+        closeModal();
+    }
+});
 </script>
-<!-- PWA Update Banner (Hidden by default) -->
-<div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
-    <div>
-        <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
-        <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
-    </div>
-    <button onclick="window.location.reload()" class="bg-brandYellow text-black text-xs font-bold px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
-        Refresh
-    </button>
-</div>
+
+<!-- SCRIPTURE SEARCH LOGIC SCRIPT -->
+<script>
+    const bibleForm = document.getElementById('bible-form');
+    const bibleInput = document.getElementById('bible-input');
+    const biblePlaceholder = document.getElementById('bible-placeholder');
+    const bibleContentBox = document.getElementById('bible-content');
+    const refTitle = document.getElementById('passage-reference');
+    const passageText = document.getElementById('passage-text');
+    const searchBtn = document.getElementById('search-btn');
+
+    if (bibleForm) {
+        bibleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = bibleInput.value.trim();
+            if (!query) return;
+
+            searchBtn.textContent = 'Searching...';
+            searchBtn.disabled = true;
+
+            try {
+                const response = await fetch(`https://bible-api.com/${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    biblePlaceholder.style.display = 'block';
+                    bibleContentBox.classList.add('hidden');
+                    biblePlaceholder.innerHTML = `<p class="text-red-400 font-medium">Could not find reference. Check your spelling (e.g., John 3:16).</p>`;
+                } else {
+                    biblePlaceholder.style.display = 'none';
+                    bibleContentBox.classList.remove('hidden');
+                    refTitle.textContent = data.reference;
+                    
+                    passageText.innerHTML = data.verses.map(v => 
+                        `<span class="text-brandYellow text-xs font-bold mr-2 select-none align-super">${v.verse}</span>${v.text}`
+                    ).join(' ');
+                }
+            } catch (err) {
+                console.error("Bible fetch error:", err);
+                biblePlaceholder.style.display = 'block';
+                bibleContentBox.classList.add('hidden');
+                biblePlaceholder.innerHTML = `<p class="text-red-400">Network error. Please check your connection.</p>`;
+            } finally {
+                searchBtn.textContent = 'Search';
+                searchBtn.disabled = false;
+            }
+        });
+    }
+</script>
+
 <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
 <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/85 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
     <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
@@ -612,31 +637,30 @@ document.querySelectorAll('.category-btn').forEach(btn => {
         </li>
     </ul>
 </nav>
+
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const currentPath = window.location.pathname.split("/").pop() || "index.html";
-    const navLinks = document.querySelectorAll('.app-only-feature a, nav a'); // Adjust selector to match your bottom nav links
-    
+    const navLinks = document.querySelectorAll('.app-only-feature a, nav a');
     navLinks.forEach(link => {
-      const href = link.getAttribute('href');
-      if (href === currentPath || (currentPath === "" && href === "index.html")) {
-        link.classList.add('text-brandYellow', 'font-bold');
-        link.classList.remove('text-zinc-400', 'text-zinc-500');
-      } else {
-        link.classList.remove('text-brandYellow', 'font-bold');
-        link.classList.add('text-zinc-400'); // Your inactive text color
-      }
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath === "" && href === "index.html")) {
+            link.classList.add('text-brandYellow', 'font-bold');
+            link.classList.remove('text-zinc-400', 'text-zinc-500');
+        } else {
+            link.classList.remove('text-brandYellow', 'font-bold');
+            link.classList.add('text-zinc-400');
+        }
     });
-  });
+});
 </script>
+
 <script>
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
-
 const installGate = document.getElementById('pwa-install-gate');
 const bottomNav = document.querySelector('.app-only-feature');
 
-// Explicitly handle layout based on install state
 if (isStandalone || isInstalledFlag) {
     document.body.classList.add('pwa-installed');
     if (installGate) installGate.style.setProperty('display', 'none', 'important');
@@ -651,35 +675,33 @@ let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    const installBtn = document.getElementById('install-btn');
+    const manualInstructions = document.getElementById('manual-instructions');
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    localStorage.setItem('pwa_installed', 'true');
+                    document.body.classList.add('pwa-installed');
+                    if (installGate) installGate.style.setProperty('display', 'none', 'important');
+                    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
+                }
+                deferredPrompt = null;
+            } else {
+                if (manualInstructions) {
+                    manualInstructions.style.display = manualInstructions.style.display === 'block' ? 'none' : 'block';
+                }
+            }
+        });
+    }
 });
 
-const installBtn = document.getElementById('install-btn');
-const manualInstructions = document.getElementById('manual-instructions');
-
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                localStorage.setItem('pwa_installed', 'true');
-                document.body.classList.add('pwa-installed');
-                if (installGate) installGate.style.setProperty('display', 'none', 'important');
-                if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
-            }
-            deferredPrompt = null;
-        } else {
-            if (manualInstructions) {
-                manualInstructions.style.display = manualInstructions.style.display === 'block' ? 'none' : 'block';
-            }
-        }
-    });
-}
-
-// Fallback for Brave and privacy browsers that suppress the event
 setTimeout(() => {
-    if (!deferredPrompt && !isStandalone && !isInstalledFlag && manualInstructions) {
-        manualInstructions.style.display = 'block';
+    if (!deferredPrompt && !isStandalone && !isInstalledFlag) {
+        const manualInstructions = document.getElementById('manual-instructions');
+        if (manualInstructions) manualInstructions.style.display = 'block';
     }
 }, 1500);
 
