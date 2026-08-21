@@ -560,7 +560,8 @@
                     if (events.length === 0) {
                         eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
                         return;
- eventsContainer.innerHTML = events.map(event => {
+                    }
+eventsContainer.innerHTML = events.map(event => {
         return `
             <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
                 <div>
