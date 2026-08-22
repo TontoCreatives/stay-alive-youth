@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Inject Floating Encouragement Card globally
+  // Inject Floating Encouragement Card globally (Fixed mobile positioning)
   const floatingHTML = `
-    <div id="floating-encouragement" class="fixed bottom-6 right-6 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all">
+    <div id="floating-encouragement" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all">
       <div class="flex items-center space-x-3">
         <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">U</div>
         <div class="overflow-hidden">
