@@ -410,7 +410,7 @@ async function clearEncouragementData() {
 }
 
 // ==========================================
-// 4. COMMUNITY FELLOWSHIP FEED LOGIC
+// 4. COMMUNITY FELLOWSHIP FEED LOGIC (W/ ADMIN OVERRIDE)
 // ==========================================
 async function loadCommunityFeed() {
   const container = document.getElementById('community-feed-container');
@@ -440,7 +440,13 @@ async function loadCommunityFeed() {
 
     let html = '';
     const session = await supabaseClient.auth.getSession();
-    const currentUserId = session.data.session?.user?.id;
+    const currentUser = session.data.session?.user;
+    const currentUserId = currentUser?.id;
+    const currentUserEmail = currentUser?.email;
+
+    // Admin email override set to your account for immediate moderation privileges
+    const ADMIN_EMAIL = 'mutahitony28@gmail.com';
+    const isAdmin = currentUserEmail === ADMIN_EMAIL;
 
     for (const post of posts) {
       const { data: comments } = await supabaseClient
@@ -453,7 +459,7 @@ async function loadCommunityFeed() {
         ? `<img src="${post.avatar_url}" alt="Avatar" class="w-full h-full object-cover">`
         : (post.author_name || 'U').charAt(0).toUpperCase();
 
-      const isOwner = currentUserId === post.user_id;
+      const canDeletePost = (currentUserId === post.user_id) || isAdmin;
 
       html += `
         <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-2xl space-y-3 shadow-lg">
@@ -465,7 +471,7 @@ async function loadCommunityFeed() {
                 <p class="text-[10px] text-zinc-500">${new Date(post.created_at).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}</p>
               </div>
             </div>
-            ${isOwner ? `<button onclick="deleteCommunityPost('${post.id}')" class="text-zinc-500 hover:text-red-400 text-xs p-1 cursor-pointer" title="Delete post">🗑️</button>` : ''}
+            ${canDeletePost ? `<button onclick="deleteCommunityPost('${post.id}')" class="text-zinc-500 hover:text-red-400 text-xs p-1 cursor-pointer" title="Delete post">🗑️</button>` : ''}
           </div>
 
           ${post.verse_ref ? `<div class="inline-block px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">📖 ${post.verse_ref}</div>` : ''}
@@ -481,15 +487,18 @@ async function loadCommunityFeed() {
           <!-- Comments Thread -->
           <div class="space-y-2 pt-2">
             <div class="space-y-1.5 max-h-40 overflow-y-auto">
-              ${(comments || []).map(c => `
-                <div class="bg-zinc-950/60 border border-zinc-800/50 p-2.5 rounded-xl text-xs space-y-0.5">
-                  <div class="flex items-center justify-between">
-                    <span class="font-bold text-emerald-400 text-[11px]">${c.author_name}</span>
-                    ${currentUserId === c.user_id ? `<button onclick="deleteComment('${c.id}')" class="text-zinc-600 hover:text-red-400 text-[10px] cursor-pointer">✕</button>` : ''}
+              ${(comments || []).map(c => {
+                const canDeleteComment = (currentUserId === c.user_id) || isAdmin;
+                return `
+                  <div class="bg-zinc-950/60 border border-zinc-800/50 p-2.5 rounded-xl text-xs space-y-0.5">
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-emerald-400 text-[11px]">${c.author_name}</span>
+                      ${canDeleteComment ? `<button onclick="deleteComment('${c.id}')" class="text-zinc-600 hover:text-red-400 text-[10px] cursor-pointer">✕</button>` : ''}
+                    </div>
+                    <p class="text-zinc-300 text-[11px]">${c.comment_text}</p>
                   </div>
-                  <p class="text-zinc-300 text-[11px]">${c.comment_text}</p>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
             </div>
             
             <div class="flex gap-2 pt-1">
