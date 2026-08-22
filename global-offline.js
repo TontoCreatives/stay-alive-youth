@@ -141,9 +141,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize Auth & Presence
+  // Initialize Auth & Presence & Community Feed
   if (supabaseClient) {
     initAuthSession();
+    loadCommunityFeed();
   }
 });
 
@@ -154,6 +155,14 @@ function openProfileModal() {
 
 function closeProfileModal() {
   document.getElementById('profile-modal')?.classList.add('hidden');
+}
+
+function openNewPostModal() {
+  document.getElementById('post-modal')?.classList.remove('hidden');
+}
+
+function closeNewPostModal() {
+  document.getElementById('post-modal')?.classList.add('hidden');
 }
 
 // Supabase Session Logic & Presence Tracker
@@ -333,7 +342,7 @@ async function saveProfileChanges() {
     alert('Profile updated successfully!');
     document.getElementById('modal-user-name').textContent = newName;
     closeProfileModal();
-    window.location.reload(); // Refresh to apply presence settings instantly
+    window.location.reload();
   }
 }
 
@@ -360,4 +369,196 @@ async function clearEncouragementData() {
     alert('Encouragement cleared!');
     closeProfileModal();
   }
+}
+
+// ==========================================
+// 2. COMMUNITY FELLOWSHIP FEED LOGIC
+// ==========================================
+async function loadCommunityFeed() {
+  const container = document.getElementById('community-feed-container');
+  if (!container || !supabaseClient) return;
+
+  try {
+    const { data: posts, error } = await supabaseClient
+      .from('community_posts')
+      .select('*')
+      .eq('is_public', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      container.innerHTML = `<p class="text-center text-xs text-red-400 py-6">Failed to load community feed.</p>`;
+      return;
+    }
+
+    if (!posts || posts.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl">
+          <p class="text-zinc-400 text-xs font-medium">No community insights shared yet.</p>
+          <p class="text-zinc-600 text-[11px] mt-1">Be the first to share what God is teaching you!</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    const session = await supabaseClient.auth.getSession();
+    const currentUserId = session.data.session?.user?.id;
+
+    for (const post of posts) {
+      const { data: comments } = await supabaseClient
+        .from('post_comments')
+        .select('*')
+        .eq('post_id', post.id)
+        .order('created_at', { ascending: true });
+
+      const avatarContent = post.avatar_url 
+        ? `<img src="${post.avatar_url}" alt="Avatar" class="w-full h-full object-cover">`
+        : (post.author_name || 'U').charAt(0).toUpperCase();
+
+      const isOwner = currentUserId === post.user_id;
+
+      html += `
+        <div class="bg-zinc-900/80 border border-zinc-800 p-4 rounded-2xl space-y-3 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">${avatarContent}</div>
+              <div>
+                <h4 class="text-white text-xs font-bold">${post.author_name}</h4>
+                <p class="text-[10px] text-zinc-500">${new Date(post.created_at).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}</p>
+              </div>
+            </div>
+            ${isOwner ? `<button onclick="deleteCommunityPost('${post.id}')" class="text-zinc-500 hover:text-red-400 text-xs p-1 cursor-pointer" title="Delete post">🗑️</button>` : ''}
+          </div>
+
+          ${post.verse_ref ? `<div class="inline-block px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">📖 ${post.verse_ref}</div>` : ''}
+          
+          <p class="text-zinc-200 text-xs leading-relaxed whitespace-pre-wrap">${post.post_text}</p>
+
+          <div class="flex items-center gap-4 pt-2 border-t border-zinc-800/60 text-xs text-zinc-400">
+            <button onclick="incrementLikes('${post.id}', ${post.likes_count || 0})" class="flex items-center gap-1.5 hover:text-emerald-400 transition-colors cursor-pointer">
+              <span>🙏</span> <span>Amen (<strong class="text-white">${post.likes_count || 0}</strong>)</span>
+            </button>
+          </div>
+
+          <!-- Comments Thread -->
+          <div class="space-y-2 pt-2">
+            <div class="space-y-1.5 max-h-40 overflow-y-auto">
+              ${(comments || []).map(c => `
+                <div class="bg-zinc-950/60 border border-zinc-800/50 p-2.5 rounded-xl text-xs space-y-0.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-emerald-400 text-[11px]">${c.author_name}</span>
+                    ${currentUserId === c.user_id ? `<button onclick="deleteComment('${c.id}')" class="text-zinc-600 hover:text-red-400 text-[10px] cursor-pointer">✕</button>` : ''}
+                  </div>
+                  <p class="text-zinc-300 text-[11px]">${c.comment_text}</p>
+                </div>
+              `).join('')}
+            </div>
+            
+            <div class="flex gap-2 pt-1">
+              <input type="text" id="comment-input-${post.id}" placeholder="Write an encouraging reply..." class="flex-1 px-3 py-1.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+              <button onclick="submitComment('${post.id}')" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-xs rounded-xl transition-all cursor-pointer">Reply</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
+  } catch (err) {
+    console.error('Error loading community feed:', err);
+  }
+}
+
+async function submitCommunityPost() {
+  const verseRef = document.getElementById('post-verse-input').value.trim();
+  const postText = document.getElementById('post-text-input').value.trim();
+  const isPublic = document.getElementById('post-public-toggle').checked;
+
+  if (!postText) {
+    alert('Please write something before publishing.');
+    return;
+  }
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    alert('Please sign in to share insights with the community.');
+    openProfileModal();
+    return;
+  }
+
+  const user = session.user;
+  const authorName = user.user_metadata?.full_name || user.email.split('@')[0];
+  const avatarUrl = user.user_metadata?.avatar_url || '';
+
+  const { error } = await supabaseClient.from('community_posts').insert({
+    user_id: user.id,
+    author_name: authorName,
+    avatar_url: avatarUrl,
+    verse_ref: verseRef,
+    post_text: postText,
+    is_public: isPublic,
+    likes_count: 0
+  });
+
+  if (error) {
+    alert('Failed to publish post: ' + error.message);
+  } else {
+    closeNewPostModal();
+    document.getElementById('post-verse-input').value = '';
+    document.getElementById('post-text-input').value = '';
+    loadCommunityFeed();
+  }
+}
+
+async function incrementLikes(postId, currentCount) {
+  if (!supabaseClient) return;
+  const { error } = await supabaseClient
+    .from('community_posts')
+    .update({ likes_count: currentCount + 1 })
+    .eq('id', postId);
+
+  if (!error) loadCommunityFeed();
+}
+
+async function submitComment(postId) {
+  const inputEl = document.getElementById(`comment-input-${postId}`);
+  const commentText = inputEl?.value.trim();
+  if (!commentText) return;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    alert('Please sign in to leave a comment.');
+    openProfileModal();
+    return;
+  }
+
+  const user = session.user;
+  const authorName = user.user_metadata?.full_name || user.email.split('@')[0];
+  const avatarUrl = user.user_metadata?.avatar_url || '';
+
+  const { error } = await supabaseClient.from('post_comments').insert({
+    post_id: postId,
+    user_id: user.id,
+    author_name: authorName,
+    avatar_url: avatarUrl,
+    comment_text: commentText
+  });
+
+  if (error) {
+    alert('Failed to post comment: ' + error.message);
+  } else {
+    inputEl.value = '';
+    loadCommunityFeed();
+  }
+}
+
+async function deleteCommunityPost(postId) {
+  if (!confirm('Are you sure you want to delete this post?')) return;
+  await supabaseClient.from('community_posts').delete().eq('id', postId);
+  loadCommunityFeed();
+}
+
+async function deleteComment(commentId) {
+  await supabaseClient.from('post_comments').delete().eq('id', commentId);
+  loadCommunityFeed();
 }
