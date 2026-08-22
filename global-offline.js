@@ -31,19 +31,22 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Inject Floating Encouragement Card globally (Fixed mobile positioning)
+  // Inject Floating Encouragement Card right below the header with glass effect
   const floatingHTML = `
-    <div id="floating-encouragement" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all">
-      <div class="flex items-center space-x-3">
-        <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">U</div>
-        <div class="overflow-hidden">
-          <h4 id="floating-name" class="text-[10px] font-semibold text-zinc-400 truncate">Encouragement</h4>
-          <p id="floating-verse" class="text-xs text-white italic truncate">"..."</p>
+    <div id="floating-encouragement" class="max-w-2xl mx-auto px-4 pt-3 hidden transition-all z-30 relative">
+      <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/80 p-3.5 rounded-2xl shadow-xl flex items-center justify-between">
+        <div class="flex items-center space-x-3 overflow-hidden">
+          <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">U</div>
+          <div class="overflow-hidden">
+            <h4 id="floating-name" class="text-[10px] font-semibold text-zinc-400 truncate">Encouragement</h4>
+            <p id="floating-verse" class="text-xs text-white italic truncate">"..."</p>
+          </div>
         </div>
+        <span class="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/20 shrink-0 ml-2">Daily Word</span>
       </div>
     </div>
   `;
-  document.body.insertAdjacentHTML('beforeend', floatingHTML);
+  document.body.insertAdjacentHTML('afterbegin', floatingHTML);
 
   // Inject Profile Modal Overlay (with Favorite Verse field)
   const modalHTML = `
