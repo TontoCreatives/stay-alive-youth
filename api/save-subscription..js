@@ -8,7 +8,7 @@ const client = createClient({
   token: process.env.SANITY_WRITE_TOKEN
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ message: 'Method Not Allowed' });
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     const response = await client.create(doc);
     return res.status(200).json({ success: true, id: response._id });
   } catch (err) {
-    console.error('Error saving subscription to Sanity:', err);
-    return res.status(500).json({ error: 'Failed to save subscription' });
+    console.error('Detailed Error saving subscription to Sanity:', err.message);
+    return res.status(500).json({ error: err.message });
   }
-}
+};
