@@ -1,4 +1,4 @@
-// 3. Global Push Notification Handler
+// 3. Global Push Notification Handler & Startup Check
 const publicVapidKey = 'BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k';
 
 function urlBase64ToUint8Array(base64String) {
@@ -11,6 +11,24 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
+
+// Check on startup: If already subscribed, hide the entire prompt box instantly
+(async function checkExistingSubscription() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.getSubscription();
+    
+    const promptBox = document.getElementById('notification-prompt-box');
+    
+    if (subscription && promptBox) {
+      promptBox.style.display = 'none'; // Hides the box completely so it never nags them again
+    }
+  } catch (err) {
+    console.error('Error checking existing subscription:', err);
+  }
+})();
 
 async function subscribeToPushNotifications() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
@@ -48,13 +66,10 @@ async function subscribeToPushNotifications() {
       body: JSON.stringify(subscription),
     });
 
-    // Update button visually instead of showing a cheap alert box
-    const btn = document.querySelector('button[onclick*="subscribeToPushNotifications"]');
-    if (btn) {
-      btn.textContent = 'Notifications Enabled ✓';
-      btn.classList.remove('bg-brandYellow', 'text-zinc-950');
-      btn.classList.add('bg-emerald-600', 'text-white');
-      btn.disabled = true;
+    // Hide the prompt box smoothly after successful subscription
+    const promptBox = document.getElementById('notification-prompt-box');
+    if (promptBox) {
+      promptBox.style.display = 'none';
     }
     
     return subscription;
