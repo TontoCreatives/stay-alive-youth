@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check and hide notification prompt box if permission is already granted/denied
   checkNotificationPermissionState();
 
-  // Inject Global Header with Active Online Indicator
+  // Inject Global Header with Active Online Indicator Badge (Always visible for all users)
   const headerHTML = `
     <header class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
       <a href="/" class="flex items-center gap-2">
@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </a>
       <div class="flex items-center gap-3">
-        <!-- Live Online Counter Badge -->
-        <div id="online-counter-badge" class="hidden sm:inline-flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs text-zinc-300 shadow-lg">
+        <!-- Live Online Counter Badge - Always Visible -->
+        <div id="online-counter-badge" class="inline-flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs text-zinc-300 shadow-lg">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span id="online-count-text">0 Online</span>
+          <span id="online-count-text">1 Online</span>
         </div>
         <div id="streak-badge" class="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 shadow-lg">
           <svg class="w-3.5 h-3.5 text-amber-400 fill-current" viewBox="0 0 24 24">
