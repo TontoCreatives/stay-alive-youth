@@ -31,7 +31,7 @@ if (streakCard && (currentStreak === 3 || currentStreak === 7 || currentStreak %
 }
 
 // 3. Global Push Notification Handler
-const publicVapidKey = BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k// Replace with your Vercel VAPID Public Key
+const publicVapidKey = 'BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k';
 
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -67,11 +67,11 @@ async function subscribeToPushNotifications() {
     });
 
     console.log('Push Subscription Object:', JSON.stringify(subscription));
-    alert('Successfully subscribed to notifications! Check console for subscription string.');
+    alert('Successfully subscribed to notifications!');
     
     return subscription;
   } catch (error) {
     console.error('Failed to subscribe the user: ', error);
-    alert('Failed to subscribe. Check console for details.');
+    alert('Error: ' + error.message);
   }
 }
