@@ -66,10 +66,26 @@ async function subscribeToPushNotifications() {
       body: JSON.stringify(subscription),
     });
 
-    // Hide the prompt box smoothly after successful subscription
+    // 1. Show green success state on the button first
     const promptBox = document.getElementById('notification-prompt-box');
+    const btn = document.querySelector('button[onclick*="subscribeToPushNotifications"]');
+    
+    if (btn) {
+      btn.textContent = 'Notifications Enabled ✓';
+      btn.classList.remove('bg-brandYellow', 'text-zinc-950');
+      btn.classList.add('bg-emerald-600', 'text-white');
+      btn.disabled = true;
+    }
+
+    // 2. Fade out and hide the prompt box after a short delay
     if (promptBox) {
-      promptBox.style.display = 'none';
+      setTimeout(() => {
+        promptBox.style.transition = 'opacity 0.5s ease';
+        promptBox.style.opacity = '0';
+        setTimeout(() => {
+          promptBox.style.display = 'none';
+        }, 500);
+      }, 2000);
     }
     
     return subscription;
