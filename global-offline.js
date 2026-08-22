@@ -31,24 +31,25 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Inject Floating WhatsApp-style Profile Encouragement Bubble (Top-Right / Floating Widget)
+  // Inject Floating WhatsApp-style Profile Encouragement Bubble
   const floatingHTML = `
-    <div id="floating-encouragement" class="fixed top-20 right-4 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800/80 p-3 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all animate-bounce-subtle">
-      <div class="flex items-center space-x-3">
-        <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0 shadow-inner">U</div>
-        <div class="overflow-hidden">
+    <div id="floating-encouragement" class="fixed top-20 right-4 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800/80 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all">
+      <div class="flex items-start space-x-3">
+        <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0 shadow-inner mt-0.5">U</div>
+        <div class="overflow-hidden space-y-1">
           <div class="flex items-center gap-1.5">
             <h4 id="floating-name" class="text-[10px] font-bold text-emerald-400 truncate">Encouragement</h4>
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
           </div>
-          <p id="floating-verse" class="text-xs text-zinc-200 italic truncate">"..."</p>
+          <p id="floating-verse" class="text-xs font-semibold text-white truncate"></p>
+          <p id="floating-note" class="text-[11px] text-zinc-300 italic line-clamp-2"></p>
         </div>
       </div>
     </div>
   `;
   document.body.insertAdjacentHTML('beforeend', floatingHTML);
 
-  // Inject Profile Modal Overlay (with Favorite Verse field + Clear/Delete option)
+  // Inject Profile Modal Overlay (with Separate Verse & Encouragement Note fields)
   const modalHTML = `
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl overflow-hidden">
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">
           ✕
         </button>
-        <div class="mb-6">
+        <div class="mb-5">
           <h3 class="text-white font-bold text-lg">Account & Progress</h3>
           <p class="text-xs text-zinc-400">Manage your profile and sync your devotions.</p>
         </div>
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <!-- Logged In View -->
-        <div id="modal-logged-in" class="hidden space-y-4">
+        <div id="modal-logged-in" class="hidden space-y-3.5">
           <div class="flex items-center gap-3 p-3 rounded-2xl bg-zinc-950/60 border border-zinc-800">
             <div id="modal-user-avatar" class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-bold text-lg shadow-md overflow-hidden">U</div>
             <div class="overflow-hidden">
@@ -81,31 +82,35 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
 
-          <div class="p-4 rounded-2xl bg-zinc-950/40 border border-zinc-800 flex items-center justify-between">
+          <div class="p-3.5 rounded-2xl bg-zinc-950/40 border border-zinc-800 flex items-center justify-between">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-0.5">Reading Streak</p>
-              <p class="text-lg font-black text-white"><span id="modal-streak-display">0</span> Days 🔥</p>
+              <p class="text-base font-black text-white"><span id="modal-streak-display">0</span> Days 🔥</p>
             </div>
             <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active Sync</span>
           </div>
 
-          <div class="space-y-2 pt-2 border-t border-zinc-800">
+          <div class="space-y-1.5">
             <label class="block text-[11px] font-medium text-zinc-400">Display Name</label>
             <input type="text" id="modal-name-input" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
           </div>
 
-          <div class="space-y-2 pt-1">
-            <div class="flex justify-between items-center">
-              <label class="block text-[11px] font-medium text-zinc-400">Favorite Verse / Encouragement</label>
-              <button onclick="clearFavoriteVerse()" class="text-[10px] text-red-400 hover:text-red-300 transition-all cursor-pointer">Clear Verse</button>
-            </div>
-            <div class="flex gap-2">
-              <input type="text" id="modal-verse-input" placeholder="e.g. Hebrews 10:23" class="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
-              <button onclick="saveProfileChanges()" class="px-4 py-2 bg-emerald-600 text-white font-semibold rounded-xl text-xs hover:bg-emerald-500 transition-all cursor-pointer">Save</button>
-            </div>
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-medium text-zinc-400">Favorite Verse Reference</label>
+            <input type="text" id="modal-verse-input" placeholder="e.g. Hebrews 10:23" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
           </div>
 
-          <button onclick="logoutFromSupabase()" class="w-full py-2.5 px-4 bg-zinc-800/50 text-zinc-400 font-medium rounded-xl hover:bg-zinc-800 hover:text-white transition-all text-xs border border-zinc-800 mt-2 cursor-pointer">
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-medium text-zinc-400">Personal Encouragement / Hope Note</label>
+            <textarea id="modal-note-input" rows="2" placeholder="e.g. God is faithful through every season..." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500 resize-none"></textarea>
+          </div>
+
+          <div class="flex gap-2 pt-1">
+            <button onclick="saveProfileChanges()" class="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl text-xs hover:bg-emerald-500 transition-all cursor-pointer shadow-lg">Save Changes</button>
+            <button onclick="clearEncouragementData()" class="px-3 py-2.5 bg-zinc-800 text-red-400 hover:text-red-300 font-medium rounded-xl text-xs transition-all cursor-pointer border border-zinc-700">Clear</button>
+          </div>
+
+          <button onclick="logoutFromSupabase()" class="w-full py-2 px-4 bg-zinc-800/40 text-zinc-400 font-medium rounded-xl hover:bg-zinc-800 hover:text-white transition-all text-xs border border-zinc-800/80 cursor-pointer">
             Sign Out
           </button>
         </div>
@@ -197,7 +202,7 @@ async function fetchUserProfileData(userId) {
   try {
     const { data, error } = await supabaseClient
       .from('profiles')
-      .select('streak_count, favorite_verse, full_name, avatar_url')
+      .select('streak_count, favorite_verse, encouragement_note, full_name, avatar_url')
       .eq('id', userId)
       .single();
 
@@ -215,15 +220,18 @@ async function fetchUserProfileData(userId) {
       const modalStreakEl = document.getElementById('modal-streak-display');
       if (modalStreakEl) modalStreakEl.textContent = streakValue;
 
-      // Populate verse input & floating card
+      // Populate form inputs & floating card widget
       const verseInput = document.getElementById('modal-verse-input');
+      const noteInput = document.getElementById('modal-note-input');
       const floatingCard = document.getElementById('floating-encouragement');
 
-      if (data.favorite_verse && data.favorite_verse.trim() !== "") {
-        if (verseInput) verseInput.value = data.favorite_verse;
+      if (verseInput) verseInput.value = data.favorite_verse || '';
+      if (noteInput) noteInput.value = data.encouragement_note || '';
 
+      if ((data.favorite_verse && data.favorite_verse.trim() !== "") || (data.encouragement_note && data.encouragement_note.trim() !== "")) {
         document.getElementById('floating-name').textContent = data.full_name || 'Encouragement';
-        document.getElementById('floating-verse').textContent = `"${data.favorite_verse}"`;
+        document.getElementById('floating-verse').textContent = data.favorite_verse ? `📖 ${data.favorite_verse}` : '';
+        document.getElementById('floating-note').textContent = data.encouragement_note ? `"${data.encouragement_note}"` : '';
         
         const floatingAvatarContainer = document.getElementById('floating-avatar-container');
         if (data.avatar_url) {
@@ -234,7 +242,6 @@ async function fetchUserProfileData(userId) {
 
         floatingCard?.classList.remove('hidden');
       } else {
-        if (verseInput) verseInput.value = '';
         floatingCard?.classList.add('hidden');
       }
     }
@@ -261,6 +268,7 @@ async function logoutFromSupabase() {
 async function saveProfileChanges() {
   const newName = document.getElementById('modal-name-input').value.trim();
   const newVerse = document.getElementById('modal-verse-input').value.trim();
+  const newNote = document.getElementById('modal-note-input').value.trim();
   
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session || !supabaseClient) return;
@@ -279,6 +287,7 @@ async function saveProfileChanges() {
       id: userId, 
       full_name: newName, 
       favorite_verse: newVerse,
+      encouragement_note: newNote,
       updated_at: new Date()
     });
 
@@ -292,29 +301,31 @@ async function saveProfileChanges() {
   }
 }
 
-async function clearFavoriteVerse() {
+async function clearEncouragementData() {
   const verseInput = document.getElementById('modal-verse-input');
+  const noteInput = document.getElementById('modal-note-input');
   if (verseInput) verseInput.value = '';
+  if (noteInput) noteInput.value = '';
   
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session || !supabaseClient) return;
 
   const userId = session.user.id;
 
-  // Clear from Supabase database
   const { error } = await supabaseClient
     .from('profiles')
     .upsert({ 
       id: userId, 
       favorite_verse: '',
+      encouragement_note: '',
       updated_at: new Date()
     });
 
   if (error) {
-    alert('Failed to clear verse: ' + error.message);
+    alert('Failed to clear encouragement: ' + error.message);
   } else {
     document.getElementById('floating-encouragement')?.classList.add('hidden');
-    alert('Favorite verse cleared!');
+    alert('Encouragement cleared!');
     closeProfileModal();
   }
 }
