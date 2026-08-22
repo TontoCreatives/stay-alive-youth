@@ -31,24 +31,24 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Inject Floating Encouragement Card right below the header with glass effect
+  // Inject Floating WhatsApp-style Profile Encouragement Bubble (Top-Right / Floating Widget)
   const floatingHTML = `
-    <div id="floating-encouragement" class="max-w-2xl mx-auto px-4 pt-3 hidden transition-all z-30 relative">
-      <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/80 p-3.5 rounded-2xl shadow-xl flex items-center justify-between">
-        <div class="flex items-center space-x-3 overflow-hidden">
-          <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">U</div>
-          <div class="overflow-hidden">
-            <h4 id="floating-name" class="text-[10px] font-semibold text-zinc-400 truncate">Encouragement</h4>
-            <p id="floating-verse" class="text-xs text-white italic truncate">"..."</p>
+    <div id="floating-encouragement" class="fixed top-20 right-4 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800/80 p-3 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all animate-bounce-subtle">
+      <div class="flex items-center space-x-3">
+        <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0 shadow-inner">U</div>
+        <div class="overflow-hidden">
+          <div class="flex items-center gap-1.5">
+            <h4 id="floating-name" class="text-[10px] font-bold text-emerald-400 truncate">Encouragement</h4>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
           </div>
+          <p id="floating-verse" class="text-xs text-zinc-200 italic truncate">"..."</p>
         </div>
-        <span class="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/20 shrink-0 ml-2">Daily Word</span>
       </div>
     </div>
   `;
-  document.body.insertAdjacentHTML('afterbegin', floatingHTML);
+  document.body.insertAdjacentHTML('beforeend', floatingHTML);
 
-  // Inject Profile Modal Overlay (with Favorite Verse field)
+  // Inject Profile Modal Overlay (with Favorite Verse field + Clear/Delete option)
   const modalHTML = `
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl overflow-hidden">
@@ -95,9 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div class="space-y-2 pt-1">
-            <label class="block text-[11px] font-medium text-zinc-400">Favorite Verse / Encouragement</label>
+            <div class="flex justify-between items-center">
+              <label class="block text-[11px] font-medium text-zinc-400">Favorite Verse / Encouragement</label>
+              <button onclick="clearFavoriteVerse()" class="text-[10px] text-red-400 hover:text-red-300 transition-all cursor-pointer">Clear Verse</button>
+            </div>
             <div class="flex gap-2">
-              <input type="text" id="modal-verse-input" placeholder="e.g. Philippians 4:13" class="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+              <input type="text" id="modal-verse-input" placeholder="e.g. Hebrews 10:23" class="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
               <button onclick="saveProfileChanges()" class="px-4 py-2 bg-emerald-600 text-white font-semibold rounded-xl text-xs hover:bg-emerald-500 transition-all cursor-pointer">Save</button>
             </div>
           </div>
@@ -213,11 +216,13 @@ async function fetchUserProfileData(userId) {
       if (modalStreakEl) modalStreakEl.textContent = streakValue;
 
       // Populate verse input & floating card
-      if (data.favorite_verse) {
-        const verseInput = document.getElementById('modal-verse-input');
+      const verseInput = document.getElementById('modal-verse-input');
+      const floatingCard = document.getElementById('floating-encouragement');
+
+      if (data.favorite_verse && data.favorite_verse.trim() !== "") {
         if (verseInput) verseInput.value = data.favorite_verse;
 
-        document.getElementById('floating-name').textContent = data.full_name || 'Believer';
+        document.getElementById('floating-name').textContent = data.full_name || 'Encouragement';
         document.getElementById('floating-verse').textContent = `"${data.favorite_verse}"`;
         
         const floatingAvatarContainer = document.getElementById('floating-avatar-container');
@@ -227,7 +232,10 @@ async function fetchUserProfileData(userId) {
           floatingAvatarContainer.textContent = (data.full_name || 'U').charAt(0).toUpperCase();
         }
 
-        document.getElementById('floating-encouragement').classList.remove('hidden');
+        floatingCard?.classList.remove('hidden');
+      } else {
+        if (verseInput) verseInput.value = '';
+        floatingCard?.classList.add('hidden');
       }
     }
   } catch (err) {
@@ -281,6 +289,33 @@ async function saveProfileChanges() {
     document.getElementById('modal-user-name').textContent = newName;
     closeProfileModal();
     fetchUserProfileData(userId); // Refresh floating card instantly across the page
+  }
+}
+
+async function clearFavoriteVerse() {
+  const verseInput = document.getElementById('modal-verse-input');
+  if (verseInput) verseInput.value = '';
+  
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session || !supabaseClient) return;
+
+  const userId = session.user.id;
+
+  // Clear from Supabase database
+  const { error } = await supabaseClient
+    .from('profiles')
+    .upsert({ 
+      id: userId, 
+      favorite_verse: '',
+      updated_at: new Date()
+    });
+
+  if (error) {
+    alert('Failed to clear verse: ' + error.message);
+  } else {
+    document.getElementById('floating-encouragement')?.classList.add('hidden');
+    alert('Favorite verse cleared!');
+    closeProfileModal();
   }
 }
 
