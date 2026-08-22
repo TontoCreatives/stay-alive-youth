@@ -48,7 +48,14 @@ async function subscribeToPushNotifications() {
       body: JSON.stringify(subscription),
     });
 
-    alert('Successfully subscribed and saved to database!');
+    // Update button visually instead of showing a cheap alert box
+    const btn = document.querySelector('button[onclick*="subscribeToPushNotifications"]');
+    if (btn) {
+      btn.textContent = 'Notifications Enabled ✓';
+      btn.classList.remove('bg-brandYellow', 'text-zinc-950');
+      btn.classList.add('bg-emerald-600', 'text-white');
+      btn.disabled = true;
+    }
     
     return subscription;
   } catch (error) {
