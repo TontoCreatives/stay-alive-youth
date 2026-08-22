@@ -270,7 +270,10 @@ async function loginWithSupabase() {
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: window.location.origin
+      redirectTo: window.location.origin,
+      queryParams: {
+        prompt: 'select_account'
+      }
     }
   });
   if (error) alert('Error logging in: ' + error.message);
