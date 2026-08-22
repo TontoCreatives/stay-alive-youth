@@ -13,6 +13,7 @@ import questionBox from './questionBox'
 import coordinator from './coordinator'
 import mediaItem from './media'
 import devotional from './devotional'
+import pushSubscription from './pushSubscription'
 
 export const schemaTypes = [
   post, 
@@ -29,5 +30,6 @@ export const schemaTypes = [
   questionBox,
   coordinator,
   mediaItem,
-  devotional
+  devotional,
+  pushSubscription
 ]
