@@ -6,6 +6,9 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Check and hide notification prompt box if permission is already granted/denied
+  checkNotificationPermissionState();
+
   // Inject Global Header with Active Online Indicator
   const headerHTML = `
     <header class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
@@ -148,7 +151,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Modal Controls
+// ==========================================
+// 2. NOTIFICATION PERMISSION MANAGER
+// ==========================================
+function checkNotificationPermissionState() {
+  const notificationBox = document.getElementById('notification-prompt-box');
+  if (!notificationBox) return;
+
+  if ('Notification' in window) {
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') {
+      notificationBox.style.display = 'none';
+    }
+  }
+}
+
+async function subscribeToPushNotifications() {
+  if (!('Notification' in window)) {
+    alert('Push notifications are not supported by your browser.');
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    alert('Daily notifications enabled successfully!');
+    const notificationBox = document.getElementById('notification-prompt-box');
+    if (notificationBox) {
+      notificationBox.style.display = 'none';
+    }
+  } else {
+    alert('Notification permission was denied.');
+    const notificationBox = document.getElementById('notification-prompt-box');
+    if (notificationBox) {
+      notificationBox.style.display = 'none';
+    }
+  }
+}
+
+// ==========================================
+// 3. MODAL & AUTH CONTROLS
+// ==========================================
 function openProfileModal() {
   document.getElementById('profile-modal')?.classList.remove('hidden');
 }
@@ -165,7 +206,6 @@ function closeNewPostModal() {
   document.getElementById('post-modal')?.classList.add('hidden');
 }
 
-// Supabase Session Logic & Presence Tracker
 async function initAuthSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   updateAuthUI(session);
@@ -267,7 +307,6 @@ async function fetchUserProfileData(userId, displayName, avatarUrl) {
         floatingCard?.classList.add('hidden');
       }
 
-      // Initialize Presence Tracking if allowed
       if (data.show_online_status !== false) {
         initPresenceChannel(userId, displayName, avatarUrl);
       }
@@ -277,7 +316,6 @@ async function fetchUserProfileData(userId, displayName, avatarUrl) {
   }
 }
 
-// Supabase Realtime Presence Channel for Online Counter
 function initPresenceChannel(userId, name, avatar) {
   const channel = supabaseClient.channel('online-believers', {
     config: { presence: { key: userId } }
@@ -372,7 +410,7 @@ async function clearEncouragementData() {
 }
 
 // ==========================================
-// 2. COMMUNITY FELLOWSHIP FEED LOGIC
+// 4. COMMUNITY FELLOWSHIP FEED LOGIC
 // ==========================================
 async function loadCommunityFeed() {
   const container = document.getElementById('community-feed-container');
