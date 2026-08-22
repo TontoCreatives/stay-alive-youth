@@ -1,9 +1,6 @@
 // ==========================================
 // 1. SUPABASE CONFIGURATION & AUTH CONTROLLER
 // ==========================================
-// Ensure you include the Supabase CDN in your HTML <head>:
-// <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 const SUPABASE_URL = 'https://wgziqhahopomiyzvcvxd.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -34,7 +31,21 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Inject Profile Modal Overlay
+  // Inject Floating Encouragement Card globally
+  const floatingHTML = `
+    <div id="floating-encouragement" class="fixed bottom-6 right-6 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all">
+      <div class="flex items-center space-x-3">
+        <div id="floating-avatar-container" class="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">U</div>
+        <div class="overflow-hidden">
+          <h4 id="floating-name" class="text-[10px] font-semibold text-zinc-400 truncate">Encouragement</h4>
+          <p id="floating-verse" class="text-xs text-white italic truncate">"..."</p>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', floatingHTML);
+
+  // Inject Profile Modal Overlay (with Favorite Verse field)
   const modalHTML = `
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl overflow-hidden">
@@ -77,13 +88,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="space-y-2 pt-2 border-t border-zinc-800">
             <label class="block text-[11px] font-medium text-zinc-400">Display Name</label>
+            <input type="text" id="modal-name-input" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <label class="block text-[11px] font-medium text-zinc-400">Favorite Verse / Encouragement</label>
             <div class="flex gap-2">
-              <input type="text" id="modal-name-input" class="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+              <input type="text" id="modal-verse-input" placeholder="e.g. Philippians 4:13" class="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
               <button onclick="saveProfileChanges()" class="px-4 py-2 bg-emerald-600 text-white font-semibold rounded-xl text-xs hover:bg-emerald-500 transition-all cursor-pointer">Save</button>
             </div>
           </div>
 
-          <button onclick="logoutFromSupabase()" class="w-full py-2.5 px-4 bg-zinc-800/50 text-zinc-400 font-medium rounded-xl hover:bg-zinc-800 hover:text-white transition-all text-xs border border-zinc-800 mt-4 cursor-pointer">
+          <button onclick="logoutFromSupabase()" class="w-full py-2.5 px-4 bg-zinc-800/50 text-zinc-400 font-medium rounded-xl hover:bg-zinc-800 hover:text-white transition-all text-xs border border-zinc-800 mt-2 cursor-pointer">
             Sign Out
           </button>
         </div>
@@ -159,8 +175,8 @@ function updateAuthUI(session) {
       }
     }
 
-    // Fetch and sync user streak from database
-    fetchUserStreak(user.id);
+    // Fetch and sync user profile data & streak from database
+    fetchUserProfileData(user.id);
   } else {
     loggedOutView?.classList.remove('hidden');
     loggedInView?.classList.add('hidden');
@@ -168,19 +184,19 @@ function updateAuthUI(session) {
   }
 }
 
-// Fetch user streak from Supabase database
-async function fetchUserStreak(userId) {
+// Fetch user profile data and streak from Supabase database
+async function fetchUserProfileData(userId) {
   if (!supabaseClient || !userId) return;
 
   try {
     const { data, error } = await supabaseClient
-      .from('user_profiles')
-      .select('streak_count')
-      .eq('user_id', userId)
+      .from('profiles')
+      .select('streak_count, favorite_verse, full_name, avatar_url')
+      .eq('id', userId)
       .single();
 
     if (error) {
-      console.warn('Could not fetch streak, defaulting to 0:', error.message);
+      console.warn('Profile table entry missing or not initialized yet:', error.message);
       return;
     }
 
@@ -192,9 +208,27 @@ async function fetchUserStreak(userId) {
 
       const modalStreakEl = document.getElementById('modal-streak-display');
       if (modalStreakEl) modalStreakEl.textContent = streakValue;
+
+      // Populate verse input & floating card
+      if (data.favorite_verse) {
+        const verseInput = document.getElementById('modal-verse-input');
+        if (verseInput) verseInput.value = data.favorite_verse;
+
+        document.getElementById('floating-name').textContent = data.full_name || 'Believer';
+        document.getElementById('floating-verse').textContent = `"${data.favorite_verse}"`;
+        
+        const floatingAvatarContainer = document.getElementById('floating-avatar-container');
+        if (data.avatar_url) {
+          floatingAvatarContainer.innerHTML = `<img src="${data.avatar_url}" alt="Avatar" class="w-full h-full object-cover">`;
+        } else {
+          floatingAvatarContainer.textContent = (data.full_name || 'U').charAt(0).toUpperCase();
+        }
+
+        document.getElementById('floating-encouragement').classList.remove('hidden');
+      }
     }
   } catch (err) {
-    console.error('Error fetching streak data:', err);
+    console.error('Error fetching user profile data:', err);
   }
 }
 
@@ -210,23 +244,40 @@ async function loginWithSupabase() {
 
 async function logoutFromSupabase() {
   await supabaseClient.auth.signOut();
+  window.location.reload();
 }
 
 async function saveProfileChanges() {
   const newName = document.getElementById('modal-name-input').value.trim();
-  if (!newName || !supabaseClient) return;
+  const newVerse = document.getElementById('modal-verse-input').value.trim();
+  
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session || !supabaseClient) return;
 
-  const { error } = await supabaseClient.auth.updateUser({
+  const userId = session.user.id;
+
+  // Update Auth metadata for name
+  await supabaseClient.auth.updateUser({
     data: { full_name: newName }
   });
+
+  // Upsert into your custom profiles table
+  const { error } = await supabaseClient
+    .from('profiles')
+    .upsert({ 
+      id: userId, 
+      full_name: newName, 
+      favorite_verse: newVerse,
+      updated_at: new Date()
+    });
 
   if (error) {
     alert('Failed to update profile: ' + error.message);
   } else {
+    alert('Profile updated successfully!');
     document.getElementById('modal-user-name').textContent = newName;
-    const headerAvatarInitial = document.getElementById('header-avatar-initial');
-    if (headerAvatarInitial) headerAvatarInitial.textContent = newName.charAt(0).toUpperCase();
     closeProfileModal();
+    fetchUserProfileData(userId); // Refresh floating card instantly across the page
   }
 }
 
