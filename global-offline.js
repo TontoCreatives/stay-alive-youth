@@ -155,14 +155,12 @@ function updateAuthUI(session) {
   const loggedInView = document.getElementById('modal-logged-in');
   const headerAvatarInitial = document.getElementById('header-avatar-initial');
   
-  // Also check notification prompt box element visibility based on session state
   const notificationBox = document.getElementById('notification-prompt-box');
 
   if (session) {
     loggedOutView?.classList.add('hidden');
     loggedInView?.classList.remove('hidden');
     
-    // If user is logged in, automatically hide the "Never Miss a Devotion" prompt box container
     if (notificationBox) {
       notificationBox.style.display = 'none';
     }
@@ -269,7 +267,7 @@ function initRealtimePresence() {
 }
 
 // ==========================================
-// 3. COMMUNITY INSIGHTS FEED & SHARING
+// 3. COMMUNITY INSIGHTS FEED & SHARING MODAL
 // ==========================================
 async function fetchCommunityInsights() {
   const container = document.getElementById('community-insights-container');
@@ -309,6 +307,7 @@ async function fetchCommunityInsights() {
   }
 }
 
+// Opens the custom post modal you built in HTML
 function openShareInsightModal() {
   if (!supabaseClient) return;
   supabaseClient.auth.getSession().then(({ data: { session } }) => {
@@ -317,14 +316,42 @@ function openShareInsightModal() {
       openProfileModal();
       return;
     }
-    const insight = prompt("What is God teaching you from His Word today?");
-    if (insight && insight.trim()) {
-      submitCommunityInsight(session.user, insight.trim());
+    const postModal = document.getElementById('post-modal');
+    if (postModal) {
+      postModal.classList.remove('hidden');
     }
   });
 }
 
-async function submitCommunityInsight(user, insightText) {
+function closeNewPostModal() {
+  const postModal = document.getElementById('post-modal');
+  if (postModal) {
+    postModal.classList.add('hidden');
+  }
+}
+
+// Submits the form data from your custom modal into Supabase
+async function submitCommunityPost() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    alert('Please sign in first.');
+    return;
+  }
+
+  const verseInput = document.getElementById('post-verse-input');
+  const textInput = document.getElementById('post-text-input');
+  
+  const verse = verseInput ? verseInput.value.trim() : '';
+  const text = textInput ? textInput.value.trim() : '';
+
+  if (!text) {
+    alert('Please write an insight or note before submitting.');
+    return;
+  }
+
+  const finalInsight = verse ? `[${verse}] ${text}` : text;
+
+  const user = session.user;
   const metadata = user.user_metadata || {};
   const userName = metadata.full_name || user.email.split('@')[0];
   const avatarUrl = metadata.avatar_url || null;
@@ -336,7 +363,7 @@ async function submitCommunityInsight(user, insightText) {
         user_id: user.id, 
         user_name: userName, 
         avatar_url: avatarUrl, 
-        insight: insightText 
+        insight: finalInsight 
       }
     ]);
 
@@ -344,6 +371,9 @@ async function submitCommunityInsight(user, insightText) {
     alert('Failed to share insight: ' + error.message);
   } else {
     alert('Insight shared successfully!');
+    if (textInput) textInput.value = '';
+    if (verseInput) verseInput.value = '';
+    closeNewPostModal();
     fetchCommunityInsights();
   }
 }
