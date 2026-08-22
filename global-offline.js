@@ -1,4 +1,25 @@
-try {
+// 3. Global Push Notification Handler
+const publicVapidKey = 'BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+async function subscribeToPushNotifications() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.warn('Push messaging is not supported by this browser.');
+    alert('Push notifications are not supported on this device/browser.');
+    return;
+  }
+
+  try {
     const registration = await navigator.serviceWorker.register('/sw.js');
     console.log('Service Worker registered successfully.');
 
@@ -30,4 +51,8 @@ try {
     alert('Successfully subscribed and saved to database!');
     
     return subscription;
+  } catch (error) {
+    console.error('Failed to subscribe the user: ', error);
+    alert('Error: ' + error.message);
   }
+}
