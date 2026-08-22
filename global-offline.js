@@ -267,10 +267,10 @@ function initRealtimePresence() {
 }
 
 // ==========================================
-// 3. COMMUNITY INSIGHTS FEED & SHARING MODAL
+// 3. COMMUNITY INSIGHTS FEED & MODAL CONTROLS
 // ==========================================
 async function fetchCommunityInsights() {
-  const container = document.getElementById('community-insights-container');
+  const container = document.getElementById('community-feed-container');
   if (!container || !supabaseClient) return;
 
   try {
@@ -307,8 +307,8 @@ async function fetchCommunityInsights() {
   }
 }
 
-// Opens the custom post modal you built in HTML
-function openShareInsightModal() {
+// Matches your HTML button call: onclick="openNewPostModal()"
+function openNewPostModal() {
   if (!supabaseClient) return;
   supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (!session) {
@@ -330,7 +330,6 @@ function closeNewPostModal() {
   }
 }
 
-// Submits the form data from your custom modal into Supabase
 async function submitCommunityPost() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
