@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Inject Floating Encouragement Card globally (Fixed mobile positioning above bottom nav)
+  // Inject Floating Encouragement Card globally
   const floatingHTML = `
     <div id="floating-encouragement" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 max-w-xs bg-zinc-900/90 border border-zinc-800 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md hidden transition-all">
       <div class="flex items-center space-x-3">
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('beforeend', floatingHTML);
 
-  // Inject Profile Modal Overlay (with Favorite Verse field)
+  // Inject Profile Modal Overlay
   const modalHTML = `
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl overflow-hidden">
@@ -116,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-  // Close modal event listener
   const modalEl = document.getElementById('profile-modal');
   if (modalEl) {
     modalEl.addEventListener('click', (e) => {
@@ -124,10 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize Auth Session Check & Live Presence
+  // Initialize features
   if (supabaseClient) {
     initAuthSession();
     initRealtimePresence();
+    fetchCommunityInsights();
   }
 });
 
@@ -192,7 +192,6 @@ function updateAuthUI(session) {
   }
 }
 
-// Fetch user profile data and streak from Supabase database
 async function fetchUserProfileData(userId) {
   if (!supabaseClient || !userId) return;
 
@@ -203,14 +202,10 @@ async function fetchUserProfileData(userId) {
       .eq('id', userId)
       .single();
 
-    if (error) {
-      console.warn('Profile table entry missing or not initialized yet:', error.message);
-      return;
-    }
+    if (error) return;
 
     if (data) {
       const streakValue = data.streak_count || 0;
-      
       const streakCountEl = document.getElementById('streak-count');
       if (streakCountEl) streakCountEl.textContent = streakValue;
 
@@ -240,7 +235,7 @@ async function fetchUserProfileData(userId) {
 }
 
 // ==========================================
-// 2. LIVE ONLINE PRESENCE TRACKER (WhatsApp-style)
+// 2. LIVE ONLINE PRESENCE TRACKER
 // ==========================================
 function initRealtimePresence() {
   const presenceChannel = supabaseClient.channel('stay-alive-global-presence', {
@@ -253,7 +248,6 @@ function initRealtimePresence() {
     .on('presence', { event: 'sync' }, () => {
       const state = presenceChannel.presenceState();
       const totalOnline = Object.keys(state).length;
-      
       const onlineCountEl = document.getElementById('online-count-display');
       if (onlineCountEl) {
         onlineCountEl.textContent = totalOnline;
@@ -266,14 +260,91 @@ function initRealtimePresence() {
     });
 }
 
+// ==========================================
+// 3. COMMUNITY INSIGHTS FEED & SHARING
+// ==========================================
+async function fetchCommunityInsights() {
+  const container = document.getElementById('community-insights-container');
+  if (!container || !supabaseClient) return;
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('community_insights')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No insights shared yet. Be the first!</p>`;
+      return;
+    }
+
+    container.innerHTML = data.map(item => `
+      <div class="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">
+            ${item.avatar_url ? `<img src="${item.avatar_url}" class="w-full h-full object-cover">` : item.user_name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h5 class="text-xs font-bold text-white">${item.user_name}</h5>
+            <p class="text-[9px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</p>
+          </div>
+        </div>
+        <p class="text-xs text-zinc-300 leading-relaxed">${item.insight}</p>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error('Error fetching community insights:', err);
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Community feed ready.</p>`;
+  }
+}
+
+function openShareInsightModal() {
+  supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    if (!session) {
+      alert('Please sign in via your profile to share an insight!');
+      openProfileModal();
+      return;
+    }
+    const insight = prompt("What is God teaching you from His Word today?");
+    if (insight && insight.trim()) {
+      submitCommunityInsight(session.user, insight.trim());
+    }
+  });
+}
+
+async function submitCommunityInsight(user, insightText) {
+  const metadata = user.user_metadata || {};
+  const userName = metadata.full_name || user.email.split('@')[0];
+  const avatarUrl = metadata.avatar_url || null;
+
+  const { error } = await supabaseClient
+    .from('community_insights')
+    .insert([
+      { 
+        user_id: user.id, 
+        user_name: userName, 
+        avatar_url: avatarUrl, 
+        insight: insightText 
+      }
+    ]);
+
+  if (error) {
+    alert('Failed to share insight: ' + error.message);
+  } else {
+    alert('Insight shared successfully!');
+    fetchCommunityInsights();
+  }
+}
+
 async function loginWithSupabase() {
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: window.location.origin,
-      queryParams: {
-        prompt: 'select_account'
-      }
+      queryParams: { prompt: 'select_account' }
     }
   });
   if (error) alert('Error logging in: ' + error.message);
@@ -313,90 +384,5 @@ async function saveProfileChanges() {
     document.getElementById('modal-user-name').textContent = newName;
     closeProfileModal();
     fetchUserProfileData(userId);
-  }
-}
-
-
-// ==========================================
-// 3. GLOBAL PUSH NOTIFICATION HANDLER
-// ==========================================
-const publicVapidKey = 'BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k';
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-(async function checkExistingSubscription() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-
-  try {
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.getSubscription();
-    const promptBox = document.getElementById('notification-prompt-box');
-    
-    if (subscription && promptBox) {
-      promptBox.style.display = 'none';
-    }
-  } catch (err) {
-    console.error('Error checking existing subscription:', err);
-  }
-})();
-
-async function subscribeToPushNotifications() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    alert('Push notifications are not supported on this device/browser.');
-    return;
-  }
-
-  try {
-    const registration = await navigator.serviceWorker.register('/sw.js');
-    const activeRegistration = await navigator.serviceWorker.ready;
-
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      alert('Notification permission was denied.');
-      return;
-    }
-
-    const subscription = await activeRegistration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-    });
-
-    await fetch('/api/save-subscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(subscription),
-    });
-
-    const promptBox = document.getElementById('notification-prompt-box');
-    const btn = document.querySelector('button[onclick*="subscribeToPushNotifications"]');
-    
-    if (btn) {
-      btn.textContent = 'Notifications Enabled ✓';
-      btn.classList.remove('bg-brandYellow', 'text-zinc-950');
-      btn.classList.add('bg-emerald-600', 'text-white');
-      btn.disabled = true;
-    }
-
-    if (promptBox) {
-      setTimeout(() => {
-        promptBox.style.transition = 'opacity 0.5s ease';
-        promptBox.style.opacity = '0';
-        setTimeout(() => { promptBox.style.display = 'none'; }, 500);
-      }, 2000);
-    }
-    
-    return subscription;
-  } catch (error) {
-    console.error('Failed to subscribe the user: ', error);
-    alert('Error: ' + error.message);
   }
 }
