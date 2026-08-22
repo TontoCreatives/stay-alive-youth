@@ -6,7 +6,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Inject Global Header
+  // Inject Global Header with Active Online Indicator
   const headerHTML = `
     <header class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
       <a href="/" class="flex items-center gap-2">
@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </a>
       <div class="flex items-center gap-3">
+        <!-- Live Online Counter Badge -->
+        <div id="online-counter-badge" class="hidden sm:inline-flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs text-zinc-300 shadow-lg">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="online-count-text">0 Online</span>
+        </div>
         <div id="streak-badge" class="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-300 shadow-lg">
           <svg class="w-3.5 h-3.5 text-amber-400 fill-current" viewBox="0 0 24 24">
             <path d="M17.56 10.59c-.83-.82-1.5-1.74-2-2.73-.55-1.04-.8-2.14-.95-3.26-.05-.4-.42-.7-.83-.7-.41 0-.78.3-.83.7-.22 1.62-.77 3.19-1.63 4.59-.86 1.4-2 2.6-3.4 3.52C6.34 13.92 6 14.85 6 15.82c0 2.21 1.79 4 4 4s4-1.79 4-4c0-.75-.2-1.48-.59-2.11l2.15-3.12z"/>
@@ -49,10 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML('beforeend', floatingHTML);
 
-  // Inject Profile Modal Overlay (with Separate Verse & Encouragement Note fields)
+  // Inject Profile Modal Overlay with Privacy Toggle & Encouragement Fields
   const modalHTML = `
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl overflow-hidden">
+      <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
         <div class="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
         <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">
           ✕
@@ -66,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div id="modal-logged-out" class="text-center py-6">
           <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-zinc-800 flex items-center justify-center text-amber-400 font-bold text-lg border border-zinc-700">✨</div>
           <h4 class="text-white font-bold text-sm mb-1">Your Personal Sanctuary</h4>
-          <p class="text-xs text-zinc-400 mb-6 leading-relaxed">Sign in to track reading streaks and save your preferences across devices.</p>
+          <p class="text-xs text-zinc-400 mb-6 leading-relaxed">Sign in to track reading streaks and connect with the community.</p>
           <button onclick="loginWithSupabase()" class="w-full py-3 px-4 bg-white text-zinc-950 font-semibold rounded-xl hover:bg-zinc-200 active:scale-[0.98] transition-all text-sm shadow-lg cursor-pointer">
             Continue with Google
           </button>
@@ -105,6 +110,15 @@ document.addEventListener("DOMContentLoaded", () => {
             <textarea id="modal-note-input" rows="2" placeholder="e.g. God is faithful through every season..." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500 resize-none"></textarea>
           </div>
 
+          <!-- Privacy Toggle for Online Presence -->
+          <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800">
+            <div>
+              <p class="text-xs font-medium text-white">Show Online Presence</p>
+              <p class="text-[10px] text-zinc-400">Let others see when you're online</p>
+            </div>
+            <input type="checkbox" id="modal-privacy-toggle" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+          </div>
+
           <div class="flex gap-2 pt-1">
             <button onclick="saveProfileChanges()" class="flex-1 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl text-xs hover:bg-emerald-500 transition-all cursor-pointer shadow-lg">Save Changes</button>
             <button onclick="clearEncouragementData()" class="px-3 py-2.5 bg-zinc-800 text-red-400 hover:text-red-300 font-medium rounded-xl text-xs transition-all cursor-pointer border border-zinc-700">Clear</button>
@@ -127,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize Auth Session Check
+  // Initialize Auth & Presence
   if (supabaseClient) {
     initAuthSession();
   }
@@ -142,7 +156,7 @@ function closeProfileModal() {
   document.getElementById('profile-modal')?.classList.add('hidden');
 }
 
-// Supabase Session Logic
+// Supabase Session Logic & Presence Tracker
 async function initAuthSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   updateAuthUI(session);
@@ -186,8 +200,7 @@ function updateAuthUI(session) {
       }
     }
 
-    // Fetch and sync user profile data & streak from database
-    fetchUserProfileData(user.id);
+    fetchUserProfileData(user.id, displayName, avatarUrl);
   } else {
     loggedOutView?.classList.remove('hidden');
     loggedInView?.classList.add('hidden');
@@ -195,14 +208,13 @@ function updateAuthUI(session) {
   }
 }
 
-// Fetch user profile data and streak from Supabase database
-async function fetchUserProfileData(userId) {
+async function fetchUserProfileData(userId, displayName, avatarUrl) {
   if (!supabaseClient || !userId) return;
 
   try {
     const { data, error } = await supabaseClient
       .from('profiles')
-      .select('streak_count, favorite_verse, encouragement_note, full_name, avatar_url')
+      .select('streak_count, favorite_verse, encouragement_note, full_name, avatar_url, show_online_status')
       .eq('id', userId)
       .single();
 
@@ -220,13 +232,14 @@ async function fetchUserProfileData(userId) {
       const modalStreakEl = document.getElementById('modal-streak-display');
       if (modalStreakEl) modalStreakEl.textContent = streakValue;
 
-      // Populate form inputs & floating card widget
       const verseInput = document.getElementById('modal-verse-input');
       const noteInput = document.getElementById('modal-note-input');
+      const privacyToggle = document.getElementById('modal-privacy-toggle');
       const floatingCard = document.getElementById('floating-encouragement');
 
       if (verseInput) verseInput.value = data.favorite_verse || '';
       if (noteInput) noteInput.value = data.encouragement_note || '';
+      if (privacyToggle) privacyToggle.checked = data.show_online_status ?? true;
 
       if ((data.favorite_verse && data.favorite_verse.trim() !== "") || (data.encouragement_note && data.encouragement_note.trim() !== "")) {
         document.getElementById('floating-name').textContent = data.full_name || 'Encouragement';
@@ -244,18 +257,43 @@ async function fetchUserProfileData(userId) {
       } else {
         floatingCard?.classList.add('hidden');
       }
+
+      // Initialize Presence Tracking if allowed
+      if (data.show_online_status !== false) {
+        initPresenceChannel(userId, displayName, avatarUrl);
+      }
     }
   } catch (err) {
     console.error('Error fetching user profile data:', err);
   }
 }
 
+// Supabase Realtime Presence Channel for Online Counter
+function initPresenceChannel(userId, name, avatar) {
+  const channel = supabaseClient.channel('online-believers', {
+    config: { presence: { key: userId } }
+  });
+
+  channel.subscribe(async (status) => {
+    if (status === 'SUBSCRIBED') {
+      await channel.track({ name, avatar, online_at: new Date().toISOString() });
+    }
+  });
+
+  channel.on('presence', { event: 'sync' }, () => {
+    const state = channel.presenceState();
+    const count = Object.keys(state).length;
+    const badge = document.getElementById('online-counter-badge');
+    const text = document.getElementById('online-count-text');
+    if (text) text.textContent = `${count} Online`;
+    if (badge) badge.classList.remove('hidden');
+  });
+}
+
 async function loginWithSupabase() {
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider: 'google',
-    options: {
-      redirectTo: window.location.origin
-    }
+    options: { redirectTo: window.location.origin }
   });
   if (error) alert('Error logging in: ' + error.message);
 }
@@ -269,18 +307,15 @@ async function saveProfileChanges() {
   const newName = document.getElementById('modal-name-input').value.trim();
   const newVerse = document.getElementById('modal-verse-input').value.trim();
   const newNote = document.getElementById('modal-note-input').value.trim();
+  const showOnline = document.getElementById('modal-privacy-toggle').checked;
   
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session || !supabaseClient) return;
 
   const userId = session.user.id;
 
-  // Update Auth metadata for name
-  await supabaseClient.auth.updateUser({
-    data: { full_name: newName }
-  });
+  await supabaseClient.auth.updateUser({ data: { full_name: newName } });
 
-  // Upsert into your custom profiles table
   const { error } = await supabaseClient
     .from('profiles')
     .upsert({ 
@@ -288,6 +323,7 @@ async function saveProfileChanges() {
       full_name: newName, 
       favorite_verse: newVerse,
       encouragement_note: newNote,
+      show_online_status: showOnline,
       updated_at: new Date()
     });
 
@@ -297,25 +333,21 @@ async function saveProfileChanges() {
     alert('Profile updated successfully!');
     document.getElementById('modal-user-name').textContent = newName;
     closeProfileModal();
-    fetchUserProfileData(userId); // Refresh floating card instantly across the page
+    window.location.reload(); // Refresh to apply presence settings instantly
   }
 }
 
 async function clearEncouragementData() {
-  const verseInput = document.getElementById('modal-verse-input');
-  const noteInput = document.getElementById('modal-note-input');
-  if (verseInput) verseInput.value = '';
-  if (noteInput) noteInput.value = '';
+  document.getElementById('modal-verse-input').value = '';
+  document.getElementById('modal-note-input').value = '';
   
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session || !supabaseClient) return;
 
-  const userId = session.user.id;
-
   const { error } = await supabaseClient
     .from('profiles')
     .upsert({ 
-      id: userId, 
+      id: session.user.id, 
       favorite_verse: '',
       encouragement_note: '',
       updated_at: new Date()
@@ -327,90 +359,5 @@ async function clearEncouragementData() {
     document.getElementById('floating-encouragement')?.classList.add('hidden');
     alert('Encouragement cleared!');
     closeProfileModal();
-  }
-}
-
-
-// ==========================================
-// 2. GLOBAL PUSH NOTIFICATION HANDLER
-// ==========================================
-const publicVapidKey = 'BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k';
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-(async function checkExistingSubscription() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-
-  try {
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.getSubscription();
-    const promptBox = document.getElementById('notification-prompt-box');
-    
-    if (subscription && promptBox) {
-      promptBox.style.display = 'none';
-    }
-  } catch (err) {
-    console.error('Error checking existing subscription:', err);
-  }
-})();
-
-async function subscribeToPushNotifications() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    alert('Push notifications are not supported on this device/browser.');
-    return;
-  }
-
-  try {
-    const registration = await navigator.serviceWorker.register('/sw.js');
-    const activeRegistration = await navigator.serviceWorker.ready;
-
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      alert('Notification permission was denied.');
-      return;
-    }
-
-    const subscription = await activeRegistration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-    });
-
-    await fetch('/api/save-subscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(subscription),
-    });
-
-    const promptBox = document.getElementById('notification-prompt-box');
-    const btn = document.querySelector('button[onclick*="subscribeToPushNotifications"]');
-    
-    if (btn) {
-      btn.textContent = 'Notifications Enabled ✓';
-      btn.classList.remove('bg-brandYellow', 'text-zinc-950');
-      btn.classList.add('bg-emerald-600', 'text-white');
-      btn.disabled = true;
-    }
-
-    if (promptBox) {
-      setTimeout(() => {
-        promptBox.style.transition = 'opacity 0.5s ease';
-        promptBox.style.opacity = '0';
-        setTimeout(() => { promptBox.style.display = 'none'; }, 500);
-      }, 2000);
-    }
-    
-    return subscription;
-  } catch (error) {
-    console.error('Failed to subscribe the user: ', error);
-    alert('Error: ' + error.message);
   }
 }
