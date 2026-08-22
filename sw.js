@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay-alive-v4';
+const CACHE_NAME = 'stay-alive-v5'; // Bumped version to force cache refresh
 const SANITY_CACHE = 'stay-alive-sanity-v1';
 
 const assetsToCache = [
@@ -47,11 +47,9 @@ self.addEventListener('fetch', (event) => {
             cache.put(event.request, networkResponse.clone());
             return networkResponse;
           }).catch(() => {
-            // If offline and fetch fails, return cached response if available
             return cachedResponse;
           });
 
-          // Return cached data immediately if available, otherwise wait for network
           return cachedResponse || fetchPromise;
         });
       })
