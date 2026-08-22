@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize features
+  // Initialize features safely
   if (supabaseClient) {
     initAuthSession();
     initRealtimePresence();
@@ -155,10 +155,18 @@ function updateAuthUI(session) {
   const loggedInView = document.getElementById('modal-logged-in');
   const headerAvatarInitial = document.getElementById('header-avatar-initial');
   
+  // Also check notification prompt box element visibility based on session state
+  const notificationBox = document.getElementById('notification-prompt-box');
+
   if (session) {
     loggedOutView?.classList.add('hidden');
     loggedInView?.classList.remove('hidden');
     
+    // If user is logged in, automatically hide the "Never Miss a Devotion" prompt box container
+    if (notificationBox) {
+      notificationBox.style.display = 'none';
+    }
+
     const user = session.user;
     const email = user.email || '';
     const metadata = user.user_metadata || {};
@@ -302,6 +310,7 @@ async function fetchCommunityInsights() {
 }
 
 function openShareInsightModal() {
+  if (!supabaseClient) return;
   supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (!session) {
       alert('Please sign in via your profile to share an insight!');
@@ -384,5 +393,89 @@ async function saveProfileChanges() {
     document.getElementById('modal-user-name').textContent = newName;
     closeProfileModal();
     fetchUserProfileData(userId);
+  }
+}
+
+// ==========================================
+// 4. GLOBAL PUSH NOTIFICATION HANDLER
+// ==========================================
+const publicVapidKey = 'BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+(async function checkExistingSubscription() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.getSubscription();
+    const promptBox = document.getElementById('notification-prompt-box');
+    
+    if (subscription && promptBox) {
+      promptBox.style.display = 'none';
+    }
+  } catch (err) {
+    console.error('Error checking existing subscription:', err);
+  }
+})();
+
+async function subscribeToPushNotifications() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    alert('Push notifications are not supported on this device/browser.');
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.register('/sw.js');
+    const activeRegistration = await navigator.serviceWorker.ready;
+
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      alert('Notification permission was denied.');
+      return;
+    }
+
+    const subscription = await activeRegistration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+    });
+
+    await fetch('/api/save-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(subscription),
+    });
+
+    const promptBox = document.getElementById('notification-prompt-box');
+    const btn = document.querySelector('button[onclick*="subscribeToPushNotifications"]');
+    
+    if (btn) {
+      btn.textContent = 'Notifications Enabled ✓';
+      btn.classList.remove('bg-brandYellow', 'text-zinc-950');
+      btn.classList.add('bg-emerald-600', 'text-white');
+      btn.disabled = true;
+    }
+
+    if (promptBox) {
+      setTimeout(() => {
+        promptBox.style.transition = 'opacity 0.5s ease';
+        promptBox.style.opacity = '0';
+        setTimeout(() => { promptBox.style.display = 'none'; }, 500);
+      }, 2000);
+    }
+    
+    return subscription;
+  } catch (error) {
+    console.error('Failed to subscribe the user: ', error);
+    alert('Error: ' + error.message);
   }
 }
