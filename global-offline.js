@@ -60,16 +60,21 @@ function handleProfileClick() {
   if (client) {
     client.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        alert(`Logged in as: ${session.user.email}\nCloud sync is active.`);
-      } else {
-        const action = confirm("You are in Guest Mode. Would you like to log in or sign up?");
+        const action = confirm(`Logged in as: ${session.user.email}\nWould you like to log out?`);
         if (action) {
-          window.location.href = '/login.html';
+          client.auth.signOut().then(() => {
+            alert("Logged out successfully.");
+            window.location.reload();
+          });
         }
+      } else {
+        window.location.href = '/login.html';
       }
+    }).catch(() => {
+      window.location.href = '/login.html';
     });
   } else {
-    alert("Profile system initializing or offline.");
+    window.location.href = '/login.html';
   }
 }
 
