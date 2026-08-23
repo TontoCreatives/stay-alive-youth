@@ -132,7 +132,70 @@ document.addEventListener("DOMContentLoaded", () => {
     initRealtimePresence();
     fetchCommunityInsights();
   }
+
+  // Initialize Sanity Hero Carousel
+  loadDynamicHeroCarousel();
 });
+
+// ==========================================
+// 2. SANITY HERO CAROUSEL CONTROLLER
+// ==========================================
+async function loadDynamicHeroCarousel() {
+    const projectId = "y4q1h6a9"; 
+    const dataset = "production";
+    
+    const query = encodeURIComponent(`*[_type == "homeSettings"][0]{
+        heroCarousel[]{
+            "url": image.asset->url,
+            badge,
+            caption
+        }
+    }`);
+
+    const url = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=${query}`;
+
+    try {
+        const response = await fetch(url);
+        const { result } = await response.json();
+        
+        if (!result || !result.heroCarousel || result.heroCarousel.length === 0) return;
+
+        const container = document.getElementById('hero-carousel-container');
+        if (!container) return;
+        container.innerHTML = ''; 
+
+        result.heroCarousel.forEach((slide, index) => {
+            const opacityClass = index === 0 ? 'opacity-100' : 'opacity-0';
+            const slideHTML = `
+                <div class="absolute inset-2 transition-opacity duration-1000 ease-in-out ${opacityClass} hero-slide rounded-xl overflow-hidden">
+                    <img src="${slide.url}" alt="${slide.caption || 'Slide'}" class="w-full h-full object-cover">
+                    <div class="absolute bottom-4 left-4 right-4 bg-zinc-950/80 backdrop-blur-xl p-4 rounded-lg border border-zinc-800">
+                        <p class="text-xs text-amber-400 font-semibold uppercase tracking-wider">${slide.badge || 'Active'}</p>
+                        <p class="text-sm font-medium text-white">${slide.caption || ''}</p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', slideHTML);
+        });
+
+        startHeroFadeLoop();
+
+    } catch (error) {
+        console.error("Failed to load hero slides from Sanity:", error);
+    }
+}
+
+function startHeroFadeLoop() {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length <= 1) return;
+    
+    let currentSlide = 0;
+    setInterval(() => {
+        slides[currentSlide].style.opacity = '0';
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].style.opacity = '1';
+    }, 4000);
+}
 
 // Real-time network banner monitor (Updated text)
 function initNetworkStatusBanner() {
@@ -274,7 +337,7 @@ async function fetchUserProfileData(userId) {
 }
 
 // ==========================================
-// 2. LIVE ONLINE PRESENCE TRACKER
+// 3. LIVE ONLINE PRESENCE TRACKER
 // ==========================================
 function initRealtimePresence() {
   const presenceChannel = supabaseClient.channel('stay-alive-global-presence', {
@@ -300,7 +363,7 @@ function initRealtimePresence() {
 }
 
 // ==========================================
-// 3. COMMUNITY INSIGHTS FEED & MODAL CONTROLS
+// 4. COMMUNITY INSIGHTS FEED & MODAL CONTROLS
 // ==========================================
 async function fetchCommunityInsights() {
   const container = document.getElementById('community-feed-container');
