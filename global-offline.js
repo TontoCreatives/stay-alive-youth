@@ -23,10 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize features
   checkNotebookAuthMode();
   loadUserProfileAndStreak();
+  loadCommunityInsights();
 });
 
 // ==========================================
-// 0. HEADER INJECTION
+// 0. HEADER INJECTION & INTERACTION
 // ==========================================
 function injectGlobalHeader() {
   if (document.querySelector('header')) return; // Don't duplicate if already hardcoded
@@ -34,7 +35,7 @@ function injectGlobalHeader() {
   const headerHTML = `
     <header class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
       <a href="/" class="flex items-center gap-2">
-        <img src="/Banner images and logo/bible%20study%20logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-cover">
+        <img src="/Banner images and logo/bible study logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-cover">
         <div>
           <h1 class="text-white text-xs font-bold tracking-wider">STAY ALIVE</h1>
           <p class="text-[10px] text-zinc-400">BIBLE STUDY</p>
@@ -45,11 +46,31 @@ function injectGlobalHeader() {
           <span class="text-amber-400 font-bold" id="user-streak-counter">0</span>
           <span class="text-[10px] text-zinc-400">Day Streak</span>
         </div>
-        <img id="user-profile-avatar" src="https://via.placeholder.com/32" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-zinc-700 cursor-pointer">
+        <button onclick="handleProfileClick()" class="cursor-pointer focus:outline-none" title="Account & Profile">
+          <img id="user-profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Guest" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-zinc-700 bg-zinc-800">
+        </button>
       </div>
     </header>
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
+}
+
+function handleProfileClick() {
+  const client = window.supabaseClient || window.supabase;
+  if (client) {
+    client.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        alert(`Logged in as: ${session.user.email}\nCloud sync is active.`);
+      } else {
+        const action = confirm("You are in Guest Mode. Would you like to log in or sign up?");
+        if (action) {
+          window.location.href = '/login.html';
+        }
+      }
+    });
+  } else {
+    alert("Profile system initializing or offline.");
+  }
 }
 
 // ==========================================
@@ -453,7 +474,103 @@ async function loadUserProfileAndStreak() {
       }
     }
   } catch (err) {
-    // Gracefully handle if profile table columns differ
     console.log("Profile streak sync check skipped.");
+  }
+}
+
+// ==========================================
+// 6. COMMUNITY FELLOWSHIP & INSIGHTS FEED
+// ==========================================
+async function loadCommunityInsights() {
+  // Looks for a container element or defaults to a standard list element ID if present
+  const container = document.getElementById('community-insights-container') || document.querySelector('.community-feed-container');
+  if (!container) return;
+
+  const client = window.supabaseClient || window.supabase;
+  if (!client || !navigator.onLine) {
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Connect online to view shared community insights.</p>`;
+    return;
+  }
+
+  try {
+    const { data, error } = await client
+      .from('community_insights') // Adjust table name if different in your database schema
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (error || !data || data.length === 0) {
+      container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No community insights shared yet. Be the first to share yours!</p>`;
+      return;
+    }
+
+    container.innerHTML = data.map(item => `
+      <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 mt-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-400">${item.scripture_ref || 'Fellowship Insight'}</span>
+          <span class="text-[10px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</span>
+        </div>
+        <p class="text-xs text-zinc-300 leading-relaxed">${item.content || item.notes_content}</p>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Unable to load community feed right now.</p>`;
+  }
+}
+
+async function shareCommunityInsight() {
+  const content = prompt("Share a brief spiritual insight or encouragement with the community:");
+  if (!content) return;
+
+  const scriptureRef = prompt("Related Scripture Reference (e.g. Psalm 23:1):") || "General Fellowship";
+  const client = window.supabaseClient || window.supabase;
+  
+  if (!client || !navigator.onLine) {
+    alert("You must be online to share insights with the community.");
+    return;
+  }
+
+  try {
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) {
+      alert("Please log in to share insights.");
+      return;
+    }
+
+    const { error } = await client
+      .from('community_insights')
+      .insert([{
+        user_id: session.user.id,
+        scripture_ref: scriptureRef,
+        content: content,
+        created_at: new Date().toISOString()
+      }]);
+
+    if (error) throw error;
+    alert("Insight shared successfully with the community fellowship!");
+    loadCommunityInsights();
+  } catch (err) {
+    alert("Failed to share insight: " + err.message);
+  }
+}
+
+// ==========================================
+// 7. DAILY PUSH / WEB NOTIFICATIONS
+// ==========================================
+async function enableDailyNotifications() {
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notifications.");
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+  if (permission === "granted") {
+    alert("Daily notifications enabled successfully! You will receive daily devotion reminders.");
+    new Notification("Stay Alive Fellowship", {
+      body: "You are all set to receive daily devotion reminders and study prompts.",
+      icon: "/Banner images and logo/bible study logo.png"
+    });
+  } else {
+    alert("Notification permission was denied. You can re-enable it in your browser settings.");
   }
 }
