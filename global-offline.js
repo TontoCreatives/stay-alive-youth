@@ -1,5 +1,5 @@
 // ==========================================
-// GLOBAL SCRIPT - FIXED ARCHIVES & SCRIPTURE TOOLS
+// UNIFIED GLOBAL SCRIPT - COMPLETE FIX
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,34 +16,69 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Instantly load local notes so UI never hangs on "Loading notes..."
+  loadLocalNotebooks();
+  
+  // Check cloud auth in background
   checkNotebookAuthMode();
 });
 
 // ==========================================
-// 1. LEXICON ORIGINAL LANGUAGE DICTIONARY
+// 1. COMPREHENSIVE GREEK & HEBREW LEXICON DICTIONARY
 // ==========================================
 const lexiconDictionary = {
-  "agape": { original: "ἀγάπη (G26)", meaning: "Unconditional, sacrificial, divine love exercised intentionally." },
-  "logos": { original: "λόγος (G3056)", meaning: "Word, divine expression, reason, or calculation manifesting God's mind." },
-  "chesed": { original: "חֶסֶד (H2617)", meaning: "Steadfast covenant love, loyalty, mercy, and lovingkindness." },
-  "shalom": { original: "שָׁלוֹם (H7965)", meaning: "Completeness, wholeness, peace, welfare, and flourishing in all dimensions." },
-  "pisteuo": { original: "πιστεύω (G4100)", meaning: "To entrust oneself, rely upon, have active faith or conviction." },
-  "sozo": { original: "σῴζω (G4982)", meaning: "To save, keep safe, rescue from danger, heal, and preserve." },
-  "romans": { original: "ῥωμαῖος / Context", meaning: "Paul's letter addressing justification by faith, God's righteousness, and universal human guilt before a holy God." }
+  // Greek New Testament Roots
+  "agape": { original: "ἀγάπη (G26)", meaning: "Unconditional, sacrificial, divine love exercised intentionally as an act of will." },
+  "phileo": { original: "φιλέω (G5368)", meaning: "Brotherly affection, tender regard, and warm interpersonal friendship." },
+  "logos": { original: "λόγος (G3056)", meaning: "Word, divine expression, reason, or calculation manifesting God's mind and intent." },
+  "pisteuo": { original: "πιστεύω (G4100)", meaning: "To entrust oneself, rely upon, have active faith, loyalty, and conviction." },
+  "sozo": { original: "σῴζω (G4982)", meaning: "To save, keep safe, rescue from danger, heal, preserve, and deliver." },
+  "charis": { original: "χάρις (G5485)", meaning: "Grace, unmerited favor, loving-kindness, and divine enablement." },
+  "zoe": { original: "ζωή (G2222)", meaning: "Life in the absolute sense, divine spiritual life as opposed to mere physical existence." },
+  "pneuma": { original: "πνεῦμα (G4151)", meaning: "Spirit, breath, wind, or the immaterial rational soul energized by God." },
+  "metanoia": { original: "μετάνοια (G3341)", meaning: "A change of mind, turning away from sin, and a total turnaround in direction." },
+  "dikaiosyne": { original: "δικαιοσύνη (G1343)", meaning: "Righteousness, justice, uprightness, and acting in accord with God's standard." },
+
+  // Hebrew Old Testament Roots
+  "chesed": { original: "חֶסֶד (H2617)", meaning: "Steadfast covenant love, loyalty, mercy, faithfulness, and lovingkindness." },
+  "shalom": { original: "שָׁלוֹם (H7965)", meaning: "Completeness, wholeness, peace, safety, health, and holistic flourishing." },
+  "yada": { original: "יָדַע (H3045)", meaning: "To know intimately through direct experience, observation, and personal relationship." },
+  "nephesh": { original: "נֶפֶשׁ (H5315)", meaning: "Soul, living being, life, self, personhood, or deep inner desire." },
+  "baruch": { original: "בָּרוּךְ (H1288)", meaning: "Blessed, praised, or invoked with divine favor and power for prosperity." },
+  "tsedaqah": { original: "צְדָקָה (H6666)", meaning: "Moral righteousness, ethical justice, and right-living in community." },
+
+  // Biblical Books / General Context Fallbacks
+  "john": { original: "Ἰωάννης / Gospel Context", meaning: "Emphasizes the eternal pre-existence and deity of Christ as the incarnate Word (Logos)." },
+  "romans": { original: "Ῥωμαῖος / Pauline Epistle", meaning: "A systematic exposition of justification by grace through faith and God's righteousness." },
+  "genesis": { original: "בְּרֵאשִׁית / Torah Context", meaning: "The book of beginnings, addressing creation, covenant, and the origin of redemptive history." }
 };
 
 function inspectLexiconTerm(termKey) {
+  if (!termKey) return;
+  
   const cleanKey = termKey.toLowerCase().replace(/[^a-z]/g, '');
-  const entry = lexiconDictionary[cleanKey] || { 
-    original: "Theological Root & Context", 
-    meaning: "Examine biblical terms through historical context, authorial intent, and original Hebrew/Greek semantics." 
-  };
+  let entry = lexiconDictionary[cleanKey];
+  
+  if (!entry) {
+    const matchedKey = Object.keys(lexiconDictionary).find(k => cleanKey.includes(k));
+    if (matchedKey) {
+      entry = lexiconDictionary[matchedKey];
+    } else {
+      entry = { 
+        original: `Original Language Study: "${termKey}"`, 
+        meaning: "Examine this text through its historical framework, authorial intent, grammar, and broader redemptive narrative context." 
+      };
+    }
+  }
 
   const modalBox = document.getElementById('lexicon-inspect-box');
   if (modalBox) {
     modalBox.innerHTML = `
-      <div class="p-3 rounded-xl bg-zinc-950 border border-amber-500/30 space-y-1 mt-3 text-left">
-        <span class="text-[9px] font-bold text-amber-400 uppercase tracking-wider">Original Language / Lexicon</span>
+      <div class="p-3.5 rounded-xl bg-zinc-950 border border-amber-500/30 space-y-1.5 mt-3 text-left shadow-lg">
+        <div class="flex items-center justify-between">
+          <span class="text-[9px] font-bold text-amber-400 uppercase tracking-wider">Original Language & Lexicon Tool</span>
+          <button onclick="document.getElementById('lexicon-inspect-box').innerHTML=''" class="text-[10px] text-zinc-500 hover:text-white cursor-pointer">✕ Close</button>
+        </div>
         <h5 class="text-xs font-bold text-white">${entry.original}</h5>
         <p class="text-[11px] text-zinc-300 leading-relaxed">${entry.meaning}</p>
       </div>
@@ -52,7 +87,7 @@ function inspectLexiconTerm(termKey) {
 }
 
 // ==========================================
-// 2. OFFLINE & ONLINE SCRIPTURE SEARCH & CACHE
+// 2. UNIVERSAL BIBLE SEARCH (ANY VERSE/PASSAGE)
 // ==========================================
 async function searchScripturePassage() {
   const inputEl = document.getElementById('bible-input');
@@ -71,17 +106,18 @@ async function searchScripturePassage() {
   const cacheKey = `stay_alive_passage_${query.toLowerCase().replace(/\s+/g, '_')}`;
   const cachedPassage = localStorage.getItem(cacheKey);
 
+  if (cachedPassage) {
+    renderPassageResult(textEl, query, cachedPassage, true);
+    return;
+  }
+
   if (!navigator.onLine) {
-    if (cachedPassage) {
-      renderPassageResult(textEl, query, cachedPassage, true);
-    } else {
-      textEl.innerHTML = `
-        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs space-y-2">
-          <p class="font-bold">You are offline and this passage is not cached.</p>
-          <p class="text-zinc-400">Connect to the internet once to search and save passages for offline reading.</p>
-        </div>
-      `;
-    }
+    textEl.innerHTML = `
+      <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs space-y-2">
+        <p class="font-bold">You are offline and this passage is not cached.</p>
+        <p class="text-zinc-400">Connect to the internet once to search and cache new passages.</p>
+      </div>
+    `;
     return;
   }
 
@@ -89,40 +125,31 @@ async function searchScripturePassage() {
 
   try {
     const encodedRef = encodeURIComponent(query);
-    const res = await fetch(`https://api.esv.org/v3/passage/text/?q=${encodedRef}&include-footnotes=false&include-headings=false`, {
-      headers: {
-        'Authorization': 'Token 6979505527dc41c2c2f210d7e2e28328fa3f80c2'
-      }
-    });
+    const res = await fetch(`https://bible-api.com/${encodedRef}`);
 
-    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    if (!res.ok) throw new Error(`Passage not found`);
     const data = await res.json();
 
-    if (data.passages && data.passages.length > 0) {
-      const passageText = data.passages.join('\n\n');
+    if (data.text) {
+      const passageText = data.text.trim();
       localStorage.setItem(cacheKey, passageText);
       renderPassageResult(textEl, query, passageText, false);
     } else {
       throw new Error('Passage not found');
     }
   } catch (err) {
-    if (cachedPassage) {
-      renderPassageResult(textEl, query, cachedPassage, true);
-    } else {
-      // Graceful fallback display so it never leaves user hanging
-      textEl.innerHTML = `
-        <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs space-y-2 text-zinc-300">
-          <p class="text-amber-400 font-bold">⚠️ Network/API Limit Notice</p>
-          <p>Could not reach live ESV database directly. However, you can reflect on this passage using original context tools below:</p>
-          <div class="pt-2">
-            <button onclick="inspectLexiconTerm('${query}')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 text-[11px] font-semibold border border-amber-500/30">
-              🔍 Inspect Original Context & Meaning
-            </button>
-          </div>
+    textEl.innerHTML = `
+      <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs space-y-2 text-zinc-300">
+        <p class="text-amber-400 font-bold">⚠️ Reference Not Found</p>
+        <p>Could not fetch "${query}". Check your spelling (e.g., "John 3:4" or "Romans 8:28") or explore the original context:</p>
+        <div class="pt-2">
+          <button onclick="inspectLexiconTerm('${query}')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 text-[11px] font-semibold border border-amber-500/30 cursor-pointer">
+            🔍 Inspect Original Context & Meaning
+          </button>
         </div>
-        <div id="lexicon-inspect-box"></div>
-      `;
-    }
+      </div>
+      <div id="lexicon-inspect-box"></div>
+    `;
   }
 }
 
@@ -167,16 +194,8 @@ async function checkNotebookAuthMode() {
   const indicator = document.getElementById('notebook-mode-indicator');
   const syncBtn = document.getElementById('sync-notes-btn');
   
-  if (!window.supabaseClient && !window.supabase) {
-    loadLocalNotebooks();
-    return;
-  }
-
-  const client = window.supabaseClient || supabaseClient;
-  if (!client) {
-    loadLocalNotebooks();
-    return;
-  }
+  const client = window.supabaseClient || window.supabase;
+  if (!client) return;
 
   try {
     const { data: { session } } = await client.auth.getSession();
@@ -204,7 +223,6 @@ function setGuestModeUI(syncBtn, indicator) {
   if (localNotes.length > 0 && syncBtn) {
     syncBtn.classList.remove('hidden');
   }
-  loadLocalNotebooks();
 }
 
 // ==========================================
@@ -224,7 +242,7 @@ async function saveSessionNotebookEntry() {
 
   let imageUrl = null;
   let session = null;
-  const client = window.supabaseClient || supabaseClient;
+  const client = window.supabaseClient || window.supabase;
 
   if (client && navigator.onLine) {
     try {
@@ -266,29 +284,25 @@ async function saveSessionNotebookEntry() {
     created_at: new Date().toISOString()
   };
 
-  if (session && navigator.onLine) {
-    const { error } = await client
-      .from('session_notebook')
-      .insert([{
-        user_id: session.user.id,
-        leader_ref: newEntry.leader_ref,
-        leader_text: newEntry.leader_text,
-        scripture_ref: newEntry.scripture_ref,
-        notes_content: newEntry.notes_content,
-        image_url: newEntry.image_url,
-        session_date: newEntry.session_date
-      }]);
+  // Save locally first for instant UI response
+  const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+  localNotes.unshift(newEntry);
+  localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
+  loadLocalNotebooks();
 
-    if (error) {
-      alert('Failed to save to cloud: ' + error.message);
-      return;
-    }
-    loadCloudNotebooks(session.user.id);
-  } else {
-    const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
-    localNotes.unshift(newEntry);
-    localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
-    loadLocalNotebooks();
+  // Push to cloud in background if authenticated
+  if (session && navigator.onLine) {
+    client.from('session_notebook').insert([{
+      user_id: session.user.id,
+      leader_ref: newEntry.leader_ref,
+      leader_text: newEntry.leader_text,
+      scripture_ref: newEntry.scripture_ref,
+      notes_content: newEntry.notes_content,
+      image_url: newEntry.image_url,
+      session_date: newEntry.session_date
+    }]).then(({ error }) => {
+      if (!error) loadCloudNotebooks(session.user.id);
+    });
   }
 
   alert('Study note saved successfully!');
@@ -314,25 +328,10 @@ function loadLocalNotebooks() {
 
 async function loadCloudNotebooks(userId) {
   const container = document.getElementById('saved-notebooks-container');
-  if (!container) return;
+  if (!container || !navigator.onLine) return;
 
-  if (!navigator.onLine) {
-    loadLocalNotebooks();
-    return;
-  }
-
-  const client = window.supabaseClient || supabaseClient;
-  if (!client) {
-    loadLocalNotebooks();
-    return;
-  }
-
-  // Safety fallback timer so container never stays on "Loading notes..." forever
-  const timeoutId = setTimeout(() => {
-    if (container.innerHTML.includes('Loading notes...')) {
-      loadLocalNotebooks();
-    }
-  }, 3000);
+  const client = window.supabaseClient || window.supabase;
+  if (!client) return;
 
   try {
     const { data, error } = await client
@@ -342,17 +341,11 @@ async function loadCloudNotebooks(userId) {
       .order('created_at', { ascending: false })
       .limit(20);
 
-    clearTimeout(timeoutId);
-
-    if (error || !data || data.length === 0) {
-      loadLocalNotebooks();
-      return;
+    if (!error && data && data.length > 0) {
+      renderNotebookItems(data, container, false);
     }
-
-    renderNotebookItems(data, container, false);
   } catch (err) {
-    clearTimeout(timeoutId);
-    loadLocalNotebooks();
+    // Falls back gracefully to local notes
   }
 }
 
@@ -389,21 +382,18 @@ async function deleteNotebookEntry(id, isLocal) {
     localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
     loadLocalNotebooks();
   } else {
-    const client = window.supabaseClient || supabaseClient;
+    const client = window.supabaseClient || window.supabase;
     if (client) {
-      const { error } = await client.from('session_notebook').delete().eq('id', id);
-      if (error) {
-        alert('Failed to delete from cloud: ' + error.message);
-        return;
-      }
+      await client.from('session_notebook').delete().eq('id', id);
       const { data: { session } } = await client.auth.getSession();
       if (session) loadCloudNotebooks(session.user.id);
+      else loadLocalNotebooks();
     }
   }
 }
 
 async function syncLocalNotesToCloud() {
-  const client = window.supabaseClient || supabaseClient;
+  const client = window.supabaseClient || window.supabase;
   if (!client || !navigator.onLine) return;
   
   const { data: { session } } = await client.auth.getSession();
