@@ -46,7 +46,7 @@ function injectGlobalHeader() {
           <span class="text-amber-400 font-bold" id="user-streak-counter">0</span>
           <span class="text-[10px] text-zinc-400">Day Streak</span>
         </div>
-        <button onclick="handleProfileClick()" class="cursor-pointer focus:outline-none" title="Account & Profile">
+        <button id="profile-trigger-btn" class="cursor-pointer focus:outline-none" title="Account & Profile">
           <img id="user-profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Guest" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-zinc-700 bg-zinc-800">
         </button>
       </div>
@@ -55,7 +55,7 @@ function injectGlobalHeader() {
     <!-- Profile Account Modal -->
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 relative shadow-2xl space-y-4">
-        <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
+        <button id="profile-close-btn" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
         <div>
           <h3 class="text-white font-bold text-base mb-1">Account Settings</h3>
           <p id="profile-modal-email" class="text-xs text-zinc-400">Manage your connected Supabase profile.</p>
@@ -66,10 +66,10 @@ function injectGlobalHeader() {
             <label class="block text-[11px] font-medium text-zinc-400 mb-1">Avatar Image URL</label>
             <input type="text" id="profile-avatar-input" placeholder="https://example.com/avatar.png" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
           </div>
-          <button onclick="updateUserAvatar()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
+          <button id="profile-update-btn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
             Update Avatar
           </button>
-          <button onclick="handleUserSignOut()" class="w-full py-2.5 bg-zinc-800 hover:bg-red-600/20 hover:text-red-400 text-zinc-300 font-semibold rounded-xl text-xs transition-all cursor-pointer">
+          <button id="profile-signout-btn" class="w-full py-2.5 bg-zinc-800 hover:bg-red-600/20 hover:text-red-400 text-zinc-300 font-semibold rounded-xl text-xs transition-all cursor-pointer">
             Sign Out
           </button>
         </div>
@@ -77,6 +77,12 @@ function injectGlobalHeader() {
     </div>
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
+
+  // Attach event listeners safely after injection
+  document.getElementById('profile-trigger-btn')?.addEventListener('click', handleProfileClick);
+  document.getElementById('profile-close-btn')?.addEventListener('click', closeProfileModal);
+  document.getElementById('profile-update-btn')?.addEventListener('click', updateUserAvatar);
+  document.getElementById('profile-signout-btn')?.addEventListener('click', handleUserSignOut);
 }
 
 function handleProfileClick() {
