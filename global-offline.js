@@ -134,26 +134,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Real-time network banner monitor
+// Real-time network banner monitor (Updated text)
 function initNetworkStatusBanner() {
   window.addEventListener('online', () => {
-    showNetworkBanner('Back online! Syncing data...', 'bg-emerald-600');
+    showNetworkBanner('Back online!', 'bg-emerald-600 text-white');
   });
 
   window.addEventListener('offline', () => {
-    showNetworkBanner('Offline mode active. Using local cache.', 'bg-amber-600');
+    showNetworkBanner('You are offline.', 'bg-zinc-900 text-zinc-300 border-b border-zinc-800');
   });
 }
 
-function showNetworkBanner(text, bgColor) {
+function showNetworkBanner(text, className) {
   let banner = document.getElementById('network-status-banner');
   if (!banner) {
     banner = document.createElement('div');
     banner.id = 'network-status-banner';
-    banner.className = `fixed top-0 left-0 right-0 z-[60] text-white text-[11px] font-semibold text-center py-1.5 transition-all shadow-md ${bgColor}`;
+    banner.className = `fixed top-0 left-0 right-0 z-[60] text-xs font-medium text-center py-2 transition-all shadow-md ${className}`;
     document.body.prepend(banner);
   }
-  banner.className = `fixed top-0 left-0 right-0 z-[60] text-white text-[11px] font-semibold text-center py-1.5 transition-all shadow-md ${bgColor}`;
+  banner.className = `fixed top-0 left-0 right-0 z-[60] text-xs font-medium text-center py-2 transition-all shadow-md ${className}`;
   banner.textContent = text;
   banner.style.display = 'block';
 
@@ -340,7 +340,6 @@ async function fetchCommunityInsights() {
   }
 }
 
-// Matches your HTML button call: onclick="openNewPostModal()"
 function openNewPostModal() {
   if (!supabaseClient) return;
   supabaseClient.auth.getSession().then(({ data: { session } }) => {
@@ -455,89 +454,5 @@ async function saveProfileChanges() {
     document.getElementById('modal-user-name').textContent = newName;
     closeProfileModal();
     fetchUserProfileData(userId);
-  }
-}
-
-// ==========================================
-// 4. GLOBAL PUSH NOTIFICATION HANDLER
-// ==========================================
-const publicVapidKey = 'BG5_uf1J5ta1TCCVWHtQpXOjyIn7ZqqZodNJzFRqxxTAywUpqQ8UM0PovCllP9S_uQRv0lB9ogrg79y_fKFfn3k';
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-(async function checkExistingSubscription() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-
-  try {
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.getSubscription();
-    const promptBox = document.getElementById('notification-prompt-box');
-    
-    if (subscription && promptBox) {
-      promptBox.style.display = 'none';
-    }
-  } catch (err) {
-    console.error('Error checking existing subscription:', err);
-  }
-})();
-
-async function subscribeToPushNotifications() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    alert('Push notifications are not supported on this device/browser.');
-    return;
-  }
-
-  try {
-    const registration = await navigator.serviceWorker.register('/sw.js');
-    const activeRegistration = await navigator.serviceWorker.ready;
-
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      alert('Notification permission was denied.');
-      return;
-    }
-
-    const subscription = await activeRegistration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-    });
-
-    await fetch('/api/save-subscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(subscription),
-    });
-
-    const promptBox = document.getElementById('notification-prompt-box');
-    const btn = document.querySelector('button[onclick*="subscribeToPushNotifications"]');
-    
-    if (btn) {
-      btn.textContent = 'Notifications Enabled ✓';
-      btn.classList.remove('bg-brandYellow', 'text-zinc-950');
-      btn.classList.add('bg-emerald-600', 'text-white');
-      btn.disabled = true;
-    }
-
-    if (promptBox) {
-      setTimeout(() => {
-        promptBox.style.transition = 'opacity 0.5s ease';
-        promptBox.style.opacity = '0';
-        setTimeout(() => { promptBox.style.display = 'none'; }, 500);
-      }, 2000);
-    }
-    
-    return subscription;
-  } catch (error) {
-    console.error('Failed to subscribe the user: ', error);
-    alert('Error: ' + error.message);
   }
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay-alive-v7';
+const CACHE_NAME = 'stay-alive-v8';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -6,7 +6,7 @@ const ASSETS_TO_CACHE = [
   '/Banner images and logo/bible%20study%20logo.png'
 ];
 
-// Install Event: Cache core assets
+// Install Event: Cache core assets and force immediate activation
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -16,7 +16,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate Event: Clean up old caches
+// Activate Event: Clean up old caches immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -34,7 +34,6 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Event: Network-first strategy with cache fallback
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests or browser extensions
   if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
     return;
   }
@@ -42,7 +41,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // If valid network response, clone it and update the cache
         if (response && response.status === 200 && response.type === 'basic') {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -52,13 +50,11 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => {
-        // Fallback to cache if offline or network fails
         return caches.match(event.request).then((cachedResponse) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Optional: Return a fallback page if both fail, or let it fail gracefully
-          if (event.request.headers.get('accept').includes('text/html')) {
+          if (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
             return caches.match('/index.html');
           }
         });
