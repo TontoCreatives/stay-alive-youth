@@ -1,5 +1,5 @@
 // ==========================================
-// UNIFIED GLOBAL SCRIPT - COMPLETE FIX
+// UNIFIED GLOBAL SCRIPT - COMPLETE CODE
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -50,7 +50,8 @@ const lexiconDictionary = {
   // Biblical Books / General Context Fallbacks
   "john": { original: "Ἰωάννης / Gospel Context", meaning: "Emphasizes the eternal pre-existence and deity of Christ as the incarnate Word (Logos)." },
   "romans": { original: "Ῥωμαῖος / Pauline Epistle", meaning: "A systematic exposition of justification by grace through faith and God's righteousness." },
-  "genesis": { original: "בְּרֵאשִׁית / Torah Context", meaning: "The book of beginnings, addressing creation, covenant, and the origin of redemptive history." }
+  "genesis": { original: "בְּרֵאשִׁית / Torah Context", meaning: "The book of beginnings, addressing creation, covenant, and the origin of redemptive history." },
+  "james": { original: "Ἰάκωβος / General Epistle", meaning: "Emphasizes practical Christian living, authentic active faith, trials, and ethical consistency." }
 };
 
 function inspectLexiconTerm(termKey) {
@@ -141,7 +142,7 @@ async function searchScripturePassage() {
     textEl.innerHTML = `
       <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs space-y-2 text-zinc-300">
         <p class="text-amber-400 font-bold">⚠️ Reference Not Found</p>
-        <p>Could not fetch "${query}". Check your spelling (e.g., "John 3:4" or "Romans 8:28") or explore the original context:</p>
+        <p>Could not fetch "${query}". Check your spelling or explore the original context:</p>
         <div class="pt-2">
           <button onclick="inspectLexiconTerm('${query}')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 text-[11px] font-semibold border border-amber-500/30 cursor-pointer">
             🔍 Inspect Original Context & Meaning
@@ -154,6 +155,15 @@ async function searchScripturePassage() {
 }
 
 function renderPassageResult(containerEl, queryRef, passageText, isOfflineCached) {
+  // Automatically scan and highlight known theological/lexicon words inside the verse text
+  let formattedText = passageText;
+  const searchableWords = Object.keys(lexiconDictionary);
+  
+  searchableWords.forEach(word => {
+    const regex = new RegExp(`\\b(${word})\\b`, 'gi');
+    formattedText = formattedText.replace(regex, `<span onclick="inspectLexiconTerm('$1')" class="text-amber-400 underline decoration-amber-500/40 cursor-pointer font-medium hover:text-amber-300" title="Tap to inspect original language">$1</span>`);
+  });
+
   containerEl.innerHTML = `
     <div class="flex items-center justify-between mb-2">
       <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md ${isOfflineCached ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
@@ -163,10 +173,11 @@ function renderPassageResult(containerEl, queryRef, passageText, isOfflineCached
         + Send to Notebook
       </button>
     </div>
-    <div class="whitespace-pre-line text-zinc-200 text-sm leading-relaxed">${passageText}</div>
+    <p class="text-[10px] text-zinc-500 italic mb-2">💡 Tap any highlighted word in the text below to view its original language background.</p>
+    <div class="whitespace-pre-line text-zinc-200 text-sm leading-relaxed">${formattedText}</div>
     <div class="mt-4 pt-3 border-t border-zinc-800">
       <button onclick="inspectLexiconTerm('${queryRef}')" class="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 cursor-pointer">
-        📖 Explore Greek/Hebrew Lexicon & Background
+        📖 Explore Full Passage Background & Context
       </button>
       <div id="lexicon-inspect-box"></div>
     </div>
@@ -284,13 +295,11 @@ async function saveSessionNotebookEntry() {
     created_at: new Date().toISOString()
   };
 
-  // Save locally first for instant UI response
   const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
   localNotes.unshift(newEntry);
   localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
   loadLocalNotebooks();
 
-  // Push to cloud in background if authenticated
   if (session && navigator.onLine) {
     client.from('session_notebook').insert([{
       user_id: session.user.id,
@@ -344,9 +353,7 @@ async function loadCloudNotebooks(userId) {
     if (!error && data && data.length > 0) {
       renderNotebookItems(data, container, false);
     }
-  } catch (err) {
-    // Falls back gracefully to local notes
-  }
+  } catch (err) {}
 }
 
 function renderNotebookItems(items, container, isLocal) {
