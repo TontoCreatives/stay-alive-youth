@@ -370,13 +370,12 @@ async function fetchCommunityInsights() {
   if (!container || !supabaseClient) return;
 
   try {
-    // 24-hour expiration filter calculation
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
     const { data, error } = await supabaseClient
       .from('community_insights')
       .select('*')
-      .gte('created_at', twentyFourHoursAgo) // Excludes insights older than 24 hours
+      .gte('created_at', twentyFourHoursAgo)
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -387,7 +386,6 @@ async function fetchCommunityInsights() {
       return;
     }
 
-    // Check if current viewer is the admin
     const { data: { session } } = await supabaseClient.auth.getSession();
     const currentUserEmail = session?.user?.email || '';
     const isAdmin = currentUserEmail === 'mutahitony28@gmail.com';
@@ -548,4 +546,216 @@ async function saveProfileChanges() {
     closeProfileModal();
     fetchUserProfileData(userId);
   }
+}
+
+// ==========================================
+// 5. INTERACTIVE STUDY NOTEBOOK CONTROLLER
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+  const dateEl = document.getElementById('current-study-date');
+  if (dateEl) {
+    dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  checkNotebookAuthMode();
+});
+
+async function checkNotebookAuthMode() {
+  const indicator = document.getElementById('notebook-mode-indicator');
+  const syncBtn = document.getElementById('sync-notes-btn');
+  
+  if (!window.supabaseClient && !window.supabase) {
+    loadLocalNotebooks();
+    return;
+  }
+
+  const client = window.supabaseClient || supabaseClient;
+  if (!client) {
+    loadLocalNotebooks();
+    return;
+  }
+
+  const { data: { session } } = await client.auth.getSession();
+  if (session) {
+    if (indicator) {
+      indicator.textContent = 'Cloud Synced (Secure)';
+      indicator.className = 'px-3 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+    }
+    if (syncBtn) syncBtn.classList.add('hidden');
+    loadCloudNotebooks(session.user.id);
+  } else {
+    if (indicator) {
+      indicator.textContent = 'Guest Mode (Local)';
+      indicator.className = 'px-3 py-1 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20';
+    }
+    const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+    if (localNotes.length > 0 && syncBtn) {
+      syncBtn.classList.remove('hidden');
+    }
+    loadLocalNotebooks();
+  }
+}
+
+async function saveSessionNotebookEntry() {
+  const scriptureRef = document.getElementById('note-scripture-input').value.trim();
+  const notesContent = document.getElementById('note-content-input').value.trim();
+  const imageInput = document.getElementById('note-image-input');
+
+  if (!notesContent) {
+    alert('Please write something in your notes before saving.');
+    return;
+  }
+
+  let imageUrl = null;
+  let session = null;
+  const client = window.supabaseClient || supabaseClient;
+
+  if (client) {
+    const res = await client.auth.getSession();
+    session = res.data.session;
+  }
+
+  if (session && imageInput && imageInput.files[0]) {
+    const file = imageInput.files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
+    const filePath = `study_notes/${fileName}`;
+
+    const { error: uploadError } = await client.storage
+      .from('session-assets')
+      .upload(filePath, file);
+
+    if (!uploadError) {
+      const { data: publicURLData } = client.storage
+        .from('session-assets')
+        .getPublicUrl(filePath);
+      imageUrl = publicURLData.publicUrl;
+    }
+  } else if (!session && imageInput && imageInput.files[0]) {
+    imageUrl = await convertFileToBase64(imageInput.files[0]);
+  }
+
+  const newEntry = {
+    id: 'note_' + Date.now(),
+    scripture_ref: scriptureRef || 'General Reflection',
+    notes_content: notesContent,
+    image_url: imageUrl,
+    session_date: new Date().toISOString().split('T')[0],
+    created_at: new Date().toISOString()
+  };
+
+  if (session) {
+    const { error } = await client
+      .from('session_notebook')
+      .insert([{
+        user_id: session.user.id,
+        scripture_ref: newEntry.scripture_ref,
+        notes_content: newEntry.notes_content,
+        image_url: newEntry.image_url,
+        session_date: newEntry.session_date
+      }]);
+
+    if (error) {
+      alert('Failed to save to cloud: ' + error.message);
+      return;
+    }
+    loadCloudNotebooks(session.user.id);
+  } else {
+    const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+    localNotes.unshift(newEntry);
+    localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
+    loadLocalNotebooks();
+    
+    const syncBtn = document.getElementById('sync-notes-btn');
+    if (syncBtn) syncBtn.classList.remove('hidden');
+  }
+
+  alert('Study note saved successfully!');
+  document.getElementById('note-scripture-input').value = '';
+  document.getElementById('note-content-input').value = '';
+  if (imageInput) imageInput.value = '';
+}
+
+function loadLocalNotebooks() {
+  const container = document.getElementById('saved-notebooks-container');
+  if (!container) return;
+
+  const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+  if (localNotes.length === 0) {
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-2">No local notes saved yet. Start typing above!</p>`;
+    return;
+  }
+
+  renderNotebookItems(localNotes, container, true);
+}
+
+async function loadCloudNotebooks(userId) {
+  const container = document.getElementById('saved-notebooks-container');
+  if (!container) return;
+
+  const client = window.supabaseClient || supabaseClient;
+  if (!client) return;
+
+  const { data, error } = await client
+    .from('session_notebook')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(15);
+
+  if (error || !data || data.length === 0) {
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-2">No cloud notes found. Write your first note above!</p>`;
+    return;
+  }
+
+  renderNotebookItems(data, container, false);
+}
+
+function renderNotebookItems(items, container, isLocal) {
+  container.innerHTML = items.map(item => `
+    <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-emerald-400">${item.scripture_ref}</span>
+        <span class="text-[10px] text-zinc-500">${item.session_date} ${isLocal ? '(Local)' : ''}</span>
+      </div>
+      <p class="text-xs text-zinc-300 leading-relaxed">${item.notes_content}</p>
+      ${item.image_url ? `<img src="${item.image_url}" class="w-full h-32 object-cover rounded-lg border border-zinc-800 mt-2">` : ''}
+    </div>
+  `).join('');
+}
+
+async function syncLocalNotesToCloud() {
+  const client = window.supabaseClient || supabaseClient;
+  if (!client) return;
+  
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) {
+    alert('Please sign in via your profile first to sync your local notes to your account.');
+    return;
+  }
+
+  const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+  if (localNotes.length === 0) return;
+
+  for (const note of localNotes) {
+    await client.from('session_notebook').insert([{
+      user_id: session.user.id,
+      scripture_ref: note.scripture_ref,
+      notes_content: note.notes_content,
+      image_url: note.image_url,
+      session_date: note.session_date
+    }]);
+  }
+
+  localStorage.removeItem('stay_alive_local_notes');
+  alert('All local notes successfully synced to your cloud account!');
+  checkNotebookAuthMode();
+}
+
+function convertFileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
 }
