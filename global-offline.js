@@ -1,5 +1,5 @@
 // ==========================================
-// UNIFIED GLOBAL SCRIPT - COMPLETE RESTORATION
+// GLOBAL SCRIPT - COMPLETE IMPLEMENTATION
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
+  // Hook up Scripture Search Form
   const bibleForm = document.getElementById('bible-form');
   if (bibleForm) {
     bibleForm.addEventListener('submit', async (e) => {
@@ -16,157 +17,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Restore core UI features on boot
-  initializeUserProfileAndStreak();
-  loadCommunityInsights();
-  loadLocalNotebooks();
+  // Initialize features
   checkNotebookAuthMode();
+  loadUserProfileAndStreak();
 });
 
 // ==========================================
-// 1. PROFILE LOGO & STREAK TRACKING
-// ==========================================
-async function initializeUserProfileAndStreak() {
-  const streakEl = document.getElementById('user-streak-counter');
-  const profileAvatarEl = document.getElementById('user-profile-avatar');
-
-  // Track daily reading streak via LocalStorage
-  let lastActiveDate = localStorage.getItem('stay_alive_last_active');
-  let currentStreak = parseInt(localStorage.getItem('stay_alive_streak_count') || '1', 10);
-  const todayStr = new Date().toISOString().split('T')[0];
-
-  if (lastActiveDate !== todayStr) {
-    if (lastActiveDate) {
-      const lastDate = new Date(lastActiveDate);
-      const todayDate = new Date(todayStr);
-      const diffTime = Math.abs(todayDate - lastDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays === 1) {
-        currentStreak += 1;
-      } else if (diffDays > 1) {
-        currentStreak = 1; // Reset if a day was missed
-      }
-    }
-    localStorage.setItem('stay_alive_last_active', todayStr);
-    localStorage.setItem('stay_alive_streak_count', currentStreak);
-  }
-
-  if (streakEl) {
-    streakEl.textContent = `${currentStreak} Day Streak 🔥`;
-  }
-
-  // Load user session avatar if logged in via Supabase
-  const client = window.supabaseClient || window.supabase;
-  if (client && navigator.onLine) {
-    try {
-      const { data: { session } } = await client.auth.getSession();
-      if (session && session.user) {
-        const metadata = session.user.user_metadata;
-        if (profileAvatarEl && metadata && metadata.avatar_url) {
-          profileAvatarEl.innerHTML = `<img src="${metadata.avatar_url}" class="w-full h-full object-cover rounded-full">`;
-        } else if (profileAvatarEl) {
-          const initial = session.user.email ? session.user.email[0].toUpperCase() : 'U';
-          profileAvatarEl.innerHTML = `<span class="text-xs font-bold text-amber-400">${initial}</span>`;
-        }
-      }
-    } catch (e) {
-      // Fallback if auth check fails
-    }
-  }
-}
-
-// ==========================================
-// 2. COMMUNITY INSIGHTS FEED LOADER
-// ==========================================
-async function loadCommunityInsights() {
-  const container = document.getElementById('community-insights-container');
-  if (!container) return;
-
-  const client = window.supabaseClient || window.supabase;
-  if (!client || !navigator.onLine) {
-    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Community feed requires an internet connection.</p>`;
-    return;
-  }
-
-  try {
-    const { data, error } = await client
-      .from('community_insights')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    if (error || !data || data.length === 0) {
-      container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No community insights shared yet. Be the first to share yours!</p>`;
-      return;
-    }
-
-    container.innerHTML = data.map(item => `
-      <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-amber-400">${item.author_name || 'Fellow Believer'}</span>
-          <span class="text-[10px] text-zinc-500">${item.created_at ? item.created_at.split('T')[0] : ''}</span>
-        </div>
-        <p class="text-xs text-zinc-300 leading-relaxed">${item.content || ''}</p>
-      </div>
-    `).join('');
-  } catch (err) {
-    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Unable to load community insights right now.</p>`;
-  }
-}
-
-// ==========================================
-// 3. COMPREHENSIVE GREEK & HEBREW LEXICON DICTIONARY
+// 1. LEXICON ORIGINAL LANGUAGE DICTIONARY
 // ==========================================
 const lexiconDictionary = {
-  "agape": { original: "ἀγάπη (G26)", meaning: "Unconditional, sacrificial, divine love exercised intentionally as an act of will." },
-  "phileo": { original: "φιλέω (G5368)", meaning: "Brotherly affection, tender regard, and warm interpersonal friendship." },
-  "logos": { original: "λόγος (G3056)", meaning: "Word, divine expression, reason, or calculation manifesting God's mind and intent." },
-  "pisteuo": { original: "πιστεύω (G4100)", meaning: "To entrust oneself, rely upon, have active faith, loyalty, and conviction." },
-  "sozo": { original: "σῴζω (G4982)", meaning: "To save, keep safe, rescue from danger, heal, preserve, and deliver." },
-  "charis": { original: "χάρις (G5485)", meaning: "Grace, unmerited favor, loving-kindness, and divine enablement." },
-  "zoe": { original: "ζωή (G2222)", meaning: "Life in the absolute sense, divine spiritual life as opposed to mere physical existence." },
-  "pneuma": { original: "πνεῦμα (G4151)", meaning: "Spirit, breath, wind, or the immaterial rational soul energized by God." },
-  "metanoia": { original: "μετάνοια (G3341)", meaning: "A change of mind, turning away from sin, and a total turnaround in direction." },
-  "dikaiosyne": { original: "δικαιοσύνη (G1343)", meaning: "Righteousness, justice, uprightness, and acting in accord with God's standard." },
-  "chesed": { original: "חֶסֶד (H2617)", meaning: "Steadfast covenant love, loyalty, mercy, faithfulness, and lovingkindness." },
-  "shalom": { original: "שָׁלוֹם (H7965)", meaning: "Completeness, wholeness, peace, safety, health, and holistic flourishing." },
-  "yada": { original: "יָדַע (H3045)", meaning: "To know intimately through direct experience, observation, and personal relationship." },
-  "nephesh": { original: "נֶפֶשׁ (H5315)", meaning: "Soul, living being, life, self, personhood, or deep inner desire." },
-  "baruch": { original: "בָּרוּךְ (H1288)", meaning: "Blessed, praised, or invoked with divine favor and power for prosperity." },
-  "tsedaqah": { original: "צְדָקָה (H6666)", meaning: "Moral righteousness, ethical justice, and right-living in community." },
-  "john": { original: "Ἰωάννης / Gospel Context", meaning: "Emphasizes the eternal pre-existence and deity of Christ as the incarnate Word (Logos)." },
-  "romans": { original: "Ῥωμαῖος / Pauline Epistle", meaning: "A systematic exposition of justification by grace through faith and God's righteousness." },
-  "genesis": { original: "בְּרֵאשִׁית / Torah Context", meaning: "The book of beginnings, addressing creation, covenant, and the origin of redemptive history." },
-  "james": { original: "Ἰάκωβος / General Epistle", meaning: "Emphasizes practical Christian living, authentic active faith, trials, and ethical consistency." }
+  "agape": { original: "ἀγάπη (G26)", meaning: "Unconditional, sacrificial, divine love exercised intentionally." },
+  "logos": { original: "λόγος (G3056)", meaning: "Word, divine expression, reason, or calculation manifesting God's mind." },
+  "chesed": { original: "חֶסֶד (H2617)", meaning: "Steadfast covenant love, loyalty, mercy, and lovingkindness." },
+  "shalom": { original: "שָׁלוֹם (H7965)", meaning: "Completeness, wholeness, peace, welfare, and flourishing in all dimensions." },
+  "pisteuo": { original: "πιστεύω (G4100)", meaning: "To entrust oneself, rely upon, have active faith or conviction." },
+  "sozo": { original: "σῴζω (G4982)", meaning: "To save, keep safe, rescue from danger, heal, and preserve." }
 };
 
 function inspectLexiconTerm(termKey) {
-  if (!termKey) return;
-  
   const cleanKey = termKey.toLowerCase().replace(/[^a-z]/g, '');
-  let entry = lexiconDictionary[cleanKey];
-  
-  if (!entry) {
-    const matchedKey = Object.keys(lexiconDictionary).find(k => cleanKey.includes(k));
-    if (matchedKey) {
-      entry = lexiconDictionary[matchedKey];
-    } else {
-      entry = { 
-        original: `Original Language Study: "${termKey}"`, 
-        meaning: "Examine this text through its historical framework, authorial intent, grammar, and broader redemptive narrative context." 
-      };
-    }
-  }
+  const entry = lexiconDictionary[cleanKey] || { 
+    original: "Original Root Lookup", 
+    meaning: "Tap highlighted theological terms or type terms like 'agape', 'logos', or 'chesed' to view root meanings." 
+  };
 
   const modalBox = document.getElementById('lexicon-inspect-box');
   if (modalBox) {
     modalBox.innerHTML = `
-      <div class="p-3.5 rounded-xl bg-zinc-950 border border-amber-500/30 space-y-1.5 mt-3 text-left shadow-lg">
-        <div class="flex items-center justify-between">
-          <span class="text-[9px] font-bold text-amber-400 uppercase tracking-wider">Original Language & Lexicon Tool</span>
-          <button onclick="document.getElementById('lexicon-inspect-box').innerHTML=''" class="text-[10px] text-zinc-500 hover:text-white cursor-pointer">✕ Close</button>
-        </div>
+      <div class="p-3 rounded-xl bg-zinc-950 border border-amber-500/30 space-y-1 mt-3 text-left">
+        <span class="text-[9px] font-bold text-amber-400 uppercase tracking-wider">Lexicon / Original Language</span>
         <h5 class="text-xs font-bold text-white">${entry.original}</h5>
         <p class="text-[11px] text-zinc-300 leading-relaxed">${entry.meaning}</p>
       </div>
@@ -175,7 +54,7 @@ function inspectLexiconTerm(termKey) {
 }
 
 // ==========================================
-// 4. UNIVERSAL BIBLE SEARCH & CACHING
+// 2. OFFLINE & ONLINE SCRIPTURE SEARCH & CACHE
 // ==========================================
 async function searchScripturePassage() {
   const inputEl = document.getElementById('bible-input');
@@ -194,18 +73,17 @@ async function searchScripturePassage() {
   const cacheKey = `stay_alive_passage_${query.toLowerCase().replace(/\s+/g, '_')}`;
   const cachedPassage = localStorage.getItem(cacheKey);
 
-  if (cachedPassage) {
-    renderPassageResult(textEl, query, cachedPassage, true);
-    return;
-  }
-
   if (!navigator.onLine) {
-    textEl.innerHTML = `
-      <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs space-y-2">
-        <p class="font-bold">You are offline and this passage is not cached.</p>
-        <p class="text-zinc-400">Connect to the internet once to search and cache new passages.</p>
-      </div>
-    `;
+    if (cachedPassage) {
+      renderPassageResult(textEl, query, cachedPassage, true);
+    } else {
+      textEl.innerHTML = `
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs space-y-2">
+          <p class="font-bold">You are offline and this passage is not cached.</p>
+          <p class="text-zinc-400">Connect to the internet once to search and save passages for offline reading.</p>
+        </div>
+      `;
+    }
     return;
   }
 
@@ -213,43 +91,32 @@ async function searchScripturePassage() {
 
   try {
     const encodedRef = encodeURIComponent(query);
-    const res = await fetch(`https://bible-api.com/${encodedRef}`);
+    const res = await fetch(`https://api.esv.org/v3/passage/text/?q=${encodedRef}&include-footnotes=false&include-headings=false`, {
+      headers: {
+        'Authorization': 'Token 6979505527dc41c2c2f210d7e2e28328fa3f80c2'
+      }
+    });
 
-    if (!res.ok) throw new Error(`Passage not found`);
+    if (!res.ok) throw new Error('Network response was not ok');
     const data = await res.json();
 
-    if (data.text) {
-      const passageText = data.text.trim();
+    if (data.passages && data.passages.length > 0) {
+      const passageText = data.passages.join('\n\n');
       localStorage.setItem(cacheKey, passageText);
       renderPassageResult(textEl, query, passageText, false);
     } else {
-      throw new Error('Passage not found');
+      textEl.innerHTML = `<p class="text-red-400 text-sm">Passage not found. Try another reference format (e.g. John 3:16).</p>`;
     }
   } catch (err) {
-    textEl.innerHTML = `
-      <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs space-y-2 text-zinc-300">
-        <p class="text-amber-400 font-bold">⚠️ Reference Not Found</p>
-        <p>Could not fetch "${query}". Check your spelling or explore the original context:</p>
-        <div class="pt-2">
-          <button onclick="inspectLexiconTerm('${query}')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 text-[11px] font-semibold border border-amber-500/30 cursor-pointer">
-            🔍 Inspect Original Context & Meaning
-          </button>
-        </div>
-      </div>
-      <div id="lexicon-inspect-box"></div>
-    `;
+    if (cachedPassage) {
+      renderPassageResult(textEl, query, cachedPassage, true);
+    } else {
+      textEl.innerHTML = `<p class="text-amber-400 text-xs">Could not fetch passage online and no offline cache found.</p>`;
+    }
   }
 }
 
 function renderPassageResult(containerEl, queryRef, passageText, isOfflineCached) {
-  let formattedText = passageText;
-  const searchableWords = Object.keys(lexiconDictionary);
-  
-  searchableWords.forEach(word => {
-    const regex = new RegExp(`\\b(${word})\\b`, 'gi');
-    formattedText = formattedText.replace(regex, `<span onclick="inspectLexiconTerm('$1')" class="text-amber-400 underline decoration-amber-500/40 cursor-pointer font-medium hover:text-amber-300" title="Tap to inspect original language">$1</span>`);
-  });
-
   containerEl.innerHTML = `
     <div class="flex items-center justify-between mb-2">
       <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md ${isOfflineCached ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
@@ -259,20 +126,22 @@ function renderPassageResult(containerEl, queryRef, passageText, isOfflineCached
         + Send to Notebook
       </button>
     </div>
-    <p class="text-[10px] text-zinc-500 italic mb-2">💡 Tap any highlighted word in the text below to view its original language background.</p>
-    <div class="whitespace-pre-line text-zinc-200 text-sm leading-relaxed">${formattedText}</div>
-    <div class="mt-4 pt-3 border-t border-zinc-800">
-      <button onclick="inspectLexiconTerm('${queryRef}')" class="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 cursor-pointer">
-        📖 Explore Full Passage Background & Context
-      </button>
-      <div id="lexicon-inspect-box"></div>
+    <div class="whitespace-pre-line text-zinc-200 text-sm leading-relaxed">${passageText}</div>
+    <div id="lexicon-inspect-box">
+      <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-[11px] text-zinc-400 mt-4">
+        💡 <span class="text-white font-semibold">Greek/Hebrew Quick Lexicon:</span> Try checking 
+        <button onclick="inspectLexiconTerm('agape')" class="text-amber-400 underline cursor-pointer hover:text-amber-300">agape</button>, 
+        <button onclick="inspectLexiconTerm('logos')" class="text-amber-400 underline cursor-pointer hover:text-amber-300">logos</button>, or 
+        <button onclick="inspectLexiconTerm('chesed')" class="text-amber-400 underline cursor-pointer hover:text-amber-300">chesed</button>.
+      </div>
     </div>
   `;
 }
 
 function saveCachedPassageToNotes(ref) {
   const cacheKey = `stay_alive_passage_${ref.toLowerCase().replace(/\s+/g, '_')}`;
-  const passageText = localStorage.getItem(cacheKey) || ref;
+  const passageText = localStorage.getItem(cacheKey);
+  if (!passageText) return;
 
   const noteInput = document.getElementById('note-scripture-input');
   const contentInput = document.getElementById('note-content-input');
@@ -285,14 +154,17 @@ function saveCachedPassageToNotes(ref) {
 }
 
 // ==========================================
-// 5. NOTEBOOK AUTHENTICATION & STORAGE
+// 3. NOTEBOOK AUTHENTICATION & SYNC MANAGEMENT
 // ==========================================
 async function checkNotebookAuthMode() {
   const indicator = document.getElementById('notebook-mode-indicator');
   const syncBtn = document.getElementById('sync-notes-btn');
   
   const client = window.supabaseClient || window.supabase;
-  if (!client) return;
+  if (!client) {
+    loadLocalNotebooks();
+    return;
+  }
 
   try {
     const { data: { session } } = await client.auth.getSession();
@@ -304,33 +176,38 @@ async function checkNotebookAuthMode() {
       if (syncBtn) syncBtn.classList.add('hidden');
       loadCloudNotebooks(session.user.id);
     } else {
-      setGuestModeUI(syncBtn, indicator);
+      if (indicator) {
+        indicator.textContent = 'Guest Mode (Local)';
+        indicator.className = 'px-3 py-1 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20';
+      }
+      const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+      if (localNotes.length > 0 && syncBtn) {
+        syncBtn.classList.remove('hidden');
+      }
+      loadLocalNotebooks();
     }
   } catch (e) {
-    setGuestModeUI(syncBtn, indicator);
+    loadLocalNotebooks();
   }
 }
 
-function setGuestModeUI(syncBtn, indicator) {
-  if (indicator) {
-    indicator.textContent = 'Guest Mode (Local)';
-    indicator.className = 'px-3 py-1 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20';
-  }
-  const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
-  if (localNotes.length > 0 && syncBtn) {
-    syncBtn.classList.remove('hidden');
-  }
-}
-
+// ==========================================
+// 4. NOTEBOOK STORAGE & RENDERING LOGIC
+// ==========================================
 async function saveSessionNotebookEntry() {
-  const leaderRef = document.getElementById('leader-scripture-ref-input')?.value.trim() || '';
-  const leaderText = document.getElementById('leader-scripture-text-input')?.value.trim() || '';
-  const scriptureRef = document.getElementById('note-scripture-input')?.value.trim() || '';
-  const notesContent = document.getElementById('note-content-input')?.value.trim() || '';
+  const leaderRefEl = document.getElementById('leader-scripture-ref-input');
+  const leaderTextEl = document.getElementById('leader-scripture-text-input');
+  const scriptureRefEl = document.getElementById('note-scripture-input');
+  const notesContentEl = document.getElementById('note-content-input');
   const imageInput = document.getElementById('note-image-input');
 
-  if (!notesContent && !leaderText && !scriptureRef) {
-    alert('Please write something in your notes or scripture section before saving.');
+  const leaderRef = leaderRefEl ? leaderRefEl.value.trim() : '';
+  const leaderText = leaderTextEl ? leaderTextEl.value.trim() : '';
+  const scriptureRef = scriptureRefEl ? scriptureRefEl.value.trim() : '';
+  const notesContent = notesContentEl ? notesContentEl.value.trim() : '';
+
+  if (!notesContent && !leaderText) {
+    alert('Please write something in your notes or leader focus section before saving.');
     return;
   }
 
@@ -347,7 +224,7 @@ async function saveSessionNotebookEntry() {
     }
   }
 
-  if (session && imageInput && imageInput.files && imageInput.files[0] && navigator.onLine) {
+  if (session && imageInput && imageInput.files[0] && navigator.onLine) {
     const file = imageInput.files[0];
     const fileExt = file.name.split('.').pop();
     const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
@@ -363,7 +240,7 @@ async function saveSessionNotebookEntry() {
         .getPublicUrl(filePath);
       imageUrl = publicURLData.publicUrl;
     }
-  } else if (imageInput && imageInput.files && imageInput.files[0]) {
+  } else if (imageInput && imageInput.files[0]) {
     imageUrl = await convertFileToBase64(imageInput.files[0]);
   }
 
@@ -378,30 +255,39 @@ async function saveSessionNotebookEntry() {
     created_at: new Date().toISOString()
   };
 
-  const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
-  localNotes.unshift(newEntry);
-  localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
-  loadLocalNotebooks();
-
   if (session && navigator.onLine) {
-    client.from('session_notebook').insert([{
-      user_id: session.user.id,
-      leader_ref: newEntry.leader_ref,
-      leader_text: newEntry.leader_text,
-      scripture_ref: newEntry.scripture_ref,
-      notes_content: newEntry.notes_content,
-      image_url: newEntry.image_url,
-      session_date: newEntry.session_date
-    }]).then(({ error }) => {
-      if (!error) loadCloudNotebooks(session.user.id);
-    });
+    const { error } = await client
+      .from('session_notebook')
+      .insert([{
+        user_id: session.user.id,
+        leader_ref: newEntry.leader_ref,
+        leader_text: newEntry.leader_text,
+        scripture_ref: newEntry.scripture_ref,
+        notes_content: newEntry.notes_content,
+        image_url: newEntry.image_url,
+        session_date: newEntry.session_date
+      }]);
+
+    if (error) {
+      alert('Failed to save to cloud: ' + error.message);
+      return;
+    }
+    loadCloudNotebooks(session.user.id);
+  } else {
+    const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+    localNotes.unshift(newEntry);
+    localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
+    loadLocalNotebooks();
+    
+    const syncBtn = document.getElementById('sync-notes-btn');
+    if (syncBtn && navigator.onLine && session) syncBtn.classList.remove('hidden');
   }
 
   alert('Study note saved successfully!');
-  if (document.getElementById('leader-scripture-ref-input')) document.getElementById('leader-scripture-ref-input').value = '';
-  if (document.getElementById('leader-scripture-text-input')) document.getElementById('leader-scripture-text-input').value = '';
-  if (document.getElementById('note-scripture-input')) document.getElementById('note-scripture-input').value = '';
-  if (document.getElementById('note-content-input')) document.getElementById('note-content-input').value = '';
+  if (leaderRefEl) leaderRefEl.value = '';
+  if (leaderTextEl) leaderTextEl.value = '';
+  if (scriptureRefEl) scriptureRefEl.value = '';
+  if (notesContentEl) notesContentEl.value = '';
   if (imageInput) imageInput.value = '';
 }
 
@@ -411,7 +297,7 @@ function loadLocalNotebooks() {
 
   const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
   if (localNotes.length === 0) {
-    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No session archives saved yet. Fill out the notebook above to record your takeaways!</p>`;
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-2">No local notes saved yet. Start typing above!</p>`;
     return;
   }
 
@@ -420,7 +306,12 @@ function loadLocalNotebooks() {
 
 async function loadCloudNotebooks(userId) {
   const container = document.getElementById('saved-notebooks-container');
-  if (!container || !navigator.onLine) return;
+  if (!container) return;
+
+  if (!navigator.onLine) {
+    loadLocalNotebooks();
+    return;
+  }
 
   const client = window.supabaseClient || window.supabase;
   if (!client) return;
@@ -431,55 +322,39 @@ async function loadCloudNotebooks(userId) {
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
-      .limit(20);
+      .limit(15);
 
-    if (!error && data && data.length > 0) {
-      renderNotebookItems(data, container, false);
+    if (error || !data || data.length === 0) {
+      loadLocalNotebooks();
+      return;
     }
-  } catch (err) {}
+
+    renderNotebookItems(data, container, false);
+  } catch (err) {
+    loadLocalNotebooks();
+  }
 }
 
 function renderNotebookItems(items, container, isLocal) {
   container.innerHTML = items.map(item => `
-    <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative group">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-emerald-400">${item.scripture_ref || 'Reflection'}</span>
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] text-zinc-500">${item.session_date || ''} ${isLocal ? '(Local)' : ''}</span>
-          <button onclick="deleteNotebookEntry('${item.id}', ${isLocal})" class="text-[10px] text-red-400 hover:text-red-300 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20 cursor-pointer">
-            🗑️ Delete
-          </button>
-        </div>
-      </div>
+    <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
       ${item.leader_text ? `
         <div class="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800/80 space-y-1">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400">Leader Focus: ${item.leader_ref || ''}</span>
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400">Leader Focus</span>
+            <span class="text-[9px] text-zinc-400 font-mono">${item.leader_ref || ''}</span>
+          </div>
           <p class="text-xs text-zinc-300 italic">"${item.leader_text}"</p>
         </div>
       ` : ''}
-      <p class="text-xs text-zinc-300 leading-relaxed whitespace-pre-line">${item.notes_content || ''}</p>
+      <div class="flex items-center justify-between pt-1">
+        <span class="text-xs font-bold text-emerald-400">${item.scripture_ref}</span>
+        <span class="text-[10px] text-zinc-500">${item.session_date} ${isLocal ? '(Local)' : ''}</span>
+      </div>
+      <p class="text-xs text-zinc-300 leading-relaxed">${item.notes_content}</p>
       ${item.image_url ? `<img src="${item.image_url}" class="w-full h-32 object-cover rounded-lg border border-zinc-800 mt-2">` : ''}
     </div>
   `).join('');
-}
-
-async function deleteNotebookEntry(id, isLocal) {
-  if (!confirm('Are you sure you want to delete this session archive?')) return;
-
-  if (isLocal) {
-    let localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
-    localNotes = localNotes.filter(n => n.id !== id);
-    localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
-    loadLocalNotebooks();
-  } else {
-    const client = window.supabaseClient || window.supabase;
-    if (client) {
-      await client.from('session_notebook').delete().eq('id', id);
-      const { data: { session } } = await client.auth.getSession();
-      if (session) loadCloudNotebooks(session.user.id);
-      else loadLocalNotebooks();
-    }
-  }
 }
 
 async function syncLocalNotesToCloud() {
@@ -516,4 +391,39 @@ function convertFileToBase64(file) {
     reader.onload = () => resolve(reader.result);
     reader.onerror = error => reject(error);
   });
+}
+
+// ==========================================
+// 5. PROFILE & STREAK TRACKING (SUPABASE)
+// ==========================================
+async function loadUserProfileAndStreak() {
+  const client = window.supabaseClient || window.supabase;
+  const streakEl = document.getElementById('user-streak-counter');
+  const avatarEl = document.getElementById('user-profile-avatar');
+
+  if (!client) return;
+
+  try {
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) return;
+
+    // Fetch profile data if table exists
+    const { data: profile } = await client
+      .from('profiles')
+      .select('streak_count, avatar_url')
+      .eq('id', session.user.id)
+      .single();
+
+    if (profile) {
+      if (streakEl && profile.streak_count !== undefined) {
+        streakEl.textContent = profile.streak_count;
+      }
+      if (avatarEl && profile.avatar_url) {
+        avatarEl.src = profile.avatar_url;
+      }
+    }
+  } catch (err) {
+    // Gracefully handle if profile table columns differ
+    console.log("Profile streak sync check skipped.");
+  }
 }
