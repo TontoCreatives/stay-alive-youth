@@ -29,7 +29,12 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://wgziqhahopomiyzvcvxd.supabase.co/rest/v1/;
+  const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
+  window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
     <!-- Link to custom stylesheet -->
     <link rel="stylesheet" href="style.css">
     <!-- WhatsApp & Social Media Preview Meta Tags -->
@@ -59,6 +64,7 @@
         document.documentElement.classList.add('pwa-mode');
     }
 </script>
+<script src="global-offline.js"></script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
 <!-- PWA Install Gate Overlay -->
@@ -890,5 +896,4 @@ function startHeroFadeLoop() {
 
 document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
 </script>
-<script src="global-offline.js"></script>
 </html>
