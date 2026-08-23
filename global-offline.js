@@ -3,6 +3,9 @@
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. Inject Header into every page automatically
+  injectGlobalHeader();
+
   const dateEl = document.getElementById('current-study-date');
   if (dateEl) {
     dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -21,6 +24,33 @@ document.addEventListener("DOMContentLoaded", () => {
   checkNotebookAuthMode();
   loadUserProfileAndStreak();
 });
+
+// ==========================================
+// 0. HEADER INJECTION
+// ==========================================
+function injectGlobalHeader() {
+  if (document.querySelector('header')) return; // Don't duplicate if already hardcoded
+
+  const headerHTML = `
+    <header class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/Banner images and logo/bible%20study%20logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-cover">
+        <div>
+          <h1 class="text-white text-xs font-bold tracking-wider">STAY ALIVE</h1>
+          <p class="text-[10px] text-zinc-400">BIBLE STUDY</p>
+        </div>
+      </a>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs">
+          <span class="text-amber-400 font-bold" id="user-streak-counter">0</span>
+          <span class="text-[10px] text-zinc-400">Day Streak</span>
+        </div>
+        <img id="user-profile-avatar" src="https://via.placeholder.com/32" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-zinc-700 cursor-pointer">
+      </div>
+    </header>
+  `;
+  document.body.insertAdjacentHTML('afterbegin', headerHTML);
+}
 
 // ==========================================
 // 1. LEXICON ORIGINAL LANGUAGE DICTIONARY
