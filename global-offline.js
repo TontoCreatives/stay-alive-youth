@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ==========================================
-// 0. HEADER INJECTION & INTERACTION
+// 0. HEADER INJECTION & PROFILE INTERACTION
 // ==========================================
 function injectGlobalHeader() {
   if (document.querySelector('header')) return; // Don't duplicate if already hardcoded
@@ -458,7 +458,6 @@ async function loadUserProfileAndStreak() {
     const { data: { session } } = await client.auth.getSession();
     if (!session) return;
 
-    // Fetch profile data if table exists
     const { data: profile } = await client
       .from('profiles')
       .select('streak_count, avatar_url')
@@ -479,61 +478,84 @@ async function loadUserProfileAndStreak() {
 }
 
 // ==========================================
-// 6. COMMUNITY FELLOWSHIP & INSIGHTS FEED
+// 6. COMMUNITY FELLOWSHIP & MODAL LOGIC
 // ==========================================
 async function loadCommunityInsights() {
-  // Looks for a container element or defaults to a standard list element ID if present
-  const container = document.getElementById('community-insights-container') || document.querySelector('.community-feed-container');
+  const container = document.getElementById('community-feed-container');
   if (!container) return;
 
   const client = window.supabaseClient || window.supabase;
   if (!client || !navigator.onLine) {
-    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Connect online to view shared community insights.</p>`;
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Connect online to view community feed.</p>`;
     return;
   }
 
   try {
     const { data, error } = await client
-      .from('community_insights') // Adjust table name if different in your database schema
+      .from('community_insights')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(10);
 
     if (error || !data || data.length === 0) {
-      container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No community insights shared yet. Be the first to share yours!</p>`;
+      container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No community insights shared yet.</p>`;
       return;
     }
 
     container.innerHTML = data.map(item => `
-      <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 mt-3">
+      <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold text-emerald-400">${item.scripture_ref || 'Fellowship Insight'}</span>
           <span class="text-[10px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</span>
         </div>
-        <p class="text-xs text-zinc-300 leading-relaxed">${item.content || item.notes_content}</p>
+        <p class="text-xs text-zinc-300 leading-relaxed">${item.content}</p>
       </div>
     `).join('');
   } catch (err) {
-    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Unable to load community feed right now.</p>`;
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Unable to load community feed.</p>`;
   }
 }
 
-async function shareCommunityInsight() {
-  const content = prompt("Share a brief spiritual insight or encouragement with the community:");
-  if (!content) return;
+function openNewPostModal() {
+  const modal = document.getElementById('post-modal');
+  if (modal) modal.classList.remove('hidden');
+}
 
-  const scriptureRef = prompt("Related Scripture Reference (e.g. Psalm 23:1):") || "General Fellowship";
+function closeNewPostModal() {
+  const modal = document.getElementById('post-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+async function submitCommunityPost() {
+  const verseInput = document.getElementById('post-verse-input');
+  const textInput = document.getElementById('post-text-input');
+  const publicToggle = document.getElementById('post-public-toggle');
+
+  const scriptureRef = verseInput ? verseInput.value.trim() : '';
+  const content = textInput ? textInput.value.trim() : '';
+  const isPublic = publicToggle ? publicToggle.checked : true;
+
+  if (!content) {
+    alert("Please write your insight or note before publishing.");
+    return;
+  }
+
+  if (!isPublic) {
+    alert("Post is set to private. Save it in your personal study notebook instead.");
+    closeNewPostModal();
+    return;
+  }
+
   const client = window.supabaseClient || window.supabase;
-  
   if (!client || !navigator.onLine) {
-    alert("You must be online to share insights with the community.");
+    alert("You must be online to publish to the community feed.");
     return;
   }
 
   try {
     const { data: { session } } = await client.auth.getSession();
     if (!session) {
-      alert("Please log in to share insights.");
+      alert("Please log in to publish posts to the community.");
       return;
     }
 
@@ -541,23 +563,27 @@ async function shareCommunityInsight() {
       .from('community_insights')
       .insert([{
         user_id: session.user.id,
-        scripture_ref: scriptureRef,
+        scripture_ref: scriptureRef || 'General Fellowship',
         content: content,
         created_at: new Date().toISOString()
       }]);
 
     if (error) throw error;
-    alert("Insight shared successfully with the community fellowship!");
+
+    alert("Your insight has been published successfully!");
+    if (verseInput) verseInput.value = '';
+    if (textInput) textInput.value = '';
+    closeNewPostModal();
     loadCommunityInsights();
   } catch (err) {
-    alert("Failed to share insight: " + err.message);
+    alert("Failed to publish post: " + err.message);
   }
 }
 
 // ==========================================
-// 7. DAILY PUSH / WEB NOTIFICATIONS
+// 7. PUSH NOTIFICATION OPT-IN
 // ==========================================
-async function enableDailyNotifications() {
+async function subscribeToPushNotifications() {
   if (!("Notification" in window)) {
     alert("This browser does not support desktop notifications.");
     return;
@@ -565,12 +591,12 @@ async function enableDailyNotifications() {
 
   const permission = await Notification.requestPermission();
   if (permission === "granted") {
-    alert("Daily notifications enabled successfully! You will receive daily devotion reminders.");
+    alert("Daily notifications enabled successfully!");
     new Notification("Stay Alive Fellowship", {
-      body: "You are all set to receive daily devotion reminders and study prompts.",
+      body: "You are all set to receive daily devotion reminders.",
       icon: "/Banner images and logo/bible study logo.png"
     });
   } else {
-    alert("Notification permission was denied. You can re-enable it in your browser settings.");
+    alert("Notification permission was denied.");
   }
 }
