@@ -6,7 +6,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Inject Live Network Connection State Banner
+  // Inject Live Network Connection State Banner at the very top
   initNetworkStatusBanner();
 
   // Inject Global Header (with Online Presence Badge & Streak Badge)
@@ -197,7 +197,7 @@ function startHeroFadeLoop() {
     }, 4000);
 }
 
-// Real-time network banner monitor (Updated text)
+// Real-time network & update banner monitor (Pinned to top with high z-index)
 function initNetworkStatusBanner() {
   window.addEventListener('online', () => {
     showNetworkBanner('Back online!', 'bg-emerald-600 text-white');
@@ -213,10 +213,10 @@ function showNetworkBanner(text, className) {
   if (!banner) {
     banner = document.createElement('div');
     banner.id = 'network-status-banner';
-    banner.className = `fixed top-0 left-0 right-0 z-[60] text-xs font-medium text-center py-2 transition-all shadow-md ${className}`;
+    banner.className = `fixed top-0 left-0 right-0 z-[100] text-xs font-medium text-center py-2 transition-all shadow-md ${className}`;
     document.body.prepend(banner);
   }
-  banner.className = `fixed top-0 left-0 right-0 z-[60] text-xs font-medium text-center py-2 transition-all shadow-md ${className}`;
+  banner.className = `fixed top-0 left-0 right-0 z-[100] text-xs font-medium text-center py-2 transition-all shadow-md ${className}`;
   banner.textContent = text;
   banner.style.display = 'block';
 
@@ -370,11 +370,15 @@ async function fetchCommunityInsights() {
   if (!container || !supabaseClient) return;
 
   try {
+    // 24-hour expiration filter calculation
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
     const { data, error } = await supabaseClient
       .from('community_insights')
       .select('*')
+      .gte('created_at', twentyFourHoursAgo) // Excludes insights older than 24 hours
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(20);
 
     if (error) throw error;
 
@@ -383,23 +387,49 @@ async function fetchCommunityInsights() {
       return;
     }
 
+    // Check if current viewer is the admin
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const currentUserEmail = session?.user?.email || '';
+    const isAdmin = currentUserEmail === 'mutahitony28@gmail.com';
+
     container.innerHTML = data.map(item => `
-      <div class="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
+      <div id="insight-card-${item.id}" class="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
         <div class="flex items-center gap-2.5">
           <div class="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs overflow-hidden shrink-0">
-            ${item.avatar_url ? `<img src="${item.avatar_url}" class="w-full h-full object-cover">` : item.user_name.charAt(0).toUpperCase()}
+            ${item.avatar_url ? `<img src="${item.avatar_url}" class="w-full h-full object-cover">` : (item.user_name ? item.user_name.charAt(0).toUpperCase() : 'U')}
           </div>
           <div>
-            <h5 class="text-xs font-bold text-white">${item.user_name}</h5>
-            <p class="text-[9px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</p>
+            <h5 class="text-xs font-bold text-white">${item.user_name || 'Believer'}</h5>
+            <p class="text-[9px] text-zinc-500">${new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
           </div>
         </div>
-        <p class="text-xs text-zinc-300 leading-relaxed">${item.insight}</p>
+        <p class="text-xs text-zinc-300 leading-relaxed pr-6">${item.insight}</p>
+
+        ${isAdmin ? `
+          <button onclick="deleteCommunityInsight('${item.id}')" class="absolute top-3 right-3 text-zinc-500 hover:text-red-400 p-1 transition-colors cursor-pointer" title="Delete Insight">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          </button>
+        ` : ''}
       </div>
     `).join('');
   } catch (err) {
     console.error('Error fetching community insights:', err);
     container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Community feed ready.</p>`;
+  }
+}
+
+async function deleteCommunityInsight(id) {
+  if (!confirm("Are you sure you want to remove this insight?")) return;
+
+  const { error } = await supabaseClient
+    .from('community_insights')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    alert("Failed to delete: " + error.message);
+  } else {
+    document.getElementById(`insight-card-${id}`)?.remove();
   }
 }
 
