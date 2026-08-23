@@ -596,12 +596,14 @@ async function checkNotebookAuthMode() {
 }
 
 async function saveSessionNotebookEntry() {
+  const leaderRef = document.getElementById('leader-scripture-ref-input').value.trim();
+  const leaderText = document.getElementById('leader-scripture-text-input').value.trim();
   const scriptureRef = document.getElementById('note-scripture-input').value.trim();
   const notesContent = document.getElementById('note-content-input').value.trim();
   const imageInput = document.getElementById('note-image-input');
 
-  if (!notesContent) {
-    alert('Please write something in your notes before saving.');
+  if (!notesContent && !leaderText) {
+    alert('Please write something in your notes or leader focus section before saving.');
     return;
   }
 
@@ -636,6 +638,8 @@ async function saveSessionNotebookEntry() {
 
   const newEntry = {
     id: 'note_' + Date.now(),
+    leader_ref: leaderRef || 'Leader Focus',
+    leader_text: leaderText,
     scripture_ref: scriptureRef || 'General Reflection',
     notes_content: notesContent,
     image_url: imageUrl,
@@ -648,6 +652,8 @@ async function saveSessionNotebookEntry() {
       .from('session_notebook')
       .insert([{
         user_id: session.user.id,
+        leader_ref: newEntry.leader_ref,
+        leader_text: newEntry.leader_text,
         scripture_ref: newEntry.scripture_ref,
         notes_content: newEntry.notes_content,
         image_url: newEntry.image_url,
@@ -670,6 +676,8 @@ async function saveSessionNotebookEntry() {
   }
 
   alert('Study note saved successfully!');
+  document.getElementById('leader-scripture-ref-input').value = '';
+  document.getElementById('leader-scripture-text-input').value = '';
   document.getElementById('note-scripture-input').value = '';
   document.getElementById('note-content-input').value = '';
   if (imageInput) imageInput.value = '';
@@ -713,7 +721,16 @@ async function loadCloudNotebooks(userId) {
 function renderNotebookItems(items, container, isLocal) {
   container.innerHTML = items.map(item => `
     <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
-      <div class="flex items-center justify-between">
+      ${item.leader_text ? `
+        <div class="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800/80 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400">Leader Focus</span>
+            <span class="text-[9px] text-zinc-400 font-mono">${item.leader_ref || ''}</span>
+          </div>
+          <p class="text-xs text-zinc-300 italic">"${item.leader_text}"</p>
+        </div>
+      ` : ''}
+      <div class="flex items-center justify-between pt-1">
         <span class="text-xs font-bold text-emerald-400">${item.scripture_ref}</span>
         <span class="text-[10px] text-zinc-500">${item.session_date} ${isLocal ? '(Local)' : ''}</span>
       </div>
@@ -739,6 +756,8 @@ async function syncLocalNotesToCloud() {
   for (const note of localNotes) {
     await client.from('session_notebook').insert([{
       user_id: session.user.id,
+      leader_ref: note.leader_ref,
+      leader_text: note.leader_text,
       scripture_ref: note.scripture_ref,
       notes_content: note.notes_content,
       image_url: note.image_url,
