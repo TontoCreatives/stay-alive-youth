@@ -6,6 +6,9 @@ const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Inject Live Network Connection State Banner
+  initNetworkStatusBanner();
+
   // Inject Global Header (with Online Presence Badge & Streak Badge)
   const headerHTML = `
     <header class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
@@ -130,6 +133,36 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchCommunityInsights();
   }
 });
+
+// Real-time network banner monitor
+function initNetworkStatusBanner() {
+  window.addEventListener('online', () => {
+    showNetworkBanner('Back online! Syncing data...', 'bg-emerald-600');
+  });
+
+  window.addEventListener('offline', () => {
+    showNetworkBanner('Offline mode active. Using local cache.', 'bg-amber-600');
+  });
+}
+
+function showNetworkBanner(text, bgColor) {
+  let banner = document.getElementById('network-status-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'network-status-banner';
+    banner.className = `fixed top-0 left-0 right-0 z-[60] text-white text-[11px] font-semibold text-center py-1.5 transition-all shadow-md ${bgColor}`;
+    document.body.prepend(banner);
+  }
+  banner.className = `fixed top-0 left-0 right-0 z-[60] text-white text-[11px] font-semibold text-center py-1.5 transition-all shadow-md ${bgColor}`;
+  banner.textContent = text;
+  banner.style.display = 'block';
+
+  if (navigator.onLine) {
+    setTimeout(() => { 
+      if (banner) banner.style.display = 'none'; 
+    }, 3500);
+  }
+}
 
 // Modal Controls
 function openProfileModal() {
