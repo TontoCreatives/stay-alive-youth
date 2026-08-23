@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ==========================================
-// 0. HEADER INJECTION & PROFILE INTERACTION
+// 0. HEADER INJECTION & PROFILE MODAL LOGIC
 // ==========================================
 function injectGlobalHeader() {
   if (document.querySelector('header')) return; // Don't duplicate if already hardcoded
@@ -51,6 +51,30 @@ function injectGlobalHeader() {
         </button>
       </div>
     </header>
+
+    <!-- Profile Account Modal -->
+    <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 relative shadow-2xl space-y-4">
+        <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
+        <div>
+          <h3 class="text-white font-bold text-base mb-1">Account Settings</h3>
+          <p id="profile-modal-email" class="text-xs text-zinc-400">Manage your connected Supabase profile.</p>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Avatar Image URL</label>
+            <input type="text" id="profile-avatar-input" placeholder="https://example.com/avatar.png" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+          </div>
+          <button onclick="updateUserAvatar()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
+            Update Avatar
+          </button>
+          <button onclick="handleUserSignOut()" class="w-full py-2.5 bg-zinc-800 hover:bg-red-600/20 hover:text-red-400 text-zinc-300 font-semibold rounded-xl text-xs transition-all cursor-pointer">
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 }
@@ -60,14 +84,13 @@ function handleProfileClick() {
   if (client) {
     client.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        const action = confirm(`Logged in as: ${session.user.email}\nWould you like to log out?`);
-        if (action) {
-          client.auth.signOut().then(() => {
-            alert("Logged out successfully.");
-            window.location.reload();
-          });
-        }
+        // Open profile management modal if logged in
+        const modal = document.getElementById('profile-modal');
+        const emailEl = document.getElementById('profile-modal-email');
+        if (emailEl) emailEl.textContent = session.user.email;
+        if (modal) modal.classList.remove('hidden');
       } else {
+        // Redirect to login page if guest
         window.location.href = '/login.html';
       }
     }).catch(() => {
@@ -76,6 +99,47 @@ function handleProfileClick() {
   } else {
     window.location.href = '/login.html';
   }
+}
+
+function closeProfileModal() {
+  const modal = document.getElementById('profile-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+async function updateUserAvatar() {
+  const avatarInput = document.getElementById('profile-avatar-input');
+  const newAvatarUrl = avatarInput ? avatarInput.value.trim() : '';
+  if (!newAvatarUrl) {
+    alert("Please enter a valid image URL.");
+    return;
+  }
+
+  const client = window.supabaseClient || window.supabase;
+  if (!client) return;
+
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) return;
+
+  const { error } = await client
+    .from('profiles')
+    .update({ avatar_url: newAvatarUrl })
+    .eq('id', session.user.id);
+
+  if (error) {
+    alert("Failed to update avatar: " + error.message);
+  } else {
+    alert("Avatar updated successfully!");
+    closeProfileModal();
+    loadUserProfileAndStreak();
+  }
+}
+
+async function handleUserSignOut() {
+  const client = window.supabaseClient || window.supabase;
+  if (!client) return;
+  await client.auth.signOut();
+  alert("Signed out successfully.");
+  window.location.reload();
 }
 
 // ==========================================
@@ -463,6 +527,9 @@ async function loadUserProfileAndStreak() {
     const { data: { session } } = await client.auth.getSession();
     if (!session) return;
 
+    // Automatically check if Google auth metadata has an avatar
+    let defaultAvatar = session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture;
+
     const { data: profile } = await client
       .from('profiles')
       .select('streak_count, avatar_url')
@@ -473,9 +540,11 @@ async function loadUserProfileAndStreak() {
       if (streakEl && profile.streak_count !== undefined) {
         streakEl.textContent = profile.streak_count;
       }
-      if (avatarEl && profile.avatar_url) {
-        avatarEl.src = profile.avatar_url;
+      if (avatarEl) {
+        avatarEl.src = profile.avatar_url || defaultAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${session.user.email}`;
       }
+    } else if (defaultAvatar && avatarEl) {
+      avatarEl.src = defaultAvatar;
     }
   } catch (err) {
     console.log("Profile streak sync check skipped.");
