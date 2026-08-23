@@ -1,5 +1,5 @@
 // ==========================================
-// UNIFIED GLOBAL SCRIPT - COMPLETE CODE
+// UNIFIED GLOBAL SCRIPT - COMPLETE RESTORATION
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,18 +16,109 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Instantly load local notes so UI never hangs on "Loading notes..."
+  // Restore core UI features on boot
+  initializeUserProfileAndStreak();
+  loadCommunityInsights();
   loadLocalNotebooks();
-  
-  // Check cloud auth in background
   checkNotebookAuthMode();
 });
 
 // ==========================================
-// 1. COMPREHENSIVE GREEK & HEBREW LEXICON DICTIONARY
+// 1. PROFILE LOGO & STREAK TRACKING
+// ==========================================
+async function initializeUserProfileAndStreak() {
+  const streakEl = document.getElementById('user-streak-counter');
+  const profileAvatarEl = document.getElementById('user-profile-avatar');
+
+  // Track daily reading streak via LocalStorage
+  let lastActiveDate = localStorage.getItem('stay_alive_last_active');
+  let currentStreak = parseInt(localStorage.getItem('stay_alive_streak_count') || '1', 10);
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  if (lastActiveDate !== todayStr) {
+    if (lastActiveDate) {
+      const lastDate = new Date(lastActiveDate);
+      const todayDate = new Date(todayStr);
+      const diffTime = Math.abs(todayDate - lastDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 1) {
+        currentStreak += 1;
+      } else if (diffDays > 1) {
+        currentStreak = 1; // Reset if a day was missed
+      }
+    }
+    localStorage.setItem('stay_alive_last_active', todayStr);
+    localStorage.setItem('stay_alive_streak_count', currentStreak);
+  }
+
+  if (streakEl) {
+    streakEl.textContent = `${currentStreak} Day Streak 🔥`;
+  }
+
+  // Load user session avatar if logged in via Supabase
+  const client = window.supabaseClient || window.supabase;
+  if (client && navigator.onLine) {
+    try {
+      const { data: { session } } = await client.auth.getSession();
+      if (session && session.user) {
+        const metadata = session.user.user_metadata;
+        if (profileAvatarEl && metadata && metadata.avatar_url) {
+          profileAvatarEl.innerHTML = `<img src="${metadata.avatar_url}" class="w-full h-full object-cover rounded-full">`;
+        } else if (profileAvatarEl) {
+          const initial = session.user.email ? session.user.email[0].toUpperCase() : 'U';
+          profileAvatarEl.innerHTML = `<span class="text-xs font-bold text-amber-400">${initial}</span>`;
+        }
+      }
+    } catch (e) {
+      // Fallback if auth check fails
+    }
+  }
+}
+
+// ==========================================
+// 2. COMMUNITY INSIGHTS FEED LOADER
+// ==========================================
+async function loadCommunityInsights() {
+  const container = document.getElementById('community-insights-container');
+  if (!container) return;
+
+  const client = window.supabaseClient || window.supabase;
+  if (!client || !navigator.onLine) {
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Community feed requires an internet connection.</p>`;
+    return;
+  }
+
+  try {
+    const { data, error } = await client
+      .from('community_insights')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (error || !data || data.length === 0) {
+      container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No community insights shared yet. Be the first to share yours!</p>`;
+      return;
+    }
+
+    container.innerHTML = data.map(item => `
+      <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-400">${item.author_name || 'Fellow Believer'}</span>
+          <span class="text-[10px] text-zinc-500">${item.created_at ? item.created_at.split('T')[0] : ''}</span>
+        </div>
+        <p class="text-xs text-zinc-300 leading-relaxed">${item.content || ''}</p>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Unable to load community insights right now.</p>`;
+  }
+}
+
+// ==========================================
+// 3. COMPREHENSIVE GREEK & HEBREW LEXICON DICTIONARY
 // ==========================================
 const lexiconDictionary = {
-  // Greek New Testament Roots
   "agape": { original: "ἀγάπη (G26)", meaning: "Unconditional, sacrificial, divine love exercised intentionally as an act of will." },
   "phileo": { original: "φιλέω (G5368)", meaning: "Brotherly affection, tender regard, and warm interpersonal friendship." },
   "logos": { original: "λόγος (G3056)", meaning: "Word, divine expression, reason, or calculation manifesting God's mind and intent." },
@@ -38,16 +129,12 @@ const lexiconDictionary = {
   "pneuma": { original: "πνεῦμα (G4151)", meaning: "Spirit, breath, wind, or the immaterial rational soul energized by God." },
   "metanoia": { original: "μετάνοια (G3341)", meaning: "A change of mind, turning away from sin, and a total turnaround in direction." },
   "dikaiosyne": { original: "δικαιοσύνη (G1343)", meaning: "Righteousness, justice, uprightness, and acting in accord with God's standard." },
-
-  // Hebrew Old Testament Roots
   "chesed": { original: "חֶסֶד (H2617)", meaning: "Steadfast covenant love, loyalty, mercy, faithfulness, and lovingkindness." },
   "shalom": { original: "שָׁלוֹם (H7965)", meaning: "Completeness, wholeness, peace, safety, health, and holistic flourishing." },
   "yada": { original: "יָדַע (H3045)", meaning: "To know intimately through direct experience, observation, and personal relationship." },
   "nephesh": { original: "נֶפֶשׁ (H5315)", meaning: "Soul, living being, life, self, personhood, or deep inner desire." },
   "baruch": { original: "בָּרוּךְ (H1288)", meaning: "Blessed, praised, or invoked with divine favor and power for prosperity." },
   "tsedaqah": { original: "צְדָקָה (H6666)", meaning: "Moral righteousness, ethical justice, and right-living in community." },
-
-  // Biblical Books / General Context Fallbacks
   "john": { original: "Ἰωάννης / Gospel Context", meaning: "Emphasizes the eternal pre-existence and deity of Christ as the incarnate Word (Logos)." },
   "romans": { original: "Ῥωμαῖος / Pauline Epistle", meaning: "A systematic exposition of justification by grace through faith and God's righteousness." },
   "genesis": { original: "בְּרֵאשִׁית / Torah Context", meaning: "The book of beginnings, addressing creation, covenant, and the origin of redemptive history." },
@@ -88,7 +175,7 @@ function inspectLexiconTerm(termKey) {
 }
 
 // ==========================================
-// 2. UNIVERSAL BIBLE SEARCH (ANY VERSE/PASSAGE)
+// 4. UNIVERSAL BIBLE SEARCH & CACHING
 // ==========================================
 async function searchScripturePassage() {
   const inputEl = document.getElementById('bible-input');
@@ -155,7 +242,6 @@ async function searchScripturePassage() {
 }
 
 function renderPassageResult(containerEl, queryRef, passageText, isOfflineCached) {
-  // Automatically scan and highlight known theological/lexicon words inside the verse text
   let formattedText = passageText;
   const searchableWords = Object.keys(lexiconDictionary);
   
@@ -199,7 +285,7 @@ function saveCachedPassageToNotes(ref) {
 }
 
 // ==========================================
-// 3. NOTEBOOK AUTHENTICATION & SYNC MANAGEMENT
+// 5. NOTEBOOK AUTHENTICATION & STORAGE
 // ==========================================
 async function checkNotebookAuthMode() {
   const indicator = document.getElementById('notebook-mode-indicator');
@@ -236,9 +322,6 @@ function setGuestModeUI(syncBtn, indicator) {
   }
 }
 
-// ==========================================
-// 4. NOTEBOOK STORAGE, RENDERING & DELETION
-// ==========================================
 async function saveSessionNotebookEntry() {
   const leaderRef = document.getElementById('leader-scripture-ref-input')?.value.trim() || '';
   const leaderText = document.getElementById('leader-scripture-text-input')?.value.trim() || '';
