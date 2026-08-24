@@ -718,14 +718,10 @@ async function loadCloudNotebooks(userId) {
 function renderNotebookItems(items, container, isLocal) {
   container.innerHTML = items.map(item => {
     const itemId = item.id;
-    const safeItem = encodeURIComponent(JSON.stringify({
-      id: itemId,
-      leader_ref: item.leader_ref || '',
-      leader_text: item.leader_text || '',
-      scripture_ref: item.scripture_ref || '',
-      notes_content: item.notes_content || '',
-      image_url: item.image_url || ''
-    }));
+    const safeNotes = (item.notes_content || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const safeLeaderText = (item.leader_text || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const safeLeaderRef = (item.leader_ref || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const safeScriptureRef = (item.scripture_ref || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
     return `
       <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
@@ -746,11 +742,11 @@ function renderNotebookItems(items, container, isLocal) {
         ${item.image_url ? `<img src="${item.image_url}" class="w-full h-32 object-cover rounded-lg border border-zinc-800 mt-2">` : ''}
         
         <!-- Edit & Delete Archive Buttons -->
-        <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/60 mt-2">
-          <button onclick="editNotebookEntry('${safeItem}')" class="text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-900/30 transition-all">
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/60 mt-2 relative z-10">
+          <button type="button" onclick="prepareEditNotebook('${itemId}', '${safeLeaderRef}', '${safeLeaderText}', '${safeScriptureRef}', '${safeNotes}')" class="text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-900/30 transition-all">
             Edit Archive
           </button>
-          <button onclick="deleteNotebookEntry('${itemId}', ${isLocal})" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
+          <button type="button" onclick="deleteNotebookEntry('${itemId}', ${isLocal})" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
             Delete Archive
           </button>
         </div>
@@ -759,34 +755,28 @@ function renderNotebookItems(items, container, isLocal) {
   }).join('');
 }
 
-function editNotebookEntry(encodedItemStr) {
-  try {
-    const item = JSON.parse(decodeURIComponent(encodedItemStr));
+window.prepareEditNotebook = function(id, leaderRef, leaderText, scriptureRef, notesContent) {
+  const leaderRefEl = document.getElementById('leader-scripture-ref-input');
+  const leaderTextEl = document.getElementById('leader-scripture-text-input');
+  const scriptureRefEl = document.getElementById('note-scripture-input');
+  const notesContentEl = document.getElementById('note-content-input');
 
-    const leaderRefEl = document.getElementById('leader-scripture-ref-input');
-    const leaderTextEl = document.getElementById('leader-scripture-text-input');
-    const scriptureRefEl = document.getElementById('note-scripture-input');
-    const notesContentEl = document.getElementById('note-content-input');
+  if (leaderRefEl) leaderRefEl.value = leaderRef;
+  if (leaderTextEl) leaderTextEl.value = leaderText;
+  if (scriptureRefEl) scriptureRefEl.value = scriptureRef;
+  if (notesContentEl) notesContentEl.value = notesContent;
 
-    if (leaderRefEl) leaderRefEl.value = item.leader_ref || '';
-    if (leaderTextEl) leaderTextEl.value = item.leader_text || '';
-    if (scriptureRefEl) scriptureRefEl.value = item.scripture_ref || '';
-    if (notesContentEl) notesContentEl.value = item.notes_content || '';
-
-    let editInputEl = document.getElementById('editing-notebook-id');
-    if (!editInputEl) {
-      editInputEl = document.createElement('input');
-      editInputEl.type = 'hidden';
-      editInputEl.id = 'editing-notebook-id';
-      document.body.appendChild(editInputEl);
-    }
-    editInputEl.value = item.id;
-
-    document.getElementById('session-notebook-section')?.scrollIntoView({ behavior: 'smooth' });
-  } catch (err) {
-    console.error("Failed to load archive for editing", err);
+  let editInputEl = document.getElementById('editing-notebook-id');
+  if (!editInputEl) {
+    editInputEl = document.createElement('input');
+    editInputEl.type = 'hidden';
+    editInputEl.id = 'editing-notebook-id';
+    document.body.appendChild(editInputEl);
   }
-}
+  editInputEl.value = id;
+
+  document.getElementById('session-notebook-section')?.scrollIntoView({ behavior: 'smooth' });
+};
 
 async function deleteNotebookEntry(id, isLocal) {
   if (!confirm("Are you sure you want to delete this archive?")) return;
