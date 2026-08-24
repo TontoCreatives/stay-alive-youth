@@ -198,9 +198,9 @@
                                 return `<p class="mb-6 leading-relaxed">${text}</p>`;
                             }
 
-                            // 2. Audio Embeds
-                            if (block._type === 'audioEmbed') {
-                                const audioSrc = block.audioUrl || block.url;
+                            // 2. Audio Embeds (Supports multiple Sanity block names)
+                            if (block._type === 'audioEmbed' || block._type === 'audio' || block._type === 'track') {
+                                const audioSrc = block.audioUrl || block.file?.url || block.file?.asset?.url || block.url;
                                 if (!audioSrc) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Audio block found, but file URL is missing]</div>`;
                                 
                                 return `
@@ -215,7 +215,7 @@
                             }
 
                             // 3. Video Embeds
-                            if (block._type === 'videoEmbed') {
+                            if (block._type === 'videoEmbed' || block._type === 'video') {
                                 if (!block.url) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Video block found, but URL is missing]</div>`;
                                 
                                 let embedUrl = block.url;
