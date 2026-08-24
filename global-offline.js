@@ -134,7 +134,7 @@ async function initOnlinePresenceTracker() {
         }
       })
       .on('presence', { event: 'leave' }, ({ key }) => {
-        console.log(`User went offline/disconnected:`, key);
+        console.log(`User disconnected:`, key);
       });
 
     await presenceChannel.subscribe(async (status) => {
