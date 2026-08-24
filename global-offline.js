@@ -40,8 +40,15 @@ function injectGlobalHeader() {
         </div>
       </a>
       <div class="flex items-center gap-3">
-        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-emerald-500/30 text-xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <!-- Personal Online Status Indicator -->
+        <div id="my-presence-indicator" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs">
+          <span id="my-status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="my-status-text" class="text-[10px] text-emerald-400 font-medium">Online</span>
+        </div>
+
+        <!-- Room Total Counter -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-emerald-500/30 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
           <span class="text-emerald-400 font-bold" id="online-users-counter">1</span>
           <span class="text-[10px] text-zinc-400">Online</span>
         </div>
@@ -92,37 +99,83 @@ function injectGlobalHeader() {
 }
 
 // ==========================================
-// REALTIME ONLINE USERS PRESENCE TRACKER
+// REALTIME ONLINE USERS & PERSONAL STATUS TRACKER
 // ==========================================
 async function initOnlinePresenceTracker() {
   const client = window.supabaseClient || window.supabase;
-  if (!client) return;
+  const counterEl = document.getElementById('online-users-counter');
+  const statusText = document.getElementById('my-status-text');
+  const statusDot = document.getElementById('my-status-dot');
+  
+  if (!client) {
+    if (counterEl) counterEl.textContent = '1';
+    return;
+  }
 
   try {
+    const { data: { session } } = await client.auth.getSession();
+    const userIdentifier = session ? session.user.email : 'Guest-' + Math.floor(Math.random() * 1000);
+
     const presenceChannel = client.channel('room_stay_alive_online', {
-      config: { presence: { key: 'user' } }
+      config: { 
+        presence: { 
+          key: userIdentifier 
+        } 
+      }
     });
 
     presenceChannel
       .on('presence', { event: 'sync' }, () => {
         const state = presenceChannel.presenceState();
         const totalOnline = Object.keys(state).length;
-        const counterEl = document.getElementById('online-users-counter');
         if (counterEl) {
           counterEl.textContent = totalOnline > 0 ? totalOnline : 1;
         }
       })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          const { data: { session } } = await client.auth.getSession();
-          await presenceChannel.track({
-            online_at: new Date().toISOString(),
-            email: session ? session.user.email : 'Guest'
-          });
-        }
+      .on('presence', { event: 'leave' }, ({ key }) => {
+        console.log(`User went offline/disconnected:`, key);
       });
+
+    await presenceChannel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        await presenceChannel.track({
+          online_at: new Date().toISOString(),
+          user: userIdentifier
+        });
+        if (statusText) {
+          statusText.textContent = 'Online';
+          statusText.className = 'text-[10px] text-emerald-400 font-medium';
+        }
+        if (statusDot) {
+          statusDot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+        }
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      if (counterEl) counterEl.textContent = '1 (Offline)';
+      if (statusText) {
+        statusText.textContent = 'Offline';
+        statusText.className = 'text-[10px] text-red-400 font-medium';
+      }
+      if (statusDot) {
+        statusDot.className = 'w-2 h-2 rounded-full bg-red-500';
+      }
+    });
+
+    window.addEventListener('online', () => {
+      if (statusText) {
+        statusText.textContent = 'Online';
+        statusText.className = 'text-[10px] text-emerald-400 font-medium';
+      }
+      if (statusDot) {
+        statusDot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+      }
+    });
+
   } catch (err) {
-    console.log("Presence tracking initialized in offline fallback mode.");
+    console.log("Presence tracking running in fallback mode.");
+    if (counterEl) counterEl.textContent = '1';
   }
 }
 
@@ -144,7 +197,6 @@ async function handleProfileClick() {
 
     if (emailEl) emailEl.textContent = session.user.email;
 
-    // Fetch current profile settings to pre-fill inputs
     const { data: profile } = await client
       .from('profiles')
       .select('display_name, avatar_url')
@@ -646,26 +698,33 @@ async function loadCommunityInsights() {
     const userIds = [...new Set(data.map(item => item.user_id))];
     const { data: profilesData } = await client
       .from('profiles')
-      .select('id, display_name, avatar_url')
+      .select('id, display_name, avatar_url, is_admin')
       .in('id', userIds);
 
     const profileMap = {};
+    let currentUserIsAdmin = false;
+
     if (profilesData) {
       profilesData.forEach(p => {
         profileMap[p.id] = p;
+        if (currentUser && p.id === currentUser.id && p.is_admin) {
+          currentUserIsAdmin = true;
+        }
       });
     }
 
     container.innerHTML = data.map(item => {
       const author = profileMap[item.user_id] || {};
       const avatarUrl = author.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.user_id}`;
-      // Use display_name if set; otherwise fall back to a clean anonymous handle instead of showing an email
-      const displayName = author.display_name && author.display_name.trim() !== '' ? author.display_name : 'Fellowship Member';
-      const isAdmin = currentUser && (currentUser.email === 'tontocreatives@gmail.com' || currentUser.id === item.user_id);
+      let displayName = author.display_name && author.display_name.trim() !== '' 
+        ? author.display_name 
+        : `Member_${item.user_id.substring(0, 6)}`;
+
+      const canDelete = currentUser && (currentUserIsAdmin || currentUser.id === item.user_id);
       
       return `
         <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5 relative">
-          <!-- Author Info Header (Display Name instead of Email) -->
+          <!-- Author Info Header -->
           <div class="flex items-center justify-between border-b border-zinc-800/60 pb-2">
             <div class="flex items-center gap-2">
               <img src="${avatarUrl}" alt="Avatar" class="w-6 h-6 rounded-full object-cover border border-zinc-700 bg-zinc-800">
@@ -680,10 +739,11 @@ async function loadCommunityInsights() {
             <p class="text-xs text-zinc-300 leading-relaxed">${item.insight || ''}</p>
           </div>
 
-          ${isAdmin ? `
+          <!-- Admin or Owner Delete Option -->
+          ${canDelete ? `
             <div class="flex justify-end pt-2 border-t border-zinc-800/60 mt-2">
               <button onclick="deleteCommunityInsight('${item.id}')" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
-                Delete Post
+                ${currentUserIsAdmin && currentUser.id !== item.user_id ? 'Admin Delete' : 'Delete Post'}
               </button>
             </div>
           ` : ''}
