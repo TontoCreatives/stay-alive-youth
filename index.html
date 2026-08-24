@@ -66,8 +66,7 @@
 </script>
 <script src="global-offline.js"></script>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
-
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
 <!-- PWA Install Gate Overlay -->
 <div id="pwa-install-gate" style="display: none; flex-direction: column; justify-content: center; align-items: center; background: #000000; color: #ffffff; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; padding: 20px; text-align: center;">
     <div style="max-width: 400px; padding: 30px; background: #121212; border: 1px solid #27272a; border-radius: 16px;">
@@ -84,7 +83,7 @@
         </div>
     </div>
 </div>
-
+</div>
     <!-- START GLASS CRACK INTRO -->
     <div id="glass-intro" class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center bg-black/90 transition-opacity">
         <div class="relative w-full h-full flex items-center justify-center overflow-hidden">
@@ -138,15 +137,8 @@
     <!-- END GLASS CRACK INTRO -->
 
  <!-- NAVIGATION BAR -->
-<header class="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        
-        <!-- Logo & Title -->
-        <a href="index.html" class="flex items-center gap-3 group">
-            <img id="nav-logo" src="Banner%20images%20and%20logo/bible%20study%20logo.png" alt="Logo" class="w-9 h-9 rounded-xl object-cover border border-zinc-800">
-            <span class="font-black tracking-tight text-white group-hover:text-brandYellow transition-colors text-sm sm:text-base">Stay Alive Fellowship</span>
-        </a>
 
+   
         <!-- Desktop Nav Links -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
             <a href="index.html" class="text-brandYellow transition-colors">Home</a>
@@ -157,11 +149,6 @@
             <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
             <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
         </nav>
-
-        <!-- Right Side: Profile / Online Status Widget & Mobile Menu Button -->
-        <div class="flex items-center gap-3">
-            <div id="global-header-profile-slot"></div>
-        </div>
 
     </div>
 </header>
@@ -219,7 +206,7 @@
         <!-- Devotional Card Container -->
         <div class="bg-cardBg/80 backdrop-blur-xl border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
             
-            <!-- Featured Image -->
+            <!-- Featured Image (PC Uploaded to Sanity) -->
             <img id="dev-image" src="" alt="Devotional Featured Image" class="w-full h-48 sm:h-72 object-cover rounded-xl hidden" />
         <!-- Scripture Banner -->
         <div class="border-l-4 border-brandYellow pl-4 py-1">
@@ -251,7 +238,6 @@
         </div>
     </div>
 </section>
-
 <!-- Community Fellowship Feed Section -->
 <section class="max-w-xl mx-auto px-4 py-8 space-y-6">
   <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
@@ -302,19 +288,16 @@
     </div>
   </div>
 </div>
-
 <!-- Push Notification Opt-in -->
-<div class="max-w-xl mx-auto px-4 w-full">
-  <div id="notification-prompt-box" class="my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center">
-    <h3 class="text-white font-semibold mb-1">Never Miss a Devotion</h3>
-    <p class="text-xs text-zinc-400 mb-4">Get daily reminders sent straight to your device.</p>
-    
-    <button onclick="subscribeToPushNotifications()" class="w-full py-3 px-4 bg-brandYellow text-zinc-950 font-bold rounded-xl hover:opacity-90 transition-all text-center">
-      Enable Daily Notifications
-    </button>
-  </div>
+<div id="notification-prompt-box" class="my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center">
+  <h3 class="text-white font-semibold mb-1">Never Miss a Devotion</h3>
+  <p class="text-xs text-zinc-400 mb-4">Get daily reminders sent straight to your device.</p>
+  
+  <button onclick="subscribeToPushNotifications()" class="w-full py-3 px-4 bg-brandYellow text-zinc-950 font-bold rounded-xl hover:opacity-90 transition-all text-center">
+    Enable Daily Notifications
+  </button>
 </div>
-
+</div>
 <!-- QUICK ACCESS SECTION -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex items-center justify-between mb-4">
@@ -359,7 +342,6 @@
 
     </div>
 </section>
-
 <!-- DNA SECTION -->
     <section class="py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto media-card-gradient rounded-3xl p-6 sm:p-10 border border-zinc-800/80">
@@ -465,6 +447,15 @@
             <p id="footer-text">&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
         </div>
     </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
 
     <!-- PWA Update Banner -->
     <div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
@@ -627,27 +618,27 @@
                         eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
                         return;
                     }
-                    eventsContainer.innerHTML = events.map(event => {
-                        return `
-                            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
-                                <div>
-                                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
-                                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
-                                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
-                                    </div>
-                                    <div class="p-6 pb-2">
-                                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
-                                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
-                                    </div>
-                                </div>
-                                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
-                                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
-                                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
+eventsContainer.innerHTML = events.map(event => {
+        return `
+            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+                <div>
+                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
+                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
+                    </div>
+                    <div class="p-6 pb-2">
+                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
+                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
+                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
+                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
+                </div>
+            </div>
+        `;
+    }).join('');
                 }
             } catch (err) {
                 console.error("Sanity events fetch error:", err);
@@ -710,39 +701,44 @@
         fetchEvents();
         fetchLatestArticles();
         fetchLatestDevotional();
+async function fetchLatestDevotional() {
+    try {
+        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
+        const dev = await client.fetch(query);
 
-        async function fetchLatestDevotional() {
-            try {
-                const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
-                const dev = await client.fetch(query);
+        if (dev) {
+            document.getElementById('dev-date').textContent = dev.publishedAt || '';
+            document.getElementById('dev-title').textContent = dev.title || '';
+            document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
+            
+            // Clean single-assignment without hardcoded extra quotes
+            document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
+            
+            document.getElementById('dev-observation').textContent = dev.observation || '';
+            document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
+            document.getElementById('dev-application').textContent = dev.application || '';
+            document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
 
-                if (dev) {
-                    document.getElementById('dev-date').textContent = dev.publishedAt || '';
-                    document.getElementById('dev-title').textContent = dev.title || '';
-                    document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
-                    document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
-                    document.getElementById('dev-observation').textContent = dev.observation || '';
-                    document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
-                    document.getElementById('dev-application').textContent = dev.application || '';
-                    document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
-
-                    const imgElement = document.getElementById('dev-image');
-                    if (dev.imageUrl) {
-                        imgElement.src = dev.imageUrl;
-                        imgElement.classList.remove('hidden');
-                    } else {
-                        imgElement.classList.add('hidden');
-                    }
-                } else {
-                    document.getElementById('dev-title').textContent = "No devotionals published yet.";
-                }
-            } catch (error) {
-                console.error("Error fetching devotional:", error);
-                document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
+            // Handle Featured Image display from Sanity CDN asset URL
+            const imgElement = document.getElementById('dev-image');
+            if (dev.imageUrl) {
+                imgElement.src = dev.imageUrl;
+                imgElement.classList.remove('hidden');
+            } else {
+                imgElement.classList.add('hidden');
             }
+        } else {
+            document.getElementById('dev-title').textContent = "No devotionals published yet.";
         }
-    </script>
+    } catch (error) {
+        console.error("Error fetching devotional:", error);
+        document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
+    }
+}
 
+// Ensure it runs on page load
+fetchLatestDevotional();
+    </script>
 <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
 <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/85 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
     <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
@@ -772,7 +768,6 @@
         </li>
     </ul>
 </nav>
-
 <script>
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
@@ -833,9 +828,18 @@ window.addEventListener('appinstalled', () => {
     if (installGate) installGate.style.setProperty('display', 'none', 'important');
     if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
 });
-
-async function loadDynamicHeroCarousel() {
-    const projectId = "y4q1h6a9";
+// NFS Hero Carousel Fade Loop
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].style.opacity = '0';
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].style.opacity = '1';
+        }, 4000);
+    }
+    async function loadDynamicHeroCarousel() {
+    const projectId = "y4q1h6a9"; // Your Sanity Project ID
     const dataset = "production";
     
     const query = encodeURIComponent(`*[_type == "homeSettings"][0]{
@@ -892,5 +896,4 @@ function startHeroFadeLoop() {
 
 document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
 </script>
-</body>
 </html>
