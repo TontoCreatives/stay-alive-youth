@@ -4,11 +4,11 @@ import {defineType, defineArrayMember} from 'sanity'
  * This is the schema definition for the rich text fields used for
  * for this blog studio. When you import it in schemas.js it can be
  * reused in other parts of the studio with:
- *  {
- *    name: 'someName',
- *    title: 'Some title',
- *    type: 'blockContent'
- *  }
+ *   {
+ *     name: 'someName',
+ *     title: 'Some title',
+ *     type: 'blockContent'
+ *   }
  */
 export default defineType({
   title: 'Block Content',
@@ -56,12 +56,41 @@ export default defineType({
         ],
       },
     }),
-    // You can add additional types here. Note that you can't use
-    // primitive types such as 'string' and 'number' in the same array
-    // as a block type.
+    
+    // Standard Image block with caption option
     defineArrayMember({
       type: 'image',
       options: {hotspot: true},
+      fields: [
+        {
+          name: 'caption',
+          type: 'string',
+          title: 'Image Caption',
+        }
+      ]
+    }),
+
+    // Custom MP3 Audio Block
+    defineArrayMember({
+      name: 'audioEmbed',
+      title: 'Audio (MP3)',
+      type: 'object',
+      fields: [
+        { name: 'title', title: 'Track Name / Title', type: 'string' },
+        { name: 'file', title: 'Upload MP3 File', type: 'file', options: { accept: 'audio/mpeg' } },
+        { name: 'url', title: 'Or External MP3 URL', type: 'url' }
+      ]
+    }),
+
+    // Custom Video Block
+    defineArrayMember({
+      name: 'videoEmbed',
+      title: 'Video Embed',
+      type: 'object',
+      fields: [
+        { name: 'url', title: 'YouTube / Video URL', type: 'url' },
+        { name: 'caption', title: 'Video Caption', type: 'string' }
+      ]
     }),
   ],
 })
