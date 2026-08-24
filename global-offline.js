@@ -71,7 +71,7 @@ function injectGlobalHeader() {
           <p id="profile-modal-email" class="text-xs text-zinc-400">Manage how you appear in community posts.</p>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-3" id="profile-modal-body-container">
           <div>
             <label class="block text-[11px] font-medium text-zinc-400 mb-1">Display Name (Public)</label>
             <input type="text" id="profile-displayname-input" placeholder="e.g. David K." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
@@ -183,19 +183,74 @@ async function handleProfileClick() {
   const client = window.supabaseClient || window.supabase;
   if (!client) return;
 
+  const modal = document.getElementById('profile-modal');
+  const emailEl = document.getElementById('profile-modal-email');
+  const updateBtn = document.getElementById('profile-update-btn');
+  const signoutBtn = document.getElementById('profile-signout-btn');
+  
+  // Containers / input fields
+  const nameInput = document.getElementById('profile-displayname-input');
+  const avatarInput = document.getElementById('profile-avatar-input');
+
   try {
     const { data: { session } } = await client.auth.getSession();
+    
     if (!session) {
-      window.location.href = '/login.html';
+      // GUEST STATE: Transform modal into an inline Login/Register form
+      if (emailEl) emailEl.textContent = "Sign in or create an account to sync your study notes and streaks.";
+      
+      const parentBlock = nameInput ? nameInput.parentElement.parentElement : null;
+      if (parentBlock) {
+        parentBlock.innerHTML = `
+          <div>
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Email Address</label>
+            <input type="email" id="auth-email-input" placeholder="you@example.com" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Password</label>
+            <input type="password" id="auth-password-input" placeholder="••••••••" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+          </div>
+          <button id="profile-update-btn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
+            Sign In / Register
+          </button>
+          <button id="profile-signout-btn" class="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold rounded-xl text-xs transition-all cursor-pointer" style="display:none;">
+            Sign Out
+          </button>
+        `;
+        
+        // Bind action click handler for the newly injected sign-in button
+        document.getElementById('profile-update-btn').onclick = async () => {
+          const email = document.getElementById('auth-email-input').value.trim();
+          const password = document.getElementById('auth-password-input').value.trim();
+          
+          if (!email || !password) {
+            alert("Please enter both email and password.");
+            return;
+          }
+
+          let { error } = await client.auth.signInWithPassword({ email, password });
+          if (error) {
+            let { error: signUpError } = await client.auth.signUp({ email, password });
+            if (signUpError) {
+              alert("Auth error: " + signUpError.message);
+              return;
+            } else {
+              alert("Account created and signed in successfully!");
+            }
+          } else {
+            alert("Signed in successfully!");
+          }
+          window.location.reload();
+        };
+      }
+
+      if (modal) modal.classList.remove('hidden');
       return;
     }
 
-    const modal = document.getElementById('profile-modal');
-    const emailEl = document.getElementById('profile-modal-email');
-    const nameInput = document.getElementById('profile-displayname-input');
-    const avatarInput = document.getElementById('profile-avatar-input');
-
+    // AUTHENTICATED STATE: Render standard profile configuration settings
     if (emailEl) emailEl.textContent = session.user.email;
+    if (signoutBtn) signoutBtn.style.display = 'block';
 
     const { data: profile } = await client
       .from('profiles')
@@ -210,7 +265,7 @@ async function handleProfileClick() {
 
     if (modal) modal.classList.remove('hidden');
   } catch (e) {
-    window.location.href = '/login.html';
+    console.error("Profile modal error:", e);
   }
 }
 
