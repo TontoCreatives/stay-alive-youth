@@ -849,10 +849,10 @@ async function loadCommunityInsights() {
 
     container.innerHTML = data.map(item => {
       const author = profileMap[item.user_id] || {};
-      const avatarUrl = author.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.user_id}`;
-      let displayName = author.display_name && author.display_name.trim() !== '' 
+      const avatarUrl = item.avatar_url || author.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.user_id}`;
+      let displayName = item.user_name || (author.display_name && author.display_name.trim() !== '' 
         ? author.display_name 
-        : `Member_${item.user_id.substring(0, 6)}`;
+        : `Member_${item.user_id.substring(0, 6)}`);
 
       const canDelete = currentUser && (currentUserIsAdmin || currentUser.id === item.user_id);
       
@@ -869,7 +869,8 @@ async function loadCommunityInsights() {
 
           <!-- Post Content -->
           <div class="space-y-1">
-            <p class="text-xs text-zinc-300 leading-relaxed">${item.insight || ''}</p>
+            ${item.scripture_ref ? `<span class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/40">${item.scripture_ref}</span>` : ''}
+            <p class="text-xs text-zinc-300 leading-relaxed mt-1">${item.insight || ''}</p>
           </div>
 
           <!-- Admin or Owner Delete Option -->
@@ -949,11 +950,28 @@ async function submitCommunityPost() {
       return;
     }
 
+    let displayName = session.user.email?.split('@')[0] || 'Member';
+    let avatarUrl = session.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${session.user.id}`;
+
+    const { data: profile } = await client
+      .from('profiles')
+      .select('display_name, avatar_url')
+      .eq('id', session.user.id)
+      .single();
+
+    if (profile) {
+      if (profile.display_name && profile.display_name.trim() !== '') displayName = profile.display_name;
+      if (profile.avatar_url && profile.avatar_url.trim() !== '') avatarUrl = profile.avatar_url;
+    }
+
     const { error } = await client
       .from('community_insights')
       .insert([{
         user_id: session.user.id,
-        insight: `[${scriptureRef || 'General Fellowship'}] ${content}`,
+        user_name: displayName,
+        avatar_url: avatarUrl,
+        scripture_ref: scriptureRef || 'General',
+        insight: content,
         created_at: new Date().toISOString()
       }]);
 
