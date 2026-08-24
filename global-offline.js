@@ -751,7 +751,6 @@ function renderNotebookItems(items, container, isLocal) {
     `;
   }).join('');
 
-  // Attach safe click listeners to all edit buttons
   container.querySelectorAll('.edit-notebook-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       try {
@@ -982,7 +981,8 @@ async function loadCommunityInsights() {
   }
 }
 
-function editCommunityInsight(encodedPostStr) {
+// Explicitly bind to window scope so inline onclick handlers invoke properly
+window.editCommunityInsight = function(encodedPostStr) {
   try {
     const item = JSON.parse(decodeURIComponent(encodedPostStr));
     
@@ -1001,11 +1001,14 @@ function editCommunityInsight(encodedPostStr) {
     }
     editPostIdEl.value = item.id;
 
-    openNewPostModal();
+    const modal = document.getElementById('post-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
   } catch (err) {
-    console.error("Failed to load post for editing", err);
+    console.error("Failed to load post for editing:", err);
   }
-}
+};
 
 async function deleteCommunityInsight(id) {
   if (!confirm("Are you sure you want to delete this insight?")) return;
