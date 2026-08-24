@@ -200,22 +200,22 @@
                     return `<p class="mb-4 text-zinc-300">${text}</p>`;
                 }
 
-                // Handle Audio embeds
-                if (block._type === 'audio' || (block.asset && block.asset._ref && block.asset._ref.includes('audio'))) {
+                // Handle Audio / File embeds
+                if (block._type === 'audio' || block._type === 'file' || block._type === 'audioFile' || (block.asset && (block.asset.mimeType?.includes('audio') || (block.asset._ref && block.asset._ref.includes('audio'))))) {
                     const audioUrl = block.asset?.url || block.url;
                     if (!audioUrl) return '';
                     return `
                         <div class="my-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
                             <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider mb-2">Audio Dispatch</p>
                             <audio controls class="w-full">
-                                <source src="${audioUrl}" type="audio/mpeg">
+                                <source src="${audioUrl}">
                                 Your browser does not support the audio element.
                             </audio>
                         </div>
                     `;
                 }
 
-                // Handle Video embeds or media types
+                // Handle Video embeds
                 if (block._type === 'video' || block._type === 'mux.video') {
                     const videoUrl = block.url || block.asset?.url;
                     if (!videoUrl) return '';
@@ -229,11 +229,11 @@
                     `;
                 }
 
-                // Handle standalone images inside the Portable Text stream
+                // Handle Images (Contrained height/width & centered)
                 if (block._type === 'image' && block.asset?.url) {
                     return `
-                        <figure class="my-6">
-                            <img src="${block.asset.url}" alt="Article image" class="w-full rounded-xl border border-zinc-800 object-cover">
+                        <figure class="my-6 flex flex-col items-center">
+                            <img src="${block.asset.url}" alt="Article image" class="max-h-[450px] w-auto max-w-full rounded-xl border border-zinc-800 object-contain shadow-lg">
                         </figure>
                     `;
                 }
