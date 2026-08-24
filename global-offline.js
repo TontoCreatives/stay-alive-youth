@@ -582,7 +582,6 @@ async function saveSessionNotebookEntry() {
   const editId = document.getElementById('editing-notebook-id')?.value;
 
   if (editId) {
-    // Updating an existing entry
     if (session && navigator.onLine) {
       const { error } = await client
         .from('session_notebook')
@@ -619,13 +618,11 @@ async function saveSessionNotebookEntry() {
       loadLocalNotebooks();
     }
 
-    // Clear editing state hidden input if it exists
     const editInputEl = document.getElementById('editing-notebook-id');
     if (editInputEl) editInputEl.remove();
 
     alert('Study note updated successfully!');
   } else {
-    // Creating a new entry
     const newEntry = {
       id: 'note_' + Date.now(),
       leader_ref: leaderRef || 'Leader Focus',
@@ -720,8 +717,16 @@ async function loadCloudNotebooks(userId) {
 
 function renderNotebookItems(items, container, isLocal) {
   container.innerHTML = items.map(item => {
-    // Safely encode item data for inline editing invocation
-    const safeItem = encodeURIComponent(JSON.stringify(item));
+    const itemId = item.id;
+    const safeItem = encodeURIComponent(JSON.stringify({
+      id: itemId,
+      leader_ref: item.leader_ref || '',
+      leader_text: item.leader_text || '',
+      scripture_ref: item.scripture_ref || '',
+      notes_content: item.notes_content || '',
+      image_url: item.image_url || ''
+    }));
+
     return `
       <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
         ${item.leader_text ? `
@@ -735,7 +740,7 @@ function renderNotebookItems(items, container, isLocal) {
         ` : ''}
         <div class="flex items-center justify-between pt-1">
           <span class="text-xs font-bold text-emerald-400">${item.scripture_ref}</span>
-          <span class="text-[10px] text-zinc-500">${item.session_date} ${isLocal ? '(Local)' : ''}</span>
+          <span class="text-[10px] text-zinc-500">${item.session_date || ''} ${isLocal ? '(Local)' : ''}</span>
         </div>
         <p class="text-xs text-zinc-300 leading-relaxed">${item.notes_content}</p>
         ${item.image_url ? `<img src="${item.image_url}" class="w-full h-32 object-cover rounded-lg border border-zinc-800 mt-2">` : ''}
@@ -745,7 +750,7 @@ function renderNotebookItems(items, container, isLocal) {
           <button onclick="editNotebookEntry('${safeItem}')" class="text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-900/30 transition-all">
             Edit Archive
           </button>
-          <button onclick="deleteNotebookEntry('${item.id}', ${isLocal})" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
+          <button onclick="deleteNotebookEntry('${itemId}', ${isLocal})" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
             Delete Archive
           </button>
         </div>
@@ -777,7 +782,6 @@ function editNotebookEntry(encodedItemStr) {
     }
     editInputEl.value = item.id;
 
-    alert("Loaded archive into input fields above for editing. Modify your text and click save!");
     document.getElementById('session-notebook-section')?.scrollIntoView({ behavior: 'smooth' });
   } catch (err) {
     console.error("Failed to load archive for editing", err);
@@ -1033,7 +1037,6 @@ function closeNewPostModal() {
   const modal = document.getElementById('post-modal');
   if (modal) modal.classList.add('hidden');
   
-  // Clear edit state
   const editPostIdEl = document.getElementById('editing-community-post-id');
   if (editPostIdEl) editPostIdEl.remove();
   const verseInput = document.getElementById('post-verse-input');
@@ -1092,7 +1095,6 @@ async function submitCommunityPost() {
     const editPostId = document.getElementById('editing-community-post-id')?.value;
 
     if (editPostId) {
-      // Update existing post
       const { error } = await client
         .from('community_insights')
         .update({
@@ -1104,7 +1106,6 @@ async function submitCommunityPost() {
       if (error) throw error;
       alert("Your post has been updated successfully!");
     } else {
-      // Insert new post
       const { error } = await client
         .from('community_insights')
         .insert([{
