@@ -688,8 +688,36 @@ function renderNotebookItems(items, container, isLocal) {
       </div>
       <p class="text-xs text-zinc-300 leading-relaxed">${item.notes_content}</p>
       ${item.image_url ? `<img src="${item.image_url}" class="w-full h-32 object-cover rounded-lg border border-zinc-800 mt-2">` : ''}
+      
+      <!-- Delete Archive Button -->
+      <div class="flex justify-end pt-2 border-t border-zinc-800/60 mt-2">
+        <button onclick="deleteNotebookEntry('${item.id}', ${isLocal})" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
+          Delete Archive
+        </button>
+      </div>
     </div>
   `).join('');
+}
+
+async function deleteNotebookEntry(id, isLocal) {
+  if (!confirm("Are you sure you want to delete this archive?")) return;
+
+  if (isLocal) {
+    let localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+    localNotes = localNotes.filter(n => n.id !== id);
+    localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
+    loadLocalNotebooks();
+  } else {
+    const client = window.supabaseClient || window.supabase;
+    if (!client) return;
+    const { error } = await client.from('session_notebook').delete().eq('id', id);
+    if (error) {
+      alert("Failed to delete note: " + error.message);
+    } else {
+      const { data: { session } } = await client.auth.getSession();
+      if (session) loadCloudNotebooks(session.user.id);
+    }
+  }
 }
 
 async function syncLocalNotesToCloud() {
@@ -841,7 +869,6 @@ async function loadCommunityInsights() {
 
           <!-- Post Content -->
           <div class="space-y-1">
-            <span class="text-xs font-bold text-emerald-400 block">${item.scripture_ref || 'Fellowship Insight'}</span>
             <p class="text-xs text-zinc-300 leading-relaxed">${item.insight || ''}</p>
           </div>
 
@@ -926,8 +953,7 @@ async function submitCommunityPost() {
       .from('community_insights')
       .insert([{
         user_id: session.user.id,
-        scripture_ref: scriptureRef || 'General Fellowship',
-        insight: content,
+        insight: `[${scriptureRef || 'General Fellowship'}] ${content}`,
         created_at: new Date().toISOString()
       }]);
 
@@ -950,7 +976,6 @@ function checkNotificationOptInState() {
   if (!("Notification" in window)) return;
   
   if (Notification.permission === "granted") {
-    // Hide the notification container completely if already permitted/subscribed
     const notifCards = document.querySelectorAll('div');
     notifCards.forEach(card => {
       if (card.textContent.includes("Never Miss a Devotion") && card.textContent.includes("Enable Daily Notifications")) {
