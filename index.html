@@ -135,6 +135,8 @@
             <img id="nav-logo" src="Banner images and logo/bible study logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-cover border border-zinc-800">
             <span class="text-white font-bold text-sm tracking-tight">Stay Alive Fellowship</span>
         </div>
+
+        <!-- Desktop Navigation Links -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
             <a href="index.html" class="text-brandYellow transition-colors">Home</a>
             <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
@@ -144,6 +146,23 @@
             <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
             <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
         </nav>
+
+        <!-- User Profile, Online Status & Streak Indicator -->
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 rounded-full px-3 py-1">
+                <!-- Profile Image Avatar -->
+                <div class="relative">
+                    <img id="user-avatar" src="Banner images and logo/bible study logo.png" alt="Profile" class="w-6 h-6 rounded-full object-cover border border-brandYellow/40">
+                    <!-- Online Status Badge -->
+                    <span class="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-zinc-950 animate-pulse"></span>
+                </div>
+                <!-- Reading Streak Counter -->
+                <div class="flex items-center gap-1 text-xs font-bold text-brandYellow">
+                    <span>🔥</span>
+                    <span id="streak-counter">3</span>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- HERO SECTION -->
@@ -563,7 +582,10 @@
                         document.getElementById('hero-heading').innerHTML = `${data.heroTitle} <span class="text-brandYellow">${data.heroHighlight}</span>`;
                     }
                     if (data.heroDescription) document.getElementById('hero-desc').innerText = data.heroDescription;
-                    if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
+                    if (data.siteLogoUrl) {
+                        document.getElementById('nav-logo').src = data.siteLogoUrl;
+                        document.getElementById('user-avatar').src = data.siteLogoUrl;
+                    }
                     if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
                     const tracksContainer = document.getElementById('tracks-container');
