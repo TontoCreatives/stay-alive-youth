@@ -20,42 +20,40 @@
             }
         }
     </script>
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://wgziqhahopomiyzvcvxd.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
-  window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-</script>
-<!-- Link to custom stylesheet -->
-<link rel="stylesheet" href="style.css">
-    
-    <!-- Sanity Client -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const SUPABASE_URL = 'https://wgziqhahopomiyzvcvxd.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_4_Tb-2FKevFc-YE42kTqyw_eod0wy_R';
+      window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+    <!-- Link to custom stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- Vercel Web Analytics -->
+    
+    <!-- PDF.js & Vercel Analytics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FACC15">
+    <meta name="theme-color" content="#FACC15">
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation pb-20 md:pb-0">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased pb-20 md:pb-0">
 
     <!-- NAVIGATION BAR -->
-   
-
+    <header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="index.html" class="text-white font-bold tracking-wider text-sm sm:text-base">STAY ALIVE FELLOWSHIP</a>
             <!-- Desktop Nav Links -->
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
                 <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
                 <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
                 <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
-                <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
+                <a href="insights.html" class="text-brandYellow transition-colors">Articles</a>
                 <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
                 <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
                 <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
             </nav>
-
         </div>
     </header>
 
@@ -145,7 +143,6 @@
         let activeFilter = 'all';
         let searchQuery = '';
 
-        // --- STREAK TRACKER LOGIC ---
         function updateReadingStreak() {
             const today = new Date().toISOString().split('T')[0];
             const streakData = JSON.parse(localStorage.getItem('saf_streak_data')) || {
@@ -193,15 +190,56 @@
         function blocksToHtml(blocks) {
             if (!blocks || !Array.isArray(blocks)) return '<p class="text-zinc-400">No content available for this article.</p>';
             
-            const mainBody = blocks.map(block => {
-                if (block._type !== 'block' || !block.children) return '';
-                const text = block.children.map(child => child.text).join('');
-                if (block.style === 'h2') return `<h2 class="text-2xl font-bold text-white mt-6 mb-3">${text}</h2>`;
-                if (block.style === 'h3') return `<h3 class="text-xl font-bold text-brandYellow mt-4 mb-2">${text}</h3>`;
-                return `<p class="mb-4 text-zinc-300">${text}</p>`;
-            }).join('');
+            return blocks.map(block => {
+                // Handle standard text blocks (headings, paragraphs)
+                if (block._type === 'block') {
+                    if (!block.children) return '';
+                    const text = block.children.map(child => child.text).join('');
+                    if (block.style === 'h2') return `<h2 class="text-2xl font-bold text-white mt-6 mb-3">${text}</h2>`;
+                    if (block.style === 'h3') return `<h3 class="text-xl font-bold text-brandYellow mt-4 mb-2">${text}</h3>`;
+                    return `<p class="mb-4 text-zinc-300">${text}</p>`;
+                }
 
-            return mainBody;
+                // Handle Audio embeds
+                if (block._type === 'audio' || (block.asset && block.asset._ref && block.asset._ref.includes('audio'))) {
+                    const audioUrl = block.asset?.url || block.url;
+                    if (!audioUrl) return '';
+                    return `
+                        <div class="my-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
+                            <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider mb-2">Audio Dispatch</p>
+                            <audio controls class="w-full">
+                                <source src="${audioUrl}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    `;
+                }
+
+                // Handle Video embeds or media types
+                if (block._type === 'video' || block._type === 'mux.video') {
+                    const videoUrl = block.url || block.asset?.url;
+                    if (!videoUrl) return '';
+                    return `
+                        <div class="my-6 rounded-xl overflow-hidden border border-zinc-800">
+                            <video controls class="w-full">
+                                <source src="${videoUrl}">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    `;
+                }
+
+                // Handle standalone images inside the Portable Text stream
+                if (block._type === 'image' && block.asset?.url) {
+                    return `
+                        <figure class="my-6">
+                            <img src="${block.asset.url}" alt="Article image" class="w-full rounded-xl border border-zinc-800 object-cover">
+                        </figure>
+                    `;
+                }
+
+                return '';
+            }).join('');
         }
 
         function filterAndRenderArticles() {
@@ -280,7 +318,10 @@
                     publishedAt,
                     "author": author->name,
                     excerpt,
-                    body,
+                    body[]{
+                        ...,
+                        asset->
+                    },
                     "coverUrl": mainImage.asset->url,
                     _id
                 }`;
@@ -319,14 +360,13 @@
             const article = window.appArticles[index];
             if (!article) return;
 
-            updateReadingStreak(); // Trigger streak update
+            updateReadingStreak();
 
             document.getElementById('modal-category').innerText = article.category || 'Essay';
             document.getElementById('modal-title').innerText = article.title;
             const formattedDate = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
             document.getElementById('modal-meta').innerText = `By ${article.author || 'Stay Alive Fellowship'} • ${formattedDate}`;
             
-            // Render body text only
             document.getElementById('modal-body').innerHTML = blocksToHtml(article.body);
 
             document.getElementById('article-modal').classList.remove('hidden');
@@ -353,17 +393,6 @@
       }
     </script>
     
-    <!-- PWA Update Banner (Hidden by default) -->
-    <div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
-        <div>
-            <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
-            <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
-        </div>
-        <button onclick="window.location.reload()" class="bg-brandYellow text-black text-xs font-bold px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
-            Refresh
-        </button>
-    </div>
-
     <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2">
         <ul class="grid grid-cols-4 gap-1 text-center">
