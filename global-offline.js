@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkNotebookAuthMode();
   loadUserProfileAndStreak();
   loadCommunityInsights();
+  initOnlinePresenceTracker();
 });
 
 // ==========================================
@@ -42,6 +43,12 @@ function injectGlobalHeader() {
         </div>
       </a>
       <div class="flex items-center gap-3">
+        <!-- WhatsApp-Style Live Online Presence Badge -->
+        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-emerald-500/30 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-emerald-400 font-bold" id="online-users-counter">1</span>
+          <span class="text-[10px] text-zinc-400">Online</span>
+        </div>
         <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs">
           <span class="text-amber-400 font-bold" id="user-streak-counter">0</span>
           <span class="text-[10px] text-zinc-400">Day Streak</span>
@@ -85,18 +92,51 @@ function injectGlobalHeader() {
   document.getElementById('profile-signout-btn')?.addEventListener('click', handleUserSignOut);
 }
 
+// ==========================================
+// REALTIME ONLINE USERS PRESENCE TRACKER
+// ==========================================
+async function initOnlinePresenceTracker() {
+  const client = window.supabaseClient || window.supabase;
+  if (!client) return;
+
+  try {
+    const presenceChannel = client.channel('room_stay_alive_online', {
+      config: { presence: { key: 'user' } }
+    });
+
+    presenceChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = presenceChannel.presenceState();
+        const totalOnline = Object.keys(state).length;
+        const counterEl = document.getElementById('online-users-counter');
+        if (counterEl) {
+          counterEl.textContent = totalOnline > 0 ? totalOnline : 1;
+        }
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          const { data: { session } } = await client.auth.getSession();
+          await presenceChannel.track({
+            online_at: new Date().toISOString(),
+            email: session ? session.user.email : 'Guest'
+          });
+        }
+      });
+  } catch (err) {
+    console.log("Presence tracking initialized in offline fallback mode.");
+  }
+}
+
 function handleProfileClick() {
   const client = window.supabaseClient || window.supabase;
   if (client) {
     client.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        // Open profile management modal if logged in
         const modal = document.getElementById('profile-modal');
         const emailEl = document.getElementById('profile-modal-email');
         if (emailEl) emailEl.textContent = session.user.email;
         if (modal) modal.classList.remove('hidden');
       } else {
-        // Redirect to login page if guest
         window.location.href = '/login.html';
       }
     }).catch(() => {
@@ -533,7 +573,6 @@ async function loadUserProfileAndStreak() {
     const { data: { session } } = await client.auth.getSession();
     if (!session) return;
 
-    // Automatically check if Google auth metadata has an avatar
     let defaultAvatar = session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture;
 
     const { data: profile } = await client
@@ -558,7 +597,7 @@ async function loadUserProfileAndStreak() {
 }
 
 // ==========================================
-// 6. COMMUNITY FELLOWSHIP & MODAL LOGIC
+// 6. COMMUNITY FELLOWSHIP & ADMIN DELETE
 // ==========================================
 async function loadCommunityInsights() {
   const container = document.getElementById('community-feed-container');
@@ -571,6 +610,10 @@ async function loadCommunityInsights() {
   }
 
   try {
+    // Check current logged-in user to verify admin status
+    const { data: sessionData } = await client.auth.getSession();
+    const currentUser = sessionData?.session?.user;
+    
     const { data, error } = await client
       .from('community_insights')
       .select('*')
@@ -582,17 +625,47 @@ async function loadCommunityInsights() {
       return;
     }
 
-    container.innerHTML = data.map(item => `
-      <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-emerald-400">${item.scripture_ref || 'Fellowship Insight'}</span>
-          <span class="text-[10px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</span>
+    container.innerHTML = data.map(item => {
+      // Check if current user is admin (replace with your admin email if needed)
+      const isAdmin = currentUser && (currentUser.email === 'tontocreatives@gmail.com' || currentUser.id === item.user_id);
+      
+      return `
+        <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400">${item.scripture_ref || 'Fellowship Insight'}</span>
+            <span class="text-[10px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</span>
+          </div>
+          <p class="text-xs text-zinc-300 leading-relaxed">${item.insight || ''}</p>
+          ${isAdmin ? `
+            <div class="flex justify-end pt-2 border-t border-zinc-800/60 mt-2">
+              <button onclick="deleteCommunityInsight('${item.id}')" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
+                Delete Post
+              </button>
+            </div>
+          ` : ''}
         </div>
-        <p class="text-xs text-zinc-300 leading-relaxed">${item.content}</p>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   } catch (err) {
     container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Unable to load community feed.</p>`;
+  }
+}
+
+async function deleteCommunityInsight(id) {
+  if (!confirm("Are you sure you want to delete this insight?")) return;
+
+  const client = window.supabaseClient || window.supabase;
+  if (!client) return;
+
+  const { error } = await client
+    .from('community_insights')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    alert("Failed to delete post: " + error.message);
+  } else {
+    loadCommunityInsights();
   }
 }
 
@@ -644,7 +717,7 @@ async function submitCommunityPost() {
       .insert([{
         user_id: session.user.id,
         scripture_ref: scriptureRef || 'General Fellowship',
-        content: content,
+        insight: content,
         created_at: new Date().toISOString()
       }]);
 
@@ -671,6 +744,15 @@ async function subscribeToPushNotifications() {
 
   const permission = await Notification.requestPermission();
   if (permission === "granted") {
+    // Hide or modify the button state so it doesn't stay active/yellow
+    const subButtons = document.querySelectorAll('button[onclick*="subscribeToPushNotifications"]');
+    subButtons.forEach(btn => {
+      btn.textContent = "Subscribed ✓";
+      btn.classList.remove('bg-amber-500', 'text-black');
+      btn.classList.add('bg-zinc-800', 'text-zinc-400', 'cursor-not-allowed');
+      btn.disabled = true;
+    });
+
     alert("Daily notifications enabled successfully!");
     new Notification("Stay Alive Fellowship", {
       body: "You are all set to receive daily devotion reminders.",
