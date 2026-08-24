@@ -3,7 +3,6 @@
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Inject Header into every page automatically
   injectGlobalHeader();
 
   const dateEl = document.getElementById('current-study-date');
@@ -11,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  // Hook up Scripture Search Form
   const bibleForm = document.getElementById('bible-form');
   if (bibleForm) {
     bibleForm.addEventListener('submit', async (e) => {
@@ -20,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize features
   checkNotebookAuthMode();
   loadUserProfileAndStreak();
   loadCommunityInsights();
@@ -31,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // 0. HEADER INJECTION & PROFILE MODAL LOGIC
 // ==========================================
 function injectGlobalHeader() {
-  if (document.querySelector('header')) return; // Don't duplicate if already hardcoded
+  if (document.querySelector('header')) return;
 
   const headerHTML = `
     <header class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
@@ -43,7 +40,6 @@ function injectGlobalHeader() {
         </div>
       </a>
       <div class="flex items-center gap-3">
-        <!-- WhatsApp-Style Live Online Presence Badge -->
         <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-emerald-500/30 text-xs">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span class="text-emerald-400 font-bold" id="online-users-counter">1</span>
@@ -59,22 +55,26 @@ function injectGlobalHeader() {
       </div>
     </header>
 
-    <!-- Profile Account Modal -->
+    <!-- Profile Account Modal with Display Name & Avatar Control -->
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 relative shadow-2xl space-y-4">
         <button id="profile-close-btn" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
         <div>
-          <h3 class="text-white font-bold text-base mb-1">Account Settings</h3>
-          <p id="profile-modal-email" class="text-xs text-zinc-400">Manage your connected Supabase profile.</p>
+          <h3 class="text-white font-bold text-base mb-1">Account & Profile</h3>
+          <p id="profile-modal-email" class="text-xs text-zinc-400">Manage how you appear in community posts.</p>
         </div>
 
         <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Display Name (Public)</label>
+            <input type="text" id="profile-displayname-input" placeholder="e.g. David K." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+          </div>
           <div>
             <label class="block text-[11px] font-medium text-zinc-400 mb-1">Avatar Image URL</label>
             <input type="text" id="profile-avatar-input" placeholder="https://example.com/avatar.png" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
           </div>
           <button id="profile-update-btn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
-            Update Avatar
+            Save Profile Settings
           </button>
           <button id="profile-signout-btn" class="w-full py-2.5 bg-zinc-800 hover:bg-red-600/20 hover:text-red-400 text-zinc-300 font-semibold rounded-xl text-xs transition-all cursor-pointer">
             Sign Out
@@ -85,10 +85,9 @@ function injectGlobalHeader() {
   `;
   document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
-  // Attach event listeners safely after injection
   document.getElementById('profile-trigger-btn')?.addEventListener('click', handleProfileClick);
   document.getElementById('profile-close-btn')?.addEventListener('click', closeProfileModal);
-  document.getElementById('profile-update-btn')?.addEventListener('click', updateUserAvatar);
+  document.getElementById('profile-update-btn')?.addEventListener('click', updateUserProfileSettings);
   document.getElementById('profile-signout-btn')?.addEventListener('click', handleUserSignOut);
 }
 
@@ -127,22 +126,38 @@ async function initOnlinePresenceTracker() {
   }
 }
 
-function handleProfileClick() {
+async function handleProfileClick() {
   const client = window.supabaseClient || window.supabase;
-  if (client) {
-    client.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        const modal = document.getElementById('profile-modal');
-        const emailEl = document.getElementById('profile-modal-email');
-        if (emailEl) emailEl.textContent = session.user.email;
-        if (modal) modal.classList.remove('hidden');
-      } else {
-        window.location.href = '/login.html';
-      }
-    }).catch(() => {
+  if (!client) return;
+
+  try {
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) {
       window.location.href = '/login.html';
-    });
-  } else {
+      return;
+    }
+
+    const modal = document.getElementById('profile-modal');
+    const emailEl = document.getElementById('profile-modal-email');
+    const nameInput = document.getElementById('profile-displayname-input');
+    const avatarInput = document.getElementById('profile-avatar-input');
+
+    if (emailEl) emailEl.textContent = session.user.email;
+
+    // Fetch current profile settings to pre-fill inputs
+    const { data: profile } = await client
+      .from('profiles')
+      .select('display_name, avatar_url')
+      .eq('id', session.user.id)
+      .single();
+
+    if (profile) {
+      if (nameInput) nameInput.value = profile.display_name || '';
+      if (avatarInput) avatarInput.value = profile.avatar_url || '';
+    }
+
+    if (modal) modal.classList.remove('hidden');
+  } catch (e) {
     window.location.href = '/login.html';
   }
 }
@@ -152,13 +167,12 @@ function closeProfileModal() {
   if (modal) modal.classList.add('hidden');
 }
 
-async function updateUserAvatar() {
+async function updateUserProfileSettings() {
+  const nameInput = document.getElementById('profile-displayname-input');
   const avatarInput = document.getElementById('profile-avatar-input');
+  
+  const displayName = nameInput ? nameInput.value.trim() : '';
   const newAvatarUrl = avatarInput ? avatarInput.value.trim() : '';
-  if (!newAvatarUrl) {
-    alert("Please enter a valid image URL.");
-    return;
-  }
 
   const client = window.supabaseClient || window.supabase;
   if (!client) return;
@@ -168,15 +182,20 @@ async function updateUserAvatar() {
 
   const { error } = await client
     .from('profiles')
-    .update({ avatar_url: newAvatarUrl })
-    .eq('id', session.user.id);
+    .upsert({ 
+      id: session.user.id, 
+      display_name: displayName, 
+      avatar_url: newAvatarUrl,
+      updated_at: new Date().toISOString()
+    });
 
   if (error) {
-    alert("Failed to update avatar: " + error.message);
+    alert("Failed to update profile: " + error.message);
   } else {
-    alert("Avatar updated successfully!");
+    alert("Profile updated successfully!");
     closeProfileModal();
     loadUserProfileAndStreak();
+    loadCommunityInsights();
   }
 }
 
@@ -610,7 +629,6 @@ async function loadCommunityInsights() {
   }
 
   try {
-    // Check current logged-in user to verify admin status
     const { data: sessionData } = await client.auth.getSession();
     const currentUser = sessionData?.session?.user;
     
@@ -625,17 +643,43 @@ async function loadCommunityInsights() {
       return;
     }
 
+    const userIds = [...new Set(data.map(item => item.user_id))];
+    const { data: profilesData } = await client
+      .from('profiles')
+      .select('id, display_name, avatar_url')
+      .in('id', userIds);
+
+    const profileMap = {};
+    if (profilesData) {
+      profilesData.forEach(p => {
+        profileMap[p.id] = p;
+      });
+    }
+
     container.innerHTML = data.map(item => {
-      // Check if current user is admin (replace with your admin email if needed)
+      const author = profileMap[item.user_id] || {};
+      const avatarUrl = author.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.user_id}`;
+      // Use display_name if set; otherwise fall back to a clean anonymous handle instead of showing an email
+      const displayName = author.display_name && author.display_name.trim() !== '' ? author.display_name : 'Fellowship Member';
       const isAdmin = currentUser && (currentUser.email === 'tontocreatives@gmail.com' || currentUser.id === item.user_id);
       
       return `
-        <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400">${item.scripture_ref || 'Fellowship Insight'}</span>
+        <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5 relative">
+          <!-- Author Info Header (Display Name instead of Email) -->
+          <div class="flex items-center justify-between border-b border-zinc-800/60 pb-2">
+            <div class="flex items-center gap-2">
+              <img src="${avatarUrl}" alt="Avatar" class="w-6 h-6 rounded-full object-cover border border-zinc-700 bg-zinc-800">
+              <span class="text-[11px] font-medium text-zinc-300 truncate max-w-[180px]">${displayName}</span>
+            </div>
             <span class="text-[10px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</span>
           </div>
-          <p class="text-xs text-zinc-300 leading-relaxed">${item.insight || ''}</p>
+
+          <!-- Post Content -->
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-emerald-400 block">${item.scripture_ref || 'Fellowship Insight'}</span>
+            <p class="text-xs text-zinc-300 leading-relaxed">${item.insight || ''}</p>
+          </div>
+
           ${isAdmin ? `
             <div class="flex justify-end pt-2 border-t border-zinc-800/60 mt-2">
               <button onclick="deleteCommunityInsight('${item.id}')" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
@@ -744,7 +788,6 @@ async function subscribeToPushNotifications() {
 
   const permission = await Notification.requestPermission();
   if (permission === "granted") {
-    // Hide or modify the button state so it doesn't stay active/yellow
     const subButtons = document.querySelectorAll('button[onclick*="subscribeToPushNotifications"]');
     subButtons.forEach(btn => {
       btn.textContent = "Subscribed ✓";
