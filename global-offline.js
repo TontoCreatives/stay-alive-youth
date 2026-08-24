@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   checkNotificationOptInState();
 });
 
+// Global cache for community posts to allow clean editing via event delegation
+window._communityPostsCache = {};
+
 // ==========================================
 // 0. HEADER INJECTION & PROFILE MODAL LOGIC
 // ==========================================
@@ -906,6 +909,12 @@ async function loadCommunityInsights() {
       return;
     }
 
+    // Populate global lookup cache for safe click delegation
+    window._communityPostsCache = {};
+    data.forEach(item => {
+      window._communityPostsCache[item.id] = item;
+    });
+
     const userIds = [...new Set(data.map(item => item.user_id))];
     const { data: profilesData } = await client
       .from('profiles')
@@ -941,7 +950,6 @@ async function loadCommunityInsights() {
 
       const isOwner = currentUser && currentUser.id === item.user_id;
       const canManage = currentUser && (currentUserIsAdmin || isOwner);
-      const safePostItem = encodeURIComponent(JSON.stringify(item));
       
       return `
         <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5 relative">
@@ -964,7 +972,7 @@ async function loadCommunityInsights() {
           ${canManage ? `
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/60 mt-2">
               ${isOwner ? `
-                <button onclick="editCommunityInsight('${safePostItem}')" class="text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-900/30 transition-all">
+                <button data-post-id="${item.id}" class="edit-community-btn text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-900/30 transition-all">
                   Edit Post
                 </button>
               ` : ''}
@@ -981,34 +989,35 @@ async function loadCommunityInsights() {
   }
 }
 
-// Explicitly bind to window scope so inline onclick handlers invoke properly
-window.editCommunityInsight = function(encodedPostStr) {
-  try {
-    const item = JSON.parse(decodeURIComponent(encodedPostStr));
-    
-    const verseInput = document.getElementById('post-verse-input');
-    const textInput = document.getElementById('post-text-input');
+// Event delegation handler for editing posts safely without inline JSON escaping errors
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.edit-community-btn');
+  if (!btn) return;
 
-    if (verseInput) verseInput.value = item.scripture_ref !== 'General' ? item.scripture_ref : '';
-    if (textInput) textInput.value = item.insight || '';
+  const postId = btn.getAttribute('data-post-id');
+  const item = window._communityPostsCache[postId];
+  if (!item) return;
 
-    let editPostIdEl = document.getElementById('editing-community-post-id');
-    if (!editPostIdEl) {
-      editPostIdEl = document.createElement('input');
-      editPostIdEl.type = 'hidden';
-      editPostIdEl.id = 'editing-community-post-id';
-      document.body.appendChild(editPostIdEl);
-    }
-    editPostIdEl.value = item.id;
+  const verseInput = document.getElementById('post-verse-input');
+  const textInput = document.getElementById('post-text-input');
 
-    const modal = document.getElementById('post-modal');
-    if (modal) {
-      modal.classList.remove('hidden');
-    }
-  } catch (err) {
-    console.error("Failed to load post for editing:", err);
+  if (verseInput) verseInput.value = item.scripture_ref !== 'General' ? item.scripture_ref : '';
+  if (textInput) textInput.value = item.insight || '';
+
+  let editPostIdEl = document.getElementById('editing-community-post-id');
+  if (!editPostIdEl) {
+    editPostIdEl = document.createElement('input');
+    editPostIdEl.type = 'hidden';
+    editPostIdEl.id = 'editing-community-post-id';
+    document.body.appendChild(editPostIdEl);
   }
-};
+  editPostIdEl.value = item.id;
+
+  const modal = document.getElementById('post-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
+});
 
 async function deleteCommunityInsight(id) {
   if (!confirm("Are you sure you want to delete this insight?")) return;
