@@ -135,9 +135,7 @@
                 body[]{
                     ...,
                     "imageUrl": asset->url,
-                    file{
-                        "url": asset->url
-                    }
+                    "audioUrl": file.asset->url
                 },
                 "authorName": author->name,
                 "authorBio": author->bio,
@@ -189,37 +187,22 @@
 
                     if (article.body) {
                         const bodyHtml = article.body.map(block => {
-                            // 1. Standard Text Blocks
+                            // 1. Standard text blocks
                             if (block._type === 'block' && block.children) {
                                 const text = block.children.map(c => c.text).join('');
                                 if (!text.trim()) return '';
 
-                                if (block.style === 'h2') {
-                                    return `<h2 class="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">${text}</h2>`;
-                                }
-                                if (block.style === 'h3') {
-                                    return `<h3 class="text-xl sm:text-2xl font-bold text-white mt-8 mb-3">${text}</h3>`;
-                                }
-                                if (block.style === 'blockquote') {
-                                    return `<blockquote class="border-l-4 border-brandYellow pl-4 italic text-zinc-300 my-6">${text}</blockquote>`;
-                                }
+                                if (block.style === 'h2') return `<h2 class="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">${text}</h2>`;
+                                if (block.style === 'h3') return `<h3 class="text-xl sm:text-2xl font-bold text-white mt-8 mb-3">${text}</h3>`;
+                                if (block.style === 'blockquote') return `<blockquote class="border-l-4 border-brandYellow pl-4 italic text-zinc-300 my-6">${text}</blockquote>`;
                                 return `<p class="mb-6 leading-relaxed">${text}</p>`;
                             }
 
-                            // 2. Inline Images
-                            if (block._type === 'image' && block.imageUrl) {
-                                return `
-                                    <figure class="my-8">
-                                        <img src="${block.imageUrl}" alt="Article Image" class="rounded-xl w-full object-cover border border-zinc-800 shadow-lg" />
-                                        ${block.caption ? `<figcaption class="text-center text-xs text-zinc-400 mt-2">${block.caption}</figcaption>` : ''}
-                                    </figure>
-                                `;
-                            }
-
-                            // 3. Audio (MP3) Embeds
+                            // 2. Audio Embeds
                             if (block._type === 'audioEmbed') {
-                                const audioSrc = block.file?.url || block.url;
-                                if (!audioSrc) return '';
+                                const audioSrc = block.audioUrl || block.url;
+                                if (!audioSrc) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Audio block found, but file URL is missing]</div>`;
+                                
                                 return `
                                     <div class="my-8 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3 shadow-lg">
                                         <p class="text-xs font-bold text-brandYellow uppercase tracking-wider">${block.title || "Audio Track"}</p>
@@ -231,9 +214,10 @@
                                 `;
                             }
 
-                            // 4. Video Embeds
+                            // 3. Video Embeds
                             if (block._type === 'videoEmbed') {
-                                if (!block.url) return '';
+                                if (!block.url) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Video block found, but URL is missing]</div>`;
+                                
                                 let embedUrl = block.url;
                                 if (embedUrl.includes('watch?v=')) {
                                     embedUrl = embedUrl.replace('watch?v=', 'embed/');
@@ -245,6 +229,18 @@
                                         </div>
                                         ${block.caption ? `<p class="text-center text-xs text-zinc-400">${block.caption}</p>` : ''}
                                     </div>
+                                `;
+                            }
+
+                            // 4. Images
+                            if (block._type === 'image') {
+                                const imgUrl = block.imageUrl || block.asset?.url;
+                                if (!imgUrl) return '';
+                                return `
+                                    <figure class="my-8">
+                                        <img src="${imgUrl}" alt="Article Image" class="rounded-xl w-full object-cover border border-zinc-800 shadow-lg" />
+                                        ${block.caption ? `<figcaption class="text-center text-xs text-zinc-400 mt-2">${block.caption}</figcaption>` : ''}
+                                    </figure>
                                 `;
                             }
 
