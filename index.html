@@ -133,6 +133,18 @@
         .animate-fade-in-out {
             animation: fadeInText 3.2s ease-in-out forwards;
         }
+
+        /* Typing effect cursor styling for scripture of the day */
+        #dev-scripture-text::after {
+            content: '|';
+            display: inline-block;
+            margin-left: 2px;
+            animation: blink-cursor 0.7s infinite;
+        }
+        @keyframes blink-cursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
     <!-- END GLASS CRACK INTRO -->
 
@@ -711,8 +723,19 @@ async function fetchLatestDevotional() {
             document.getElementById('dev-title').textContent = dev.title || '';
             document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
             
-            // Clean single-assignment without hardcoded extra quotes
-            document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
+            // Clean single-assignment with typewriter effect implementation
+            const scriptureElem = document.getElementById('dev-scripture-text');
+            const scriptureFullText = dev.scriptureText || '';
+            scriptureElem.textContent = '';
+            let charIndex = 0;
+            function typeScripture() {
+                if (charIndex < scriptureFullText.length) {
+                    scriptureElem.textContent += scriptureFullText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeScripture, 25);
+                }
+            }
+            typeScripture();
             
             document.getElementById('dev-observation').textContent = dev.observation || '';
             document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
