@@ -62,7 +62,7 @@ function injectGlobalHeader() {
       </div>
     </header>
 
-    <!-- Profile Account Modal with Display Name & Avatar Control -->
+    <!-- Profile Account Modal with Google Sign-In & Password Reset -->
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-sm w-full p-6 relative shadow-2xl space-y-4">
         <button id="profile-close-btn" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
@@ -185,29 +185,45 @@ async function handleProfileClick() {
 
   const modal = document.getElementById('profile-modal');
   const emailEl = document.getElementById('profile-modal-email');
-  const updateBtn = document.getElementById('profile-update-btn');
   const signoutBtn = document.getElementById('profile-signout-btn');
-  
-  // Containers / input fields
   const nameInput = document.getElementById('profile-displayname-input');
-  const avatarInput = document.getElementById('profile-avatar-input');
 
   try {
     const { data: { session } } = await client.auth.getSession();
     
     if (!session) {
-      // GUEST STATE: Transform modal into an inline Login/Register form
-      if (emailEl) emailEl.textContent = "Sign in or create an account to sync your study notes and streaks.";
+      // GUEST STATE: Transform modal into Instant Google Sign-In & Email/Password form with Forgot Password support
+      if (emailEl) emailEl.textContent = "Sign in instantly with Google or use your email account.";
       
       const parentBlock = nameInput ? nameInput.parentElement.parentElement : null;
       if (parentBlock) {
         parentBlock.innerHTML = `
+          <!-- Instant Google Sign-In Button -->
+          <button id="google-signin-btn" class="w-full py-2.5 bg-white hover:bg-zinc-100 text-zinc-900 font-semibold rounded-xl text-xs transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.18 21.31 7.22 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.19C.43 8.13 0 9.87 0 12s.43 3.87 1.19 5.4l4.08-3.16z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.18 2.69 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <div class="flex items-center my-3">
+            <div class="flex-grow border-t border-zinc-800"></div>
+            <span class="px-2 text-[10px] text-zinc-500 uppercase tracking-wider">or email</span>
+            <div class="flex-grow border-t border-zinc-800"></div>
+          </div>
+
           <div>
             <label class="block text-[11px] font-medium text-zinc-400 mb-1">Email Address</label>
             <input type="email" id="auth-email-input" placeholder="you@example.com" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
           </div>
           <div>
-            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Password</label>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-[11px] font-medium text-zinc-400">Password</label>
+              <button id="forgot-password-link" class="text-[10px] text-amber-400 hover:underline cursor-pointer">Forgot password?</button>
+            </div>
             <input type="password" id="auth-password-input" placeholder="••••••••" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
           </div>
           <button id="profile-update-btn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
@@ -217,8 +233,41 @@ async function handleProfileClick() {
             Sign Out
           </button>
         `;
+
+        // Bind Google OAuth button
+        document.getElementById('google-signin-btn').onclick = async () => {
+          const { error } = await client.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: window.location.origin
+            }
+          });
+          if (error) alert("Google Sign-In Error: " + error.message);
+        };
+
+        // Bind Forgot Password Action
+        document.getElementById('forgot-password-link').onclick = async (e) => {
+          e.preventDefault();
+          const emailInput = document.getElementById('auth-email-input');
+          const email = emailInput ? emailInput.value.trim() : '';
+          if (!email) {
+            alert("Please enter your email address above first, then click 'Forgot password?'.");
+            emailInput?.focus();
+            return;
+          }
+
+          const { error } = await client.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin
+          });
+
+          if (error) {
+            alert("Error sending reset email: " + error.message);
+          } else {
+            alert("Password reset link sent! Check your email inbox to create a new password.");
+          }
+        };
         
-        // Bind action click handler for the newly injected sign-in button
+        // Bind Email/Password Sign-In & Register Action
         document.getElementById('profile-update-btn').onclick = async () => {
           const email = document.getElementById('auth-email-input').value.trim();
           const password = document.getElementById('auth-password-input').value.trim();
@@ -260,6 +309,7 @@ async function handleProfileClick() {
 
     if (profile) {
       if (nameInput) nameInput.value = profile.display_name || '';
+      const avatarInput = document.getElementById('profile-avatar-input');
       if (avatarInput) avatarInput.value = profile.avatar_url || '';
     }
 
