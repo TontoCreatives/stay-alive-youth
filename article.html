@@ -121,140 +121,141 @@
         const articleSlug = urlParams.get('slug');
 
         async function fetchArticle() {
-            if (!articleSlug) {
-                document.getElementById('article-title').innerText = "Article Not Found";
-                document.getElementById('article-body').innerHTML = "<p class='text-zinc-400'>No article specified.</p>";
-                return;
-            }
-
-            const query = `*[_type == "post" && slug.current == $slug][0]{
-                title,
-                _createdAt,
-                publishedAt,
-                excerpt,
-                body[]{
-                    ...,
-                    "imageUrl": asset->url,
-                    "audioUrl": file.asset->url
-                },
-                "authorName": author->name,
-                "authorBio": author->bio,
-                "authorImage": author->image.asset->url,
-                "bannerUrl": mainImage.asset->url
-            }`
-
             try {
-                const article = await client.fetch(query, { slug: articleSlug })
-
-                if (article) {
-                    if (article.title) {
-                        document.getElementById('article-title').innerText = article.title;
-                        document.title = `${article.title} | Stay Alive Fellowship`;
-                    }
-                    
-                    if (article.excerpt) {
-                        const introEl = document.getElementById('article-intro');
-                        introEl.innerText = article.excerpt;
-                        introEl.classList.remove('hidden');
-                    }
-                    
-                    const dateValue = article.publishedAt || article._createdAt;
-                    if (dateValue) {
-                        document.getElementById('article-date').innerText = new Date(dateValue).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-                    }
-
-                    if (article.bannerUrl) {
-                        document.getElementById('banner-image').src = article.bannerUrl;
-                        document.getElementById('banner-container').classList.remove('hidden');
-                    }
-                    
-                    if (article.authorName) {
-                        document.getElementById('author-name').innerText = article.authorName;
-                        const bioText = typeof article.authorBio === 'string' 
-                            ? article.authorBio 
-                            : (Array.isArray(article.authorBio) ? article.authorBio.map(b => b.children?.map(c => c.text).join('')).join(' ') : 'Faithful servant of Christ.');
-                        document.getElementById('author-bio').innerText = bioText;
-                    } else {
-                        document.getElementById('author-name').innerText = "Antony Mutahi";
-                        document.getElementById('author-bio').innerText = "Graphic designer, tech enthusiast, ICT educator, and faithful servant of Christ.";
-                    }
-
-                    if (article.authorImage) {
-                        document.getElementById('author-image').src = article.authorImage;
-                    } else {
-                        document.getElementById('author-image').src = "blog%20images/WHY.jpg";
-                    }
-
-                    if (article.body) {
-                        const bodyHtml = article.body.map(block => {
-                            // 1. Standard text blocks
-                            if (block._type === 'block' && block.children) {
-                                const text = block.children.map(c => c.text).join('');
-                                if (!text.trim()) return '';
-
-                                if (block.style === 'h2') return `<h2 class="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">${text}</h2>`;
-                                if (block.style === 'h3') return `<h3 class="text-xl sm:text-2xl font-bold text-white mt-8 mb-3">${text}</h3>`;
-                                if (block.style === 'blockquote') return `<blockquote class="border-l-4 border-brandYellow pl-4 italic text-zinc-300 my-6">${text}</blockquote>`;
-                                return `<p class="mb-6 leading-relaxed">${text}</p>`;
-                            }
-
-                            // 2. Audio Embeds (Supports multiple Sanity block names)
-                            if (block._type === 'audioEmbed' || block._type === 'audio' || block._type === 'track') {
-                                const audioSrc = block.audioUrl || block.file?.url || block.file?.asset?.url || block.url;
-                                if (!audioSrc) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Audio block found, but file URL is missing]</div>`;
-                                
-                                return `
-                                    <div class="my-8 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3 shadow-lg">
-                                        <p class="text-xs font-bold text-brandYellow uppercase tracking-wider">${block.title || "Audio Track"}</p>
-                                        <audio controls class="w-full">
-                                            <source src="${audioSrc}" type="audio/mpeg" />
-                                            Your browser does not support the audio element.
-                                        </audio>
-                                    </div>
-                                `;
-                            }
-
-                            // 3. Video Embeds
-                            if (block._type === 'videoEmbed' || block._type === 'video') {
-                                if (!block.url) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Video block found, but URL is missing]</div>`;
-                                
-                                let embedUrl = block.url;
-                                if (embedUrl.includes('watch?v=')) {
-                                    embedUrl = embedUrl.replace('watch?v=', 'embed/');
-                                }
-                                return `
-                                    <div class="my-8 space-y-2">
-                                        <div class="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 shadow-lg">
-                                            <iframe src="${embedUrl}" class="w-full h-full" allowfullscreen></iframe>
-                                        </div>
-                                        ${block.caption ? `<p class="text-center text-xs text-zinc-400">${block.caption}</p>` : ''}
-                                    </div>
-                                `;
-                            }
-
-                            // 4. Images
-                            if (block._type === 'image') {
-                                const imgUrl = block.imageUrl || block.asset?.url;
-                                if (!imgUrl) return '';
-                                return `
-                                    <figure class="my-8">
-                                        <img src="${imgUrl}" alt="Article Image" class="rounded-xl w-full object-cover border border-zinc-800 shadow-lg" />
-                                        ${block.caption ? `<figcaption class="text-center text-xs text-zinc-400 mt-2">${block.caption}</figcaption>` : ''}
-                                    </figure>
-                                `;
-                            }
-
-                            return '';
-                        }).join('');
-                        document.getElementById('article-body').innerHTML = bodyHtml;
-                    }
-                } else {
+                if (!articleSlug) {
                     document.getElementById('article-title').innerText = "Article Not Found";
-                    document.getElementById('article-body').innerHTML = "<p class='text-zinc-400'>This article could not be found in the database.</p>";
+                    document.getElementById('article-body').innerHTML = "<p class='text-zinc-400'>No article specified in URL parameters.</p>";
+                    return;
                 }
+
+                console.log("Fetching slug:", articleSlug);
+
+                const query = `*[_type == "post" && slug.current == $slug][0]{
+                    title,
+                    _createdAt,
+                    publishedAt,
+                    excerpt,
+                    body[]{
+                        ...,
+                        "imageUrl": asset->url,
+                        "audioUrl": file.asset->url
+                    },
+                    "authorName": author->name,
+                    "authorBio": author->bio,
+                    "authorImage": author->image.asset->url,
+                    "bannerUrl": mainImage.asset->url
+                }`
+
+                const article = await client.fetch(query, { slug: articleSlug });
+                console.log("RAW SANITY ARTICLE DATA:", article);
+
+                if (!article) {
+                    document.getElementById('article-title').innerText = "Article Not Found";
+                    document.getElementById('article-body').innerHTML = "<p class='text-zinc-400'>No post matches this slug in Sanity.</p>";
+                    return;
+                }
+
+                if (article.title) {
+                    document.getElementById('article-title').innerText = article.title;
+                    document.title = `${article.title} | Stay Alive Fellowship`;
+                }
+                
+                if (article.excerpt) {
+                    const introEl = document.getElementById('article-intro');
+                    introEl.innerText = article.excerpt;
+                    introEl.classList.remove('hidden');
+                }
+                
+                const dateValue = article.publishedAt || article._createdAt;
+                if (dateValue) {
+                    document.getElementById('article-date').innerText = new Date(dateValue).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                }
+
+                if (article.bannerUrl) {
+                    document.getElementById('banner-image').src = article.bannerUrl;
+                    document.getElementById('banner-container').classList.remove('hidden');
+                }
+                
+                if (article.authorName) {
+                    document.getElementById('author-name').innerText = article.authorName;
+                    const bioText = typeof article.authorBio === 'string' 
+                        ? article.authorBio 
+                        : (Array.isArray(article.authorBio) ? article.authorBio.map(b => b.children?.map(c => c.text).join('')).join(' ') : 'Faithful servant of Christ.');
+                    document.getElementById('author-bio').innerText = bioText;
+                } else {
+                    document.getElementById('author-name').innerText = "Antony Mutahi";
+                    document.getElementById('author-bio').innerText = "Graphic designer, tech enthusiast, ICT educator, and faithful servant of Christ.";
+                }
+
+                if (article.authorImage) {
+                    document.getElementById('author-image').src = article.authorImage;
+                } else {
+                    document.getElementById('author-image').src = "blog%20images/WHY.jpg";
+                }
+
+                if (article.body) {
+                    const bodyHtml = article.body.map(block => {
+                        if (block._type === 'block' && block.children) {
+                            const text = block.children.map(c => c.text).join('');
+                            if (!text.trim()) return '';
+
+                            if (block.style === 'h2') return `<h2 class="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">${text}</h2>`;
+                            if (block.style === 'h3') return `<h3 class="text-xl sm:text-2xl font-bold text-white mt-8 mb-3">${text}</h3>`;
+                            if (block.style === 'blockquote') return `<blockquote class="border-l-4 border-brandYellow pl-4 italic text-zinc-300 my-6">${text}</blockquote>`;
+                            return `<p class="mb-6 leading-relaxed">${text}</p>`;
+                        }
+
+                        if (block._type === 'audioEmbed' || block._type === 'audio' || block._type === 'track') {
+                            const audioSrc = block.audioUrl || block.file?.url || block.file?.asset?.url || block.url;
+                            if (!audioSrc) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Audio block found, but file URL is missing]</div>`;
+                            
+                            return `
+                                <div class="my-8 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3 shadow-lg">
+                                    <p class="text-xs font-bold text-brandYellow uppercase tracking-wider">${block.title || "Audio Track"}</p>
+                                    <audio controls class="w-full">
+                                        <source src="${audioSrc}" type="audio/mpeg" />
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            `;
+                        }
+
+                        if (block._type === 'videoEmbed' || block._type === 'video') {
+                            if (!block.url) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Video block found, but URL is missing]</div>`;
+                            
+                            let embedUrl = block.url;
+                            if (embedUrl.includes('watch?v=')) {
+                                embedUrl = embedUrl.replace('watch?v=', 'embed/');
+                            }
+                            return `
+                                <div class="my-8 space-y-2">
+                                    <div class="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 shadow-lg">
+                                        <iframe src="${embedUrl}" class="w-full h-full" allowfullscreen></iframe>
+                                    </div>
+                                    ${block.caption ? `<p class="text-center text-xs text-zinc-400">${block.caption}</p>` : ''}
+                                </div>
+                            `;
+                        }
+
+                        if (block._type === 'image') {
+                            const imgUrl = block.imageUrl || block.asset?.url;
+                            if (!imgUrl) return '';
+                            return `
+                                <figure class="my-8">
+                                    <img src="${imgUrl}" alt="Article Image" class="rounded-xl w-full object-cover border border-zinc-800 shadow-lg" />
+                                    ${block.caption ? `<figcaption class="text-center text-xs text-zinc-400 mt-2">${block.caption}</figcaption>` : ''}
+                                </figure>
+                            `;
+                        }
+
+                        return '';
+                    }).join('');
+                    document.getElementById('article-body').innerHTML = bodyHtml;
+                }
+
             } catch (err) {
-                console.error("Sanity fetch error:", err);
-                document.getElementById('article-body').innerHTML = "<p class='text-red-400'>Error loading article content from CMS.</p>";
+                console.error("CRITICAL SCRIPT ERROR:", err);
+                document.getElementById('article-body').innerHTML = `<div class="p-4 bg-red-950 border border-red-800 text-red-200 rounded-xl">Error: ${err.message}</div>`;
             }
         }
 
