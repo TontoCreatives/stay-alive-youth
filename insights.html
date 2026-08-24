@@ -200,14 +200,27 @@
                     return `<p class="mb-4 text-zinc-300">${text}</p>`;
                 }
 
-                // Handle Audio / File embeds
-                if (block._type === 'audio' || block._type === 'file' || block._type === 'audioFile' || (block.asset && (block.asset.mimeType?.includes('audio') || (block.asset._ref && block.asset._ref.includes('audio'))))) {
-                    const audioUrl = block.asset?.url || block.url;
+                // Handle Custom Audio Object Blocks (Matching your Studio schema setup)
+                const isAudioType = block._type === 'audio' || block._type === 'audioBlock' || block._type === 'track' || block.trackTitle || block.uploadMp3 || block.externalMp3Url;
+                
+                if (isAudioType) {
+                    const audioUrl = block.uploadMp3?.asset?.url || block.externalMp3Url || block.asset?.url || block.url;
+                    const trackTitle = block.trackTitle || block.title || 'Audio Dispatch';
+                    
                     if (!audioUrl) return '';
+                    
                     return `
-                        <div class="my-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
-                            <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider mb-2">Audio Dispatch</p>
-                            <audio controls class="w-full">
+                        <div class="my-6 p-5 bg-zinc-900 border border-zinc-800 rounded-xl shadow-md">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-lg bg-brandYellow/10 border border-brandYellow/20 flex items-center justify-center text-brandYellow shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-brandYellow font-bold uppercase tracking-wider">Audio Track</p>
+                                    <h4 class="text-sm font-bold text-white">${trackTitle}</h4>
+                                </div>
+                            </div>
+                            <audio controls class="w-full accent-yellow-400">
                                 <source src="${audioUrl}">
                                 Your browser does not support the audio element.
                             </audio>
@@ -320,6 +333,9 @@
                     excerpt,
                     body[]{
                         ...,
+                        uploadMp3{
+                            asset->
+                        },
                         asset->
                     },
                     "coverUrl": mainImage.asset->url,
@@ -398,7 +414,7 @@
         <ul class="grid grid-cols-4 gap-1 text-center">
             <li>
                 <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1,1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     Home
                 </a>
             </li>
