@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay-alive-v9';
+const CACHE_NAME = 'stay-alive-v10';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -55,15 +55,12 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Fallback to index.html for navigation requests if offline
+          // Fallback to index.html for page navigations if offline
           if (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
             return caches.match('/index.html');
           }
-          // Absolute safety net: return an empty response instead of undefined to prevent crashes
-          return new Response('Network error happened', {
-            status: 408,
-            headers: { 'Content-Type': 'text/plain' }
-          });
+          // Quiet 404 response for other missing assets to prevent script crashes
+          return new Response('', { status: 404, statusText: 'Not Found' });
         });
       })
   );
