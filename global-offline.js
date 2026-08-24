@@ -579,46 +579,94 @@ async function saveSessionNotebookEntry() {
     imageUrl = await convertFileToBase64(imageInput.files[0]);
   }
 
-  const newEntry = {
-    id: 'note_' + Date.now(),
-    leader_ref: leaderRef || 'Leader Focus',
-    leader_text: leaderText,
-    scripture_ref: scriptureRef || 'General Reflection',
-    notes_content: notesContent,
-    image_url: imageUrl,
-    session_date: new Date().toISOString().split('T')[0],
-    created_at: new Date().toISOString()
-  };
+  const editId = document.getElementById('editing-notebook-id')?.value;
 
-  if (session && navigator.onLine) {
-    const { error } = await client
-      .from('session_notebook')
-      .insert([{
-        user_id: session.user.id,
-        leader_ref: newEntry.leader_ref,
-        leader_text: newEntry.leader_text,
-        scripture_ref: newEntry.scripture_ref,
-        notes_content: newEntry.notes_content,
-        image_url: newEntry.image_url,
-        session_date: newEntry.session_date
-      }]);
+  if (editId) {
+    // Updating an existing entry
+    if (session && navigator.onLine) {
+      const { error } = await client
+        .from('session_notebook')
+        .update({
+          leader_ref: leaderRef || 'Leader Focus',
+          leader_text: leaderText,
+          scripture_ref: scriptureRef || 'General Reflection',
+          notes_content: notesContent,
+          ...(imageUrl ? { image_url: imageUrl } : {})
+        })
+        .eq('id', editId);
 
-    if (error) {
-      alert('Failed to save to cloud: ' + error.message);
-      return;
+      if (error) {
+        alert('Failed to update cloud note: ' + error.message);
+        return;
+      }
+      loadCloudNotebooks(session.user.id);
+    } else {
+      let localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+      localNotes = localNotes.map(n => {
+        if (n.id === editId) {
+          return {
+            ...n,
+            leader_ref: leaderRef || 'Leader Focus',
+            leader_text: leaderText,
+            scripture_ref: scriptureRef || 'General Reflection',
+            notes_content: notesContent,
+            ...(imageUrl ? { image_url: imageUrl } : {})
+          };
+        }
+        return n;
+      });
+      localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
+      loadLocalNotebooks();
     }
-    loadCloudNotebooks(session.user.id);
+
+    // Clear editing state hidden input if it exists
+    const editInputEl = document.getElementById('editing-notebook-id');
+    if (editInputEl) editInputEl.remove();
+
+    alert('Study note updated successfully!');
   } else {
-    const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
-    localNotes.unshift(newEntry);
-    localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
-    loadLocalNotebooks();
-    
-    const syncBtn = document.getElementById('sync-notes-btn');
-    if (syncBtn && navigator.onLine && session) syncBtn.classList.remove('hidden');
+    // Creating a new entry
+    const newEntry = {
+      id: 'note_' + Date.now(),
+      leader_ref: leaderRef || 'Leader Focus',
+      leader_text: leaderText,
+      scripture_ref: scriptureRef || 'General Reflection',
+      notes_content: notesContent,
+      image_url: imageUrl,
+      session_date: new Date().toISOString().split('T')[0],
+      created_at: new Date().toISOString()
+    };
+
+    if (session && navigator.onLine) {
+      const { error } = await client
+        .from('session_notebook')
+        .insert([{
+          user_id: session.user.id,
+          leader_ref: newEntry.leader_ref,
+          leader_text: newEntry.leader_text,
+          scripture_ref: newEntry.scripture_ref,
+          notes_content: newEntry.notes_content,
+          image_url: newEntry.image_url,
+          session_date: newEntry.session_date
+        }]);
+
+      if (error) {
+        alert('Failed to save to cloud: ' + error.message);
+        return;
+      }
+      loadCloudNotebooks(session.user.id);
+    } else {
+      const localNotes = JSON.parse(localStorage.getItem('stay_alive_local_notes') || '[]');
+      localNotes.unshift(newEntry);
+      localStorage.setItem('stay_alive_local_notes', JSON.stringify(localNotes));
+      loadLocalNotebooks();
+      
+      const syncBtn = document.getElementById('sync-notes-btn');
+      if (syncBtn && navigator.onLine && session) syncBtn.classList.remove('hidden');
+    }
+    alert('Study note saved successfully!');
   }
 
-  alert('Study note saved successfully!');
   if (leaderRefEl) leaderRefEl.value = '';
   if (leaderTextEl) leaderTextEl.value = '';
   if (scriptureRefEl) scriptureRefEl.value = '';
@@ -671,32 +719,69 @@ async function loadCloudNotebooks(userId) {
 }
 
 function renderNotebookItems(items, container, isLocal) {
-  container.innerHTML = items.map(item => `
-    <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
-      ${item.leader_text ? `
-        <div class="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800/80 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400">Leader Focus</span>
-            <span class="text-[9px] text-zinc-400 font-mono">${item.leader_ref || ''}</span>
+  container.innerHTML = items.map(item => {
+    // Safely encode item data for inline editing invocation
+    const safeItem = encodeURIComponent(JSON.stringify(item));
+    return `
+      <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2 relative">
+        ${item.leader_text ? `
+          <div class="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800/80 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400">Leader Focus</span>
+              <span class="text-[9px] text-zinc-400 font-mono">${item.leader_ref || ''}</span>
+            </div>
+            <p class="text-xs text-zinc-300 italic">"${item.leader_text}"</p>
           </div>
-          <p class="text-xs text-zinc-300 italic">"${item.leader_text}"</p>
+        ` : ''}
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-xs font-bold text-emerald-400">${item.scripture_ref}</span>
+          <span class="text-[10px] text-zinc-500">${item.session_date} ${isLocal ? '(Local)' : ''}</span>
         </div>
-      ` : ''}
-      <div class="flex items-center justify-between pt-1">
-        <span class="text-xs font-bold text-emerald-400">${item.scripture_ref}</span>
-        <span class="text-[10px] text-zinc-500">${item.session_date} ${isLocal ? '(Local)' : ''}</span>
+        <p class="text-xs text-zinc-300 leading-relaxed">${item.notes_content}</p>
+        ${item.image_url ? `<img src="${item.image_url}" class="w-full h-32 object-cover rounded-lg border border-zinc-800 mt-2">` : ''}
+        
+        <!-- Edit & Delete Archive Buttons -->
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/60 mt-2">
+          <button onclick="editNotebookEntry('${safeItem}')" class="text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-900/30 transition-all">
+            Edit Archive
+          </button>
+          <button onclick="deleteNotebookEntry('${item.id}', ${isLocal})" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
+            Delete Archive
+          </button>
+        </div>
       </div>
-      <p class="text-xs text-zinc-300 leading-relaxed">${item.notes_content}</p>
-      ${item.image_url ? `<img src="${item.image_url}" class="w-full h-32 object-cover rounded-lg border border-zinc-800 mt-2">` : ''}
-      
-      <!-- Delete Archive Button -->
-      <div class="flex justify-end pt-2 border-t border-zinc-800/60 mt-2">
-        <button onclick="deleteNotebookEntry('${item.id}', ${isLocal})" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
-          Delete Archive
-        </button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+}
+
+function editNotebookEntry(encodedItemStr) {
+  try {
+    const item = JSON.parse(decodeURIComponent(encodedItemStr));
+
+    const leaderRefEl = document.getElementById('leader-scripture-ref-input');
+    const leaderTextEl = document.getElementById('leader-scripture-text-input');
+    const scriptureRefEl = document.getElementById('note-scripture-input');
+    const notesContentEl = document.getElementById('note-content-input');
+
+    if (leaderRefEl) leaderRefEl.value = item.leader_ref || '';
+    if (leaderTextEl) leaderTextEl.value = item.leader_text || '';
+    if (scriptureRefEl) scriptureRefEl.value = item.scripture_ref || '';
+    if (notesContentEl) notesContentEl.value = item.notes_content || '';
+
+    let editInputEl = document.getElementById('editing-notebook-id');
+    if (!editInputEl) {
+      editInputEl = document.createElement('input');
+      editInputEl.type = 'hidden';
+      editInputEl.id = 'editing-notebook-id';
+      document.body.appendChild(editInputEl);
+    }
+    editInputEl.value = item.id;
+
+    alert("Loaded archive into input fields above for editing. Modify your text and click save!");
+    document.getElementById('session-notebook-section')?.scrollIntoView({ behavior: 'smooth' });
+  } catch (err) {
+    console.error("Failed to load archive for editing", err);
+  }
 }
 
 async function deleteNotebookEntry(id, isLocal) {
@@ -794,7 +879,7 @@ async function loadUserProfileAndStreak() {
 }
 
 // ==========================================
-// 6. COMMUNITY FELLOWSHIP & ADMIN DELETE
+// 6. COMMUNITY FELLOWSHIP & ADMIN EDIT/DELETE
 // ==========================================
 async function loadCommunityInsights() {
   const container = document.getElementById('community-feed-container');
@@ -854,7 +939,9 @@ async function loadCommunityInsights() {
         ? author.display_name 
         : `Member_${item.user_id.substring(0, 6)}`);
 
-      const canDelete = currentUser && (currentUserIsAdmin || currentUser.id === item.user_id);
+      const isOwner = currentUser && currentUser.id === item.user_id;
+      const canManage = currentUser && (currentUserIsAdmin || isOwner);
+      const safePostItem = encodeURIComponent(JSON.stringify(item));
       
       return `
         <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5 relative">
@@ -873,11 +960,16 @@ async function loadCommunityInsights() {
             <p class="text-xs text-zinc-300 leading-relaxed mt-1">${item.insight || ''}</p>
           </div>
 
-          <!-- Admin or Owner Delete Option -->
-          ${canDelete ? `
-            <div class="flex justify-end pt-2 border-t border-zinc-800/60 mt-2">
+          <!-- Edit & Delete Options -->
+          ${canManage ? `
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/60 mt-2">
+              ${isOwner ? `
+                <button onclick="editCommunityInsight('${safePostItem}')" class="text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-900/30 transition-all">
+                  Edit Post
+                </button>
+              ` : ''}
               <button onclick="deleteCommunityInsight('${item.id}')" class="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer bg-red-950/30 px-2.5 py-1 rounded-lg border border-red-900/30 transition-all">
-                ${currentUserIsAdmin && currentUser.id !== item.user_id ? 'Admin Delete' : 'Delete Post'}
+                ${currentUserIsAdmin && !isOwner ? 'Admin Delete' : 'Delete Post'}
               </button>
             </div>
           ` : ''}
@@ -886,6 +978,31 @@ async function loadCommunityInsights() {
     }).join('');
   } catch (err) {
     container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">Unable to load community feed.</p>`;
+  }
+}
+
+function editCommunityInsight(encodedPostStr) {
+  try {
+    const item = JSON.parse(decodeURIComponent(encodedPostStr));
+    
+    const verseInput = document.getElementById('post-verse-input');
+    const textInput = document.getElementById('post-text-input');
+
+    if (verseInput) verseInput.value = item.scripture_ref !== 'General' ? item.scripture_ref : '';
+    if (textInput) textInput.value = item.insight || '';
+
+    let editPostIdEl = document.getElementById('editing-community-post-id');
+    if (!editPostIdEl) {
+      editPostIdEl = document.createElement('input');
+      editPostIdEl.type = 'hidden';
+      editPostIdEl.id = 'editing-community-post-id';
+      document.body.appendChild(editPostIdEl);
+    }
+    editPostIdEl.value = item.id;
+
+    openNewPostModal();
+  } catch (err) {
+    console.error("Failed to load post for editing", err);
   }
 }
 
@@ -915,6 +1032,14 @@ function openNewPostModal() {
 function closeNewPostModal() {
   const modal = document.getElementById('post-modal');
   if (modal) modal.classList.add('hidden');
+  
+  // Clear edit state
+  const editPostIdEl = document.getElementById('editing-community-post-id');
+  if (editPostIdEl) editPostIdEl.remove();
+  const verseInput = document.getElementById('post-verse-input');
+  const textInput = document.getElementById('post-text-input');
+  if (verseInput) verseInput.value = '';
+  if (textInput) textInput.value = '';
 }
 
 async function submitCommunityPost() {
@@ -964,22 +1089,37 @@ async function submitCommunityPost() {
       if (profile.avatar_url && profile.avatar_url.trim() !== '') avatarUrl = profile.avatar_url;
     }
 
-    const { error } = await client
-      .from('community_insights')
-      .insert([{
-        user_id: session.user.id,
-        user_name: displayName,
-        avatar_url: avatarUrl,
-        scripture_ref: scriptureRef || 'General',
-        insight: content,
-        created_at: new Date().toISOString()
-      }]);
+    const editPostId = document.getElementById('editing-community-post-id')?.value;
 
-    if (error) throw error;
+    if (editPostId) {
+      // Update existing post
+      const { error } = await client
+        .from('community_insights')
+        .update({
+          scripture_ref: scriptureRef || 'General',
+          insight: content
+        })
+        .eq('id', editPostId);
 
-    alert("Your insight has been published successfully!");
-    if (verseInput) verseInput.value = '';
-    if (textInput) textInput.value = '';
+      if (error) throw error;
+      alert("Your post has been updated successfully!");
+    } else {
+      // Insert new post
+      const { error } = await client
+        .from('community_insights')
+        .insert([{
+          user_id: session.user.id,
+          user_name: displayName,
+          avatar_url: avatarUrl,
+          scripture_ref: scriptureRef || 'General',
+          insight: content,
+          created_at: new Date().toISOString()
+        }]);
+
+      if (error) throw error;
+      alert("Your insight has been published successfully!");
+    }
+
     closeNewPostModal();
     loadCommunityInsights();
   } catch (err) {
