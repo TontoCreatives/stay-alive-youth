@@ -779,6 +779,7 @@ function renderNotebookItems(items, container, isLocal) {
         }
         editInputEl.value = item.id;
 
+        // Smooth scroll back up to the notebook input section
         document.getElementById('session-notebook-section')?.scrollIntoView({ behavior: 'smooth' });
       } catch (err) {
         console.error("Error opening notebook item for edit:", err);
