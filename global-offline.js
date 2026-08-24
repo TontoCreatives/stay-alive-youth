@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadUserProfileAndStreak();
   loadCommunityInsights();
   initOnlinePresenceTracker();
+  checkNotificationOptInState();
 });
 
 // ==========================================
@@ -192,13 +193,11 @@ async function handleProfileClick() {
     const { data: { session } } = await client.auth.getSession();
     
     if (!session) {
-      // GUEST STATE: Transform modal into Instant Google Sign-In & Email/Password form with Forgot Password support
       if (emailEl) emailEl.textContent = "Sign in instantly with Google or use your email account.";
       
       const parentBlock = nameInput ? nameInput.parentElement.parentElement : null;
       if (parentBlock) {
         parentBlock.innerHTML = `
-          <!-- Instant Google Sign-In Button -->
           <button id="google-signin-btn" class="w-full py-2.5 bg-white hover:bg-zinc-100 text-zinc-900 font-semibold rounded-xl text-xs transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer">
             <svg class="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
@@ -234,18 +233,14 @@ async function handleProfileClick() {
           </button>
         `;
 
-        // Bind Google OAuth button
         document.getElementById('google-signin-btn').onclick = async () => {
           const { error } = await client.auth.signInWithOAuth({
             provider: 'google',
-            options: {
-              redirectTo: window.location.origin
-            }
+            options: { redirectTo: window.location.origin }
           });
           if (error) alert("Google Sign-In Error: " + error.message);
         };
 
-        // Bind Forgot Password Action
         document.getElementById('forgot-password-link').onclick = async (e) => {
           e.preventDefault();
           const emailInput = document.getElementById('auth-email-input');
@@ -267,7 +262,6 @@ async function handleProfileClick() {
           }
         };
         
-        // Bind Email/Password Sign-In & Register Action
         document.getElementById('profile-update-btn').onclick = async () => {
           const email = document.getElementById('auth-email-input').value.trim();
           const password = document.getElementById('auth-password-input').value.trim();
@@ -297,7 +291,6 @@ async function handleProfileClick() {
       return;
     }
 
-    // AUTHENTICATED STATE: Render standard profile configuration settings
     if (emailEl) emailEl.textContent = session.user.email;
     if (signoutBtn) signoutBtn.style.display = 'block';
 
@@ -809,12 +802,20 @@ async function loadCommunityInsights() {
     const profileMap = {};
     let currentUserIsAdmin = false;
 
+    if (currentUser) {
+      const { data: myProfile } = await client
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', currentUser.id)
+        .single();
+      if (myProfile && myProfile.is_admin) {
+        currentUserIsAdmin = true;
+      }
+    }
+
     if (profilesData) {
       profilesData.forEach(p => {
         profileMap[p.id] = p;
-        if (currentUser && p.id === currentUser.id && p.is_admin) {
-          currentUserIsAdmin = true;
-        }
       });
     }
 
@@ -945,6 +946,20 @@ async function submitCommunityPost() {
 // ==========================================
 // 7. PUSH NOTIFICATION OPT-IN
 // ==========================================
+function checkNotificationOptInState() {
+  if (!("Notification" in window)) return;
+  
+  if (Notification.permission === "granted") {
+    // Hide the notification container completely if already permitted/subscribed
+    const notifCards = document.querySelectorAll('div');
+    notifCards.forEach(card => {
+      if (card.textContent.includes("Never Miss a Devotion") && card.textContent.includes("Enable Daily Notifications")) {
+        card.style.display = 'none';
+      }
+    });
+  }
+}
+
 async function subscribeToPushNotifications() {
   if (!("Notification" in window)) {
     alert("This browser does not support desktop notifications.");
@@ -953,19 +968,12 @@ async function subscribeToPushNotifications() {
 
   const permission = await Notification.requestPermission();
   if (permission === "granted") {
-    const subButtons = document.querySelectorAll('button[onclick*="subscribeToPushNotifications"]');
-    subButtons.forEach(btn => {
-      btn.textContent = "Subscribed ✓";
-      btn.classList.remove('bg-amber-500', 'text-black');
-      btn.classList.add('bg-zinc-800', 'text-zinc-400', 'cursor-not-allowed');
-      btn.disabled = true;
-    });
-
     alert("Daily notifications enabled successfully!");
     new Notification("Stay Alive Fellowship", {
       body: "You are all set to receive daily devotion reminders.",
       icon: "/Banner images and logo/bible study logo.png"
     });
+    checkNotificationOptInState();
   } else {
     alert("Notification permission was denied.");
   }
