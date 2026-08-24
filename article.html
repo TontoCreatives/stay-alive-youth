@@ -28,39 +28,16 @@
     <script defer src="/_vercel/insights/script.js"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FACC15">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    
-    <!-- PWA & iOS Specific Tags -->
-    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Studio">
     <link rel="apple-touch-icon" href="icon-192.png">
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brandYellow: '#FACC15',
-                        cardBg: '#18181B'
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-</head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation"></body>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 
- 
-
-        <!-- Desktop Nav Links -->
+    <!-- Desktop Nav Links -->
+    <header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-4 flex justify-between items-center max-w-7xl mx-auto w-full">
+        <a href="index.html" class="font-bold text-brandYellow text-lg tracking-wider">Stay Alive</a>
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
             <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
             <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
@@ -70,12 +47,10 @@
             <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
             <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
         </nav>
-
-    </div>
-</header>
+    </header>
 
     <!-- Main Article Content Container -->
-    <main class="py-12 sm:py-20 bg-darkBg">
+    <main class="py-12 sm:py-20 bg-darkBg flex-grow">
         <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Back Navigation -->
@@ -131,16 +106,6 @@
         </div>
     </footer>
 
-    <!-- Mobile Menu Script -->
-    <script>
-        const btn = document.getElementById('menu-btn');
-        const menu = document.getElementById('mobile-menu');
-
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
-
     <!-- Sanity Data Injector Script -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@sanity/client'
@@ -167,7 +132,13 @@
                 _createdAt,
                 publishedAt,
                 excerpt,
-                body,
+                body[]{
+                    ...,
+                    "imageUrl": asset->url,
+                    file{
+                        "url": asset->url
+                    }
+                },
                 "authorName": author->name,
                 "authorBio": author->bio,
                 "authorImage": author->image.asset->url,
@@ -218,9 +189,9 @@
 
                     if (article.body) {
                         const bodyHtml = article.body.map(block => {
+                            // 1. Standard Text Blocks
                             if (block._type === 'block' && block.children) {
                                 const text = block.children.map(c => c.text).join('');
-                                
                                 if (!text.trim()) return '';
 
                                 if (block.style === 'h2') {
@@ -232,9 +203,51 @@
                                 if (block.style === 'blockquote') {
                                     return `<blockquote class="border-l-4 border-brandYellow pl-4 italic text-zinc-300 my-6">${text}</blockquote>`;
                                 }
-                                
                                 return `<p class="mb-6 leading-relaxed">${text}</p>`;
                             }
+
+                            // 2. Inline Images
+                            if (block._type === 'image' && block.imageUrl) {
+                                return `
+                                    <figure class="my-8">
+                                        <img src="${block.imageUrl}" alt="Article Image" class="rounded-xl w-full object-cover border border-zinc-800 shadow-lg" />
+                                        ${block.caption ? `<figcaption class="text-center text-xs text-zinc-400 mt-2">${block.caption}</figcaption>` : ''}
+                                    </figure>
+                                `;
+                            }
+
+                            // 3. Audio (MP3) Embeds
+                            if (block._type === 'audioEmbed') {
+                                const audioSrc = block.file?.url || block.url;
+                                if (!audioSrc) return '';
+                                return `
+                                    <div class="my-8 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3 shadow-lg">
+                                        <p class="text-xs font-bold text-brandYellow uppercase tracking-wider">${block.title || "Audio Track"}</p>
+                                        <audio controls class="w-full">
+                                            <source src="${audioSrc}" type="audio/mpeg" />
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>
+                                `;
+                            }
+
+                            // 4. Video Embeds
+                            if (block._type === 'videoEmbed') {
+                                if (!block.url) return '';
+                                let embedUrl = block.url;
+                                if (embedUrl.includes('watch?v=')) {
+                                    embedUrl = embedUrl.replace('watch?v=', 'embed/');
+                                }
+                                return `
+                                    <div class="my-8 space-y-2">
+                                        <div class="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 shadow-lg">
+                                            <iframe src="${embedUrl}" class="w-full h-full" allowfullscreen></iframe>
+                                        </div>
+                                        ${block.caption ? `<p class="text-center text-xs text-zinc-400">${block.caption}</p>` : ''}
+                                    </div>
+                                `;
+                            }
+
                             return '';
                         }).join('');
                         document.getElementById('article-body').innerHTML = bodyHtml;
@@ -251,55 +264,16 @@
 
         fetchArticle();
     </script>
+
     <!-- PWA Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('Service Worker registered successfully!', reg))
-        .catch((err) => console.log('Service Worker registration failed:', err));
-    });
-  }
-</script>
-<!-- PWA Update Banner (Hidden by default) -->
-<div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
-    <div>
-        <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
-        <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
-    </div>
-    <button onclick="window.location.reload()" class="bg-brandYellow text-black text-xs font-bold px-3 py-2 rounded-lg hover:bg-yellow-400 transition-colors">
-        Refresh
-    </button>
-</div>
-<!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/75 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2">
-    <ul class="grid grid-cols-4 gap-1 text-center">
-        <li>
-            <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-brandYellow">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                Home
-            </a>
-        </li>
-        <li>
-            <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                Resources
-            </a>
-        </li>
-        <li>
-            <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                Prayer
-            </a>
-        </li>
-        <li>
-            <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-white">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                Events
-            </a>
-        </li>
-    </ul>
-</nav>
-<script src="global-offline.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => console.log('Service Worker registered successfully!', reg))
+            .catch((err) => console.log('Service Worker registration failed:', err));
+        });
+      }
+    </script>
 </body>
 </html>
