@@ -114,7 +114,7 @@
             projectId: 'y4q1h6a9',
             dataset: 'production',
             apiVersion: '2026-08-14',
-            useCdn: true
+            useCdn: false // Disabled CDN to guarantee fresh draft/published data instantly
         })
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -128,8 +128,7 @@
                     return;
                 }
 
-                console.log("Fetching slug:", articleSlug);
-
+                // Query that grabs all fields and handles asset resolving safely
                 const query = `*[_type == "post" && slug.current == $slug][0]{
                     title,
                     _createdAt,
@@ -147,18 +146,16 @@
                 }`
 
                 const article = await client.fetch(query, { slug: articleSlug });
-                console.log("RAW SANITY ARTICLE DATA:", article);
+                console.log("SANITY ARTICLE RESPONSE:", article);
 
                 if (!article) {
                     document.getElementById('article-title').innerText = "Article Not Found";
-                    document.getElementById('article-body').innerHTML = "<p class='text-zinc-400'>No post matches this slug in Sanity.</p>";
+                    document.getElementById('article-body').innerHTML = `<p class='text-zinc-400'>No post found for slug: <b>${articleSlug}</b>. Check if it's published in Sanity.</p>`;
                     return;
                 }
 
-                if (article.title) {
-                    document.getElementById('article-title').innerText = article.title;
-                    document.title = `${article.title} | Stay Alive Fellowship`;
-                }
+                document.getElementById('article-title').innerText = article.title || "Untitled Article";
+                document.title = `${article.title || "Article"} | Stay Alive Fellowship`;
                 
                 if (article.excerpt) {
                     const introEl = document.getElementById('article-intro');
@@ -176,25 +173,15 @@
                     document.getElementById('banner-container').classList.remove('hidden');
                 }
                 
-                if (article.authorName) {
-                    document.getElementById('author-name').innerText = article.authorName;
-                    const bioText = typeof article.authorBio === 'string' 
-                        ? article.authorBio 
-                        : (Array.isArray(article.authorBio) ? article.authorBio.map(b => b.children?.map(c => c.text).join('')).join(' ') : 'Faithful servant of Christ.');
-                    document.getElementById('author-bio').innerText = bioText;
-                } else {
-                    document.getElementById('author-name').innerText = "Antony Mutahi";
-                    document.getElementById('author-bio').innerText = "Graphic designer, tech enthusiast, ICT educator, and faithful servant of Christ.";
-                }
+                document.getElementById('author-name').innerText = article.authorName || "Antony Mutahi";
+                document.getElementById('author-bio').innerText = "Faithful servant of Christ, graphic designer, and tech educator.";
+                document.getElementById('author-image').src = article.authorImage || "blog%20images/WHY.jpg";
 
-                if (article.authorImage) {
-                    document.getElementById('author-image').src = article.authorImage;
-                } else {
-                    document.getElementById('author-image').src = "blog%20images/WHY.jpg";
-                }
+                if (article.body && Array.isArray(article.body)) {
+                    const bodyHtml = article.body.map((block, index) => {
+                        console.log(`Processing block [${index}] type:`, block._type);
 
-                if (article.body) {
-                    const bodyHtml = article.body.map(block => {
+                        // 1. Text blocks
                         if (block._type === 'block' && block.children) {
                             const text = block.children.map(c => c.text).join('');
                             if (!text.trim()) return '';
@@ -205,9 +192,15 @@
                             return `<p class="mb-6 leading-relaxed">${text}</p>`;
                         }
 
-                        if (block._type === 'audioEmbed' || block._type === 'audio' || block._type === 'track') {
-                            const audioSrc = block.audioUrl || block.file?.url || block.file?.asset?.url || block.url;
-                            if (!audioSrc) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Audio block found, but file URL is missing]</div>`;
+                        // 2. Audio blocks (Catches ANY type name containing 'audio' or 'file' or 'track')
+                        if (block._type && (block._type.toLowerCase().includes('audio') || block._type.toLowerCase().includes('file') || block._type.toLowerCase().includes('track'))) {
+                            const audioSrc = block.audioUrl || block.file?.url || block.file?.asset?.url || block.url || block.asset?.url;
+                            
+                            if (!audioSrc) {
+                                return `<div class="p-4 my-4 bg-yellow-950/40 border border-yellow-700 text-yellow-200 text-xs rounded-xl">
+                                    [Audio block detected (Type: <b>${block._type}</b>), but no media file attached or uploaded yet.]
+                                </div>`;
+                            }
                             
                             return `
                                 <div class="my-8 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3 shadow-lg">
@@ -220,7 +213,8 @@
                             `;
                         }
 
-                        if (block._type === 'videoEmbed' || block._type === 'video') {
+                        // 3. Video blocks
+                        if (block._type && block._type.toLowerCase().includes('video')) {
                             if (!block.url) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Video block found, but URL is missing]</div>`;
                             
                             let embedUrl = block.url;
@@ -237,6 +231,7 @@
                             `;
                         }
 
+                        // 4. Image blocks
                         if (block._type === 'image') {
                             const imgUrl = block.imageUrl || block.asset?.url;
                             if (!imgUrl) return '';
@@ -248,8 +243,12 @@
                             `;
                         }
 
-                        return '';
+                        // Fallback debugger block for unknown types so you can see it on screen
+                        return `<div class="p-3 my-2 bg-zinc-900/60 border border-zinc-800 text-zinc-400 text-xs rounded-lg">
+                            [Unknown block type: <b>${block._type}</b>]
+                        </div>`;
                     }).join('');
+                    
                     document.getElementById('article-body').innerHTML = bodyHtml;
                 }
 
@@ -260,17 +259,6 @@
         }
 
         fetchArticle();
-    </script>
-
-    <!-- PWA Service Worker Registration -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((reg) => console.log('Service Worker registered successfully!', reg))
-            .catch((err) => console.log('Service Worker registration failed:', err));
-        });
-      }
     </script>
 </body>
 </html>
