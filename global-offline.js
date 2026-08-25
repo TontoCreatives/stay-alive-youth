@@ -30,25 +30,27 @@ document.addEventListener("DOMContentLoaded", () => {
 window._communityPostsCache = {};
 
 // ==========================================
-// EYE-CATCHING REPEATING VERSE ANIMATION LOOP
+// TYPEWRITER REPEATING VERSE ANIMATION LOOP
 // ==========================================
 function initRepeatingSmokeAnimation() {
   const banner = document.getElementById('memory-verse-banner');
   if (!banner) return;
 
-  // Initial trigger on load
-  triggerAttentionEffect(banner);
+  // Run immediately on load
+  triggerTypewriterEffect(banner);
 
-  // Re-trigger every 30 seconds (30000 milliseconds)
+  // Re-trigger the typewriter effect every 30 seconds
   setInterval(() => {
-    triggerAttentionEffect(banner);
+    triggerTypewriterEffect(banner);
   }, 30000);
 }
 
-function triggerAttentionEffect(banner) {
-  banner.classList.remove('verse-attention-anim');
-  void banner.offsetWidth; // Force browser reflow
-  banner.classList.add('verse-attention-anim');
+function triggerTypewriterEffect(banner) {
+  const textEl = banner.querySelector('p') || banner.querySelector('span') || banner;
+  
+  textEl.classList.remove('typewriter-container');
+  void textEl.offsetWidth; // Force browser reflow
+  textEl.classList.add('typewriter-container');
 }
 
 // ==========================================
@@ -802,7 +804,6 @@ function renderNotebookItems(items, container, isLocal) {
         }
         editInputEl.value = item.id;
 
-        // Smooth scroll back up to the notebook input section
         document.getElementById('session-notebook-section')?.scrollIntoView({ behavior: 'smooth' });
       } catch (err) {
         console.error("Error opening notebook item for edit:", err);
@@ -945,7 +946,6 @@ async function loadCommunityInsights() {
       return;
     }
 
-    // Populate global lookup cache for safe click delegation using activeData
     window._communityPostsCache = {};
     activeData.forEach(item => {
       window._communityPostsCache[item.id] = item;
@@ -989,7 +989,6 @@ async function loadCommunityInsights() {
       
       return `
         <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5 relative">
-          <!-- Author Info Header -->
           <div class="flex items-center justify-between border-b border-zinc-800/60 pb-2">
             <div class="flex items-center gap-2">
               <img src="${avatarUrl}" alt="Avatar" class="w-6 h-6 rounded-full object-cover border border-zinc-700 bg-zinc-800">
@@ -998,13 +997,11 @@ async function loadCommunityInsights() {
             <span class="text-[10px] text-zinc-500">${new Date(item.created_at).toLocaleDateString()}</span>
           </div>
 
-          <!-- Post Content -->
           <div class="space-y-1">
             ${item.scripture_ref ? `<span class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/40">${item.scripture_ref}</span>` : ''}
             <p class="text-xs text-zinc-300 leading-relaxed mt-1">${item.insight || ''}</p>
           </div>
 
-          <!-- Edit & Delete Options -->
           ${canManage ? `
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/60 mt-2">
               ${isOwner ? `
@@ -1025,7 +1022,6 @@ async function loadCommunityInsights() {
   }
 }
 
-// Event delegation handler for editing posts safely without inline JSON escaping errors
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.edit-community-btn');
   if (!btn) return;
