@@ -23,10 +23,29 @@ document.addEventListener("DOMContentLoaded", () => {
   loadCommunityInsights();
   initOnlinePresenceTracker();
   checkNotificationOptInState();
+  initRepeatingSmokeAnimation();
 });
 
 // Global cache for community posts to allow clean editing via event delegation
 window._communityPostsCache = {};
+
+// ==========================================
+// REPEATING SMOKE ANIMATION LOOP
+// ==========================================
+function initRepeatingSmokeAnimation() {
+  const banner = document.getElementById('memory-verse-banner');
+  if (!banner) return;
+
+  // Initial trigger
+  banner.classList.add('smoke-animate');
+
+  // Re-trigger every 30 seconds (30000 milliseconds)
+  setInterval(() => {
+    banner.classList.remove('smoke-animate');
+    void banner.offsetWidth; // Force browser reflow
+    banner.classList.add('smoke-animate');
+  }, 30000);
+}
 
 // ==========================================
 // 0. HEADER INJECTION & PROFILE MODAL LOGIC
@@ -910,7 +929,7 @@ async function loadCommunityInsights() {
       return;
     }
 
-    // 🕒 24-HOUR EXPIRATION FILTER 🕒
+    // 🕒 24-HOUR EXPIRATION FILTER 🕒[cite: 1]
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const activeData = data.filter(item => {
       const postDate = new Date(item.created_at);
