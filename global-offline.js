@@ -903,20 +903,32 @@ async function loadCommunityInsights() {
       .from('community_insights')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(50);
 
     if (error || !data || data.length === 0) {
       container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No community insights shared yet.</p>`;
       return;
     }
 
-    // Populate global lookup cache for safe click delegation
+    // 🕒 24-HOUR EXPIRATION FILTER 🕒
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const activeData = data.filter(item => {
+      const postDate = new Date(item.created_at);
+      return postDate > twentyFourHoursAgo;
+    });
+
+    if (activeData.length === 0) {
+      container.innerHTML = `<p class="text-xs text-zinc-500 text-center py-4">No active community insights from the last 24 hours. Be the first to share one!</p>`;
+      return;
+    }
+
+    // Populate global lookup cache for safe click delegation using activeData
     window._communityPostsCache = {};
-    data.forEach(item => {
+    activeData.forEach(item => {
       window._communityPostsCache[item.id] = item;
     });
 
-    const userIds = [...new Set(data.map(item => item.user_id))];
+    const userIds = [...new Set(activeData.map(item => item.user_id))];
     const { data: profilesData } = await client
       .from('profiles')
       .select('id, display_name, avatar_url, is_admin')
@@ -942,7 +954,7 @@ async function loadCommunityInsights() {
       });
     }
 
-    container.innerHTML = data.map(item => {
+    container.innerHTML = activeData.map(item => {
       const author = profileMap[item.user_id] || {};
       const avatarUrl = item.avatar_url || author.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.user_id}`;
       let displayName = item.user_name || (author.display_name && author.display_name.trim() !== '' 
