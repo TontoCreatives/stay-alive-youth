@@ -191,7 +191,7 @@
             if (!blocks || !Array.isArray(blocks)) return '<p class="text-zinc-400">No content available for this article.</p>';
             
             return blocks.map(block => {
-                // Handle standard text blocks (headings, paragraphs)
+                // Handle standard text blocks
                 if (block._type === 'block') {
                     if (!block.children) return '';
                     const text = block.children.map(child => child.text).join('');
@@ -200,17 +200,42 @@
                     return `<p class="mb-4 text-zinc-300">${text}</p>`;
                 }
 
-                // Handle Custom Audio Object Blocks (Matching your Studio schema setup)
+                // Handle Custom Audio / Media Blocks (Supports YouTube URLs & MP3 uploads)
                 const isAudioType = block._type === 'audio' || block._type === 'audioBlock' || block._type === 'track' || block.trackTitle || block.uploadMp3 || block.externalMp3Url;
                 
                 if (isAudioType) {
-                    const audioUrl = block.uploadMp3?.asset?.url || block.externalMp3Url || block.asset?.url || block.url;
-                    const trackTitle = block.trackTitle || block.title || 'Audio Dispatch';
+                    const audioUrl = block.uploadMp3?.url || block.uploadMp3?.asset?.url || block.externalMp3Url || block.asset?.url || block.url;
+                    const trackTitle = block.trackTitle || block.title || 'Audio / Media Track';
+
+                    // Check if URL is a YouTube link
+                    if (audioUrl && (audioUrl.includes('youtube.com') || audioUrl.includes('youtu.be'))) {
+                        let videoId = '';
+                        if (audioUrl.includes('youtu.be/')) {
+                            videoId = audioUrl.split('youtu.be/')[1]?.split('?')[0];
+                        } else if (audioUrl.includes('watch?v=')) {
+                            videoId = audioUrl.split('watch?v=')[1]?.split('&')[0];
+                        }
+
+                        if (videoId) {
+                            return `
+                                <div class="my-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-md">
+                                    <div class="mb-3">
+                                        <p class="text-[10px] text-brandYellow font-bold uppercase tracking-wider">Featured Track / Video</p>
+                                        <h4 class="text-sm font-bold text-white">${trackTitle}</h4>
+                                    </div>
+                                    <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-zinc-800">
+                                        <iframe src="https://www.youtube-nocookie.com/embed/${videoId}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
                     
+                    // Fallback to standard HTML5 audio player for MP3 links
                     if (!audioUrl) return '';
                     
                     return `
-                        <div class="my-6 p-5 bg-zinc-900 border border-zinc-800 rounded-xl shadow-md">
+                        <div class="my-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-md">
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-8 h-8 rounded-lg bg-brandYellow/10 border border-brandYellow/20 flex items-center justify-center text-brandYellow shrink-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
@@ -220,7 +245,7 @@
                                     <h4 class="text-sm font-bold text-white">${trackTitle}</h4>
                                 </div>
                             </div>
-                            <audio controls class="w-full accent-yellow-400">
+                            <audio controls class="w-full accent-yellow-400 h-10">
                                 <source src="${audioUrl}">
                                 Your browser does not support the audio element.
                             </audio>
@@ -242,11 +267,11 @@
                     `;
                 }
 
-                // Handle Images (Contrained height/width & centered)
+                // Handle Images (Fixed max-height to keep images neat and constrained)
                 if (block._type === 'image' && block.asset?.url) {
                     return `
                         <figure class="my-6 flex flex-col items-center">
-                            <img src="${block.asset.url}" alt="Article image" class="max-h-[450px] w-auto max-w-full rounded-xl border border-zinc-800 object-contain shadow-lg">
+                            <img src="${block.asset.url}" alt="Article image" class="max-h-[320px] w-auto max-w-full rounded-xl border border-zinc-800 object-contain shadow-lg bg-zinc-950/50">
                         </figure>
                     `;
                 }
@@ -333,7 +358,8 @@
                     excerpt,
                     body[]{
                         ...,
-                        uploadMp3{
+                        uploadMp3 {
+                            "url": asset->url,
                             asset->
                         },
                         asset->
