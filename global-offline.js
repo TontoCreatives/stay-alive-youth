@@ -30,35 +30,23 @@ document.addEventListener("DOMContentLoaded", () => {
 window._communityPostsCache = {};
 
 // ==========================================
-// TYPEWRITER REPEATING VERSE ANIMATION LOOP
+// PULSING VERSE ATTENTION EFFECT
 // ==========================================
 function initRepeatingSmokeAnimation() {
   const banner = document.getElementById('memory-verse-banner');
   if (!banner) return;
 
-  // Find or wrap the text so the outer box never flashes
-  let textEl = banner.querySelector('p') || banner.querySelector('span');
-  if (!textEl || !textEl.classList.contains('typewriter-text')) {
-    const originalText = banner.innerHTML;
-    banner.innerHTML = `<span class="typewriter-text">${originalText}</span>`;
-    textEl = banner.querySelector('span');
+  // Wrap content inside a mobile-friendly flex container with a pulse dot indicator
+  let containerEl = banner.querySelector('.weekly-verse-container');
+  if (!containerEl) {
+    const originalText = banner.innerHTML.trim();
+    banner.innerHTML = `
+      <div class="weekly-verse-container">
+        <span class="pulse-dot"></span>
+        <span class="weekly-verse">${originalText}</span>
+      </div>
+    `;
   }
-
-  // Run immediately on load
-  runTypewriter(textEl);
-
-  // Re-trigger the typewriter effect every 30 seconds smoothly
-  setInterval(() => {
-    runTypewriter(textEl);
-  }, 30000);
-}
-
-function runTypewriter(textEl) {
-  // Remove class to reset width back to 0
-  textEl.classList.remove('typewriter-active');
-  void textEl.offsetWidth; // Force browser reflow
-  // Re-add class to start typing animation fresh
-  textEl.classList.add('typewriter-active');
 }
 
 // ==========================================
