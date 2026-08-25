@@ -167,10 +167,19 @@ body.is-offline .offline-banner {
   50% { border-color: rgba(201, 160, 0, 0.8); }
 }
 
+.weekly-verse-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  text-align: center;
+}
+
 .typewriter-text {
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
+  max-width: 100%;
   border-right: 3px solid rgba(201, 160, 0, 0.8);
   width: 0; /* Start hidden */
 }
