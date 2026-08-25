@@ -36,21 +36,29 @@ function initRepeatingSmokeAnimation() {
   const banner = document.getElementById('memory-verse-banner');
   if (!banner) return;
 
-  // Run immediately on load
-  triggerTypewriterEffect(banner);
+  // Find or wrap the text so the outer box never flashes
+  let textEl = banner.querySelector('p') || banner.querySelector('span');
+  if (!textEl || !textEl.classList.contains('typewriter-text')) {
+    const originalText = banner.innerHTML;
+    banner.innerHTML = `<span class="typewriter-text">${originalText}</span>`;
+    textEl = banner.querySelector('span');
+  }
 
-  // Re-trigger the typewriter effect every 30 seconds
+  // Run immediately on load
+  runTypewriter(textEl);
+
+  // Re-trigger the typewriter effect every 30 seconds smoothly
   setInterval(() => {
-    triggerTypewriterEffect(banner);
+    runTypewriter(textEl);
   }, 30000);
 }
 
-function triggerTypewriterEffect(banner) {
-  const textEl = banner.querySelector('p') || banner.querySelector('span') || banner;
-  
-  textEl.classList.remove('typewriter-container');
+function runTypewriter(textEl) {
+  // Remove class to reset width back to 0
+  textEl.classList.remove('typewriter-active');
   void textEl.offsetWidth; // Force browser reflow
-  textEl.classList.add('typewriter-container');
+  // Re-add class to start typing animation fresh
+  textEl.classList.add('typewriter-active');
 }
 
 // ==========================================
