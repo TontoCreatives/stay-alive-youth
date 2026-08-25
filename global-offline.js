@@ -30,21 +30,25 @@ document.addEventListener("DOMContentLoaded", () => {
 window._communityPostsCache = {};
 
 // ==========================================
-// REPEATING SMOKE ANIMATION LOOP
+// EYE-CATCHING REPEATING VERSE ANIMATION LOOP
 // ==========================================
 function initRepeatingSmokeAnimation() {
   const banner = document.getElementById('memory-verse-banner');
   if (!banner) return;
 
-  // Initial trigger
-  banner.classList.add('smoke-animate');
+  // Initial trigger on load
+  triggerAttentionEffect(banner);
 
   // Re-trigger every 30 seconds (30000 milliseconds)
   setInterval(() => {
-    banner.classList.remove('smoke-animate');
-    void banner.offsetWidth; // Force browser reflow
-    banner.classList.add('smoke-animate');
+    triggerAttentionEffect(banner);
   }, 30000);
+}
+
+function triggerAttentionEffect(banner) {
+  banner.classList.remove('verse-attention-anim');
+  void banner.offsetWidth; // Force browser reflow
+  banner.classList.add('verse-attention-anim');
 }
 
 // ==========================================
@@ -929,7 +933,7 @@ async function loadCommunityInsights() {
       return;
     }
 
-    // 🕒 24-HOUR EXPIRATION FILTER 🕒[cite: 1]
+    // 🕒 24-HOUR EXPIRATION FILTER 🕒
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const activeData = data.filter(item => {
       const postDate = new Date(item.created_at);
