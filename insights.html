@@ -200,38 +200,13 @@
                     return `<p class="mb-4 text-zinc-300">${text}</p>`;
                 }
 
-                // Handle Custom Audio / Media Blocks (Supports YouTube URLs & MP3 uploads)
+                // Handle Custom Audio Blocks
                 const isAudioType = block._type === 'audio' || block._type === 'audioBlock' || block._type === 'track' || block.trackTitle || block.uploadMp3 || block.externalMp3Url;
                 
                 if (isAudioType) {
                     const audioUrl = block.uploadMp3?.url || block.uploadMp3?.asset?.url || block.externalMp3Url || block.asset?.url || block.url;
-                    const trackTitle = block.trackTitle || block.title || 'Audio / Media Track';
-
-                    // Check if URL is a YouTube link
-                    if (audioUrl && (audioUrl.includes('youtube.com') || audioUrl.includes('youtu.be'))) {
-                        let videoId = '';
-                        if (audioUrl.includes('youtu.be/')) {
-                            videoId = audioUrl.split('youtu.be/')[1]?.split('?')[0];
-                        } else if (audioUrl.includes('watch?v=')) {
-                            videoId = audioUrl.split('watch?v=')[1]?.split('&')[0];
-                        }
-
-                        if (videoId) {
-                            return `
-                                <div class="my-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-md">
-                                    <div class="mb-3">
-                                        <p class="text-[10px] text-brandYellow font-bold uppercase tracking-wider">Featured Track / Video</p>
-                                        <h4 class="text-sm font-bold text-white">${trackTitle}</h4>
-                                    </div>
-                                    <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-zinc-800">
-                                        <iframe src="https://www.youtube-nocookie.com/embed/${videoId}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    }
+                    const trackTitle = block.trackTitle || block.title || 'Audio Track';
                     
-                    // Fallback to standard HTML5 audio player for MP3 links
                     if (!audioUrl) return '';
                     
                     return `
@@ -253,21 +228,46 @@
                     `;
                 }
 
-                // Handle Video embeds
-                if (block._type === 'video' || block._type === 'mux.video') {
-                    const videoUrl = block.url || block.asset?.url;
+                // Handle Video embeds (Supports YouTube links & Video Embed schema blocks)
+                if (block._type === 'video' || block._type === 'mux.video' || block._type === 'videoEmbed' || block.url || block.videoUrl) {
+                    const videoUrl = block.url || block.videoUrl || block.asset?.url;
+                    const videoCaption = block.caption || block.videoCaption || '';
                     if (!videoUrl) return '';
+
+                    // Check if it's a YouTube URL
+                    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                        let videoId = '';
+                        if (videoUrl.includes('youtu.be/')) {
+                            videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+                        } else if (videoUrl.includes('watch?v=')) {
+                            videoId = videoUrl.split('watch?v=')[1]?.split('&')[0];
+                        }
+
+                        if (videoId) {
+                            return `
+                                <div class="my-6 p-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-md">
+                                    <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-zinc-800">
+                                        <iframe src="https://www.youtube-nocookie.com/embed/${videoId}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    ${videoCaption ? `<p class="text-xs text-zinc-400 mt-2 text-center italic">${videoCaption}</p>` : ''}
+                                </div>
+                            `;
+                        }
+                    }
+
+                    // Fallback for standard uploaded video files
                     return `
                         <div class="my-6 rounded-xl overflow-hidden border border-zinc-800">
                             <video controls class="w-full">
                                 <source src="${videoUrl}">
                                 Your browser does not support the video tag.
                             </video>
+                            ${videoCaption ? `<p class="text-xs text-zinc-400 mt-2 text-center italic">${videoCaption}</p>` : ''}
                         </div>
                     `;
                 }
 
-                // Handle Images (Fixed max-height to keep images neat and constrained)
+                // Handle Images (Fixed max-height to keep portrait images neat and constrained)
                 if (block._type === 'image' && block.asset?.url) {
                     return `
                         <figure class="my-6 flex flex-col items-center">
