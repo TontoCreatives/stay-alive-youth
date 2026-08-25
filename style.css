@@ -155,38 +155,47 @@ body.is-offline .offline-banner {
     animation: streakPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 /* ==========================================
-   START: Typewriter Verse Attention Effect
+   START: Pulsing Verse Attention Effect
    ========================================== */
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-@keyframes blinkCursor {
-  from, to { border-color: transparent; }
-  50% { border-color: rgba(201, 160, 0, 0.8); }
-}
-
 .weekly-verse-container {
   width: 100%;
   max-width: 100%;
-  overflow: hidden;
   box-sizing: border-box;
   text-align: center;
-  padding: 0 8px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.typewriter-text {
+.weekly-verse {
   display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  /* Use max-content so width: 100% scales to the exact text length, 
-     constrained by the parent container width */
-  width: 0;
-  max-width: 100%;
-  border-right: 3px solid rgba(201, 160, 0, 0.8);
+  white-space: normal; /* Allows natural wrapping if it's long */
+  word-break: break-word;
 }
 
-.typewriter-active {
-  animation: typing 4s steps(40, end) forwards, blinkCursor 0.75s step-end infinite;
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: rgba(201, 160, 0, 0.9);
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  animation: pulseGlow 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(201, 160, 0, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(201, 160, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(201, 160, 0, 0);
+  }
 }
