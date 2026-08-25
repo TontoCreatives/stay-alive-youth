@@ -173,15 +173,18 @@ body.is-offline .offline-banner {
   overflow: hidden;
   box-sizing: border-box;
   text-align: center;
+  padding: 0 8px;
 }
 
 .typewriter-text {
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
+  /* Use max-content so width: 100% scales to the exact text length, 
+     constrained by the parent container width */
+  width: 0;
   max-width: 100%;
   border-right: 3px solid rgba(201, 160, 0, 0.8);
-  width: 0; /* Start hidden */
 }
 
 .typewriter-active {
