@@ -154,3 +154,26 @@ body.is-offline .offline-banner {
 .streak-milestone-pop {
     animation: streakPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
+/* ==========================================
+   START: Smoke Fade-In Animation for Weekly Verse
+   ========================================== */
+@keyframes smokeFadeIn {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(10px);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+#memory-verse-banner {
+  animation: smokeFadeIn 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
