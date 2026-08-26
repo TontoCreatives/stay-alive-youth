@@ -56,25 +56,12 @@
         document.documentElement.classList.add('pwa-mode');
     }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@capacitor/core@latest/dist/capacitor.js"></script>
+
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 
-<!-- PWA Install Gate Overlay -->
-<div id="pwa-install-gate" style="display: none; flex-direction: column; justify-content: center; align-items: center; background: #000000; color: #ffffff; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; padding: 20px; text-align: center;">
-    <div style="max-width: 400px; padding: 30px; background: #121212; border: 1px solid #27272a; border-radius: 16px;">
-        <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #ffffff;">Install Stay Alive Fellowship</h2>
-        <p style="font-size: 14px; color: #a1a1aa; margin-bottom: 24px; line-height: 1.5;">Please install our application to unlock full access to resources, prayers, and events.</p>
-        
-        <button id="install-btn" style="background: #c9a000; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 12px;">Install App Now</button>
-        
-        <!-- Manual Fallback Instructions -->
-        <div id="manual-instructions" style="display: none; text-align: left; background: #1a1a1e; padding: 14px; border-radius: 8px; border: 1px solid #3f3f46; font-size: 13px; color: #d4d4d8; margin-top: 10px;">
-            <p style="font-weight: bold; color: #c9a000; margin-bottom: 6px;">To install on this device:</p>
-            <p style="margin-bottom: 4px;">1. Tap your browser menu (the 3 dots or share icon).</p>
-            <p>2. Select <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong>.</p>
-        </div>
-    </div>
-</div>
+
 
 <!-- NAVIGATION BAR -->
 <header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-4 flex justify-between items-center max-w-7xl mx-auto w-full">

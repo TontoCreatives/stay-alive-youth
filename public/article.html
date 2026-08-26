@@ -32,6 +32,20 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Studio">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <script src="https://cdn.jsdelivr.net/npm/@capacitor/core@latest/dist/capacitor.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
+    const isNativeApp = window.Capacitor && window.Capacitor.isNativePlatform();
+    const installGate = document.getElementById('pwa-install-gate');
+
+    if (isNativeApp || isStandalone || isInstalledFlag) {
+        document.body.classList.add('pwa-installed');
+        if (installGate) installGate.style.setProperty('display', 'none', 'important');
+    }
+});
+</script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 

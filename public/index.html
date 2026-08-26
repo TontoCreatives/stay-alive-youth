@@ -2,15 +2,7 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <script>
-    // Instantly apply pwa-installed class if launched as PWA to prevent layout flash
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-        document.documentElement.classList.add('pwa-mode');
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.classList.add('pwa-installed');
-        });
-    }
-</script>
+  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stay Alive Fellowship | Youth Bible Study</title>
     <!-- Tailwind CSS CDN -->
