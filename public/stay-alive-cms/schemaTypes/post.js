@@ -1,0 +1,93 @@
+import {defineField, defineType} from 'sanity'
+
+export default defineType({
+  name: 'post',
+  title: 'Post',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    }),
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: {type: 'author'},
+    }),
+    defineField({
+      name: 'mainImage',
+      title: 'Main image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Theological Reflection', value: 'Theological Reflection' },
+          { title: 'Scripture Study', value: 'Scripture Study' },
+          { title: 'Relationships & Marriage', value: 'Relationships & Marriage' },
+          { title: 'Discipleship', value: 'Discipleship' },
+          { title: 'Essay', value: 'Essay' }
+        ],
+        layout: 'dropdown',
+      },
+      validation: Rule => Rule.required(),
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Body',
+      type: 'blockContent',
+    }),
+    defineField({
+      name: 'studyNotes',
+      title: 'Study Notes & Insights',
+      type: 'text',
+      description: 'Write or paste the breakdown of today scriptural text or theme',
+    }),
+    defineField({
+      name: 'questionnaire',
+      title: 'Discussion & Devotional Questions',
+      type: 'text',
+      description: 'Questions for group discussion or personal self-reflection',
+    }),
+  ],
+
+  preview: {
+    select: {
+      title: 'title',
+      author: 'author.name',
+      media: 'mainImage',
+      category: 'categories',
+    },
+    prepare(selection) {
+      const {author, category} = selection
+      const authorText = author ? `by ${author}` : ''
+      const categoryText = category ? `[${category}]` : ''
+      return {
+        ...selection, 
+        subtitle: [categoryText, authorText].filter(Boolean).join(' ')
+      }
+    },
+  },
+})

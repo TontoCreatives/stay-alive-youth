@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stay Alive Fellowship</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FACC15',
+                        darkBg: '#09090b',
+                        cardBg: '#121214'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Vercel Web Analytics -->
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FACC15">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Studio">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
+
+    <!-- Desktop Nav Links -->
+    <header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-4 flex justify-between items-center max-w-7xl mx-auto w-full">
+        <a href="index.html" class="font-bold text-brandYellow text-lg tracking-wider">Stay Alive</a>
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+            <a href="index.html" class="hover:text-brandYellow transition-colors">Home</a>
+            <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
+            <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+            <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
+            <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+            <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+            <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+        </nav>
+    </header>
+
+    <!-- Main Article Content Container -->
+    <main class="py-12 sm:py-20 bg-darkBg flex-grow">
+        <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Back Navigation -->
+            <div class="mb-8">
+                <a href="series.html" class="inline-flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-brandYellow uppercase tracking-wider bg-cardBg px-4 py-2 rounded-lg border border-zinc-800 transition-all">
+                    <span>&larr;</span> Back to Series Tracks
+                </a>
+            </div>
+
+            <!-- Article Header Meta -->
+            <header class="mb-10 border-b border-zinc-800 pb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Theological Reflection</span>
+                    <span id="article-date" class="text-zinc-500 text-xs">Loading date...</span>
+                </div>
+                <h1 id="article-title" class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-6 leading-tight">
+                    Loading title...
+                </h1>
+                <p id="article-intro" class="text-zinc-300 text-base sm:text-lg leading-relaxed hidden">
+                </p>
+            </header>
+
+            <!-- Featured Banner Image -->
+            <div id="banner-container" class="mb-10 overflow-hidden rounded-2xl border border-zinc-800 bg-cardBg shadow-2xl hidden">
+                <img id="banner-image" src="" alt="Article Banner" class="w-full max-h-[450px] object-cover object-center">
+            </div>
+
+            <!-- Article Body Content Block -->
+            <div id="article-body" class="space-y-6 text-zinc-300 text-base sm:text-lg leading-relaxed">
+                Loading article body content...
+            </div>
+
+            <!-- Author Bio Footer Box -->
+            <footer class="mt-12 pt-8 border-t border-zinc-800 flex flex-col sm:flex-row items-center gap-6 bg-cardBg p-6 sm:p-8 rounded-2xl border border-zinc-800">
+                <img id="author-image" src="" alt="Author" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover border border-zinc-700 shadow-md">
+                
+                <div class="text-center sm:text-left">
+                    <span class="text-xs text-brandYellow font-bold uppercase tracking-wider">Written By</span>
+                    <h3 id="author-name" class="text-xl font-bold text-white mt-1">Loading author...</h3>
+                    <p id="author-bio" class="text-zinc-400 text-xs sm:text-sm mt-2 leading-relaxed">
+                        Loading bio...
+                    </p>
+                </div>
+            </footer>
+
+        </article>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
+        </div>
+    </footer>
+
+    <!-- Sanity Data Injector Script -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@sanity/client'
+
+        const client = createClient({
+            projectId: 'y4q1h6a9',
+            dataset: 'production',
+            apiVersion: '2026-08-14',
+            useCdn: false 
+        })
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleSlug = urlParams.get('slug');
+
+        async function fetchArticle() {
+            try {
+                if (!articleSlug) {
+                    document.getElementById('article-title').innerText = "Article Not Found";
+                    document.getElementById('article-body').innerHTML = "<p class='text-zinc-400'>No article specified in URL parameters.</p>";
+                    return;
+                }
+
+                const query = `*[_type == "post" && slug.current == $slug][0]{
+                    title,
+                    _createdAt,
+                    publishedAt,
+                    excerpt,
+                    body[]{
+                        ...,
+                        "imageUrl": asset->url,
+                        "audioUrl": file.asset->url
+                    },
+                    "authorName": author->name,
+                    "authorBio": author->bio,
+                    "authorImage": author->image.asset->url,
+                    "bannerUrl": mainImage.asset->url
+                }`
+
+                const article = await client.fetch(query, { slug: articleSlug });
+                console.log("SANITY ARTICLE RESPONSE:", article);
+
+                if (!article) {
+                    document.getElementById('article-title').innerText = "Article Not Found";
+                    document.getElementById('article-body').innerHTML = `<p class='text-zinc-400'>No post found for slug: <b>${articleSlug}</b>. Check if it's published in Sanity.</p>`;
+                    return;
+                }
+
+                document.getElementById('article-title').innerText = article.title || "Untitled Article";
+                document.title = `${article.title || "Article"} | Stay Alive Fellowship`;
+                
+                if (article.excerpt) {
+                    const introEl = document.getElementById('article-intro');
+                    introEl.innerText = article.excerpt;
+                    introEl.classList.remove('hidden');
+                }
+                
+                const dateValue = article.publishedAt || article._createdAt;
+                if (dateValue) {
+                    document.getElementById('article-date').innerText = new Date(dateValue).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                }
+
+                if (article.bannerUrl) {
+                    document.getElementById('banner-image').src = article.bannerUrl;
+                    document.getElementById('banner-container').classList.remove('hidden');
+                }
+                
+                document.getElementById('author-name').innerText = article.authorName || "Antony Mutahi";
+                document.getElementById('author-bio').innerText = "Faithful servant of Christ, graphic designer, and tech educator.";
+                document.getElementById('author-image').src = article.authorImage || "blog%20images/WHY.jpg";
+
+                if (article.body && Array.isArray(article.body)) {
+                    const bodyHtml = article.body.map((block, index) => {
+                        console.log(`Processing block [${index}] type:`, block._type);
+
+                        // 1. Text blocks
+                        if (block._type === 'block' && block.children) {
+                            const text = block.children.map(c => c.text).join('');
+                            if (!text.trim()) return '';
+
+                            if (block.style === 'h2') return `<h2 class="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4">${text}</h2>`;
+                            if (block.style === 'h3') return `<h3 class="text-xl sm:text-2xl font-bold text-white mt-8 mb-3">${text}</h3>`;
+                            if (block.style === 'blockquote') return `<blockquote class="border-l-4 border-brandYellow pl-4 italic text-zinc-300 my-6">${text}</blockquote>`;
+                            return `<p class="mb-6 leading-relaxed">${text}</p>`;
+                        }
+
+                        // 2. Audio blocks
+                        if (block._type && (block._type.toLowerCase().includes('audio') || block._type.toLowerCase().includes('file') || block._type.toLowerCase().includes('track'))) {
+                            const audioSrc = block.audioUrl || block.file?.asset?.url || block.file?.url || block.url || block.asset?.url;
+                            
+                            if (!audioSrc) {
+                                return `<div class="p-4 my-4 bg-yellow-950/40 border border-yellow-700 text-yellow-200 text-xs rounded-xl">
+                                    [Audio block detected (Type: <b>${block._type}</b>), but no media file attached or uploaded yet.]
+                                </div>`;
+                            }
+                            
+                            return `
+                                <div class="my-8 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3 shadow-lg">
+                                    <p class="text-xs font-bold text-brandYellow uppercase tracking-wider">${block.title || "Audio Track"}</p>
+                                    <audio controls class="w-full">
+                                        <source src="${audioSrc}" type="audio/mpeg" />
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            `;
+                        }
+
+                        // 3. Video blocks
+                        if (block._type && block._type.toLowerCase().includes('video')) {
+                            if (!block.url) return `<div class="p-4 my-4 bg-red-950/50 border border-red-800 text-red-200 text-xs rounded-xl">[Video block found, but URL is missing]</div>`;
+                            
+                            let embedUrl = block.url;
+                            if (embedUrl.includes('watch?v=')) {
+                                embedUrl = embedUrl.replace('watch?v=', 'embed/');
+                            }
+                            return `
+                                <div class="my-8 space-y-2">
+                                    <div class="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 shadow-lg">
+                                        <iframe src="${embedUrl}" class="w-full h-full" allowfullscreen></iframe>
+                                    </div>
+                                    ${block.caption ? `<p class="text-center text-xs text-zinc-400">${block.caption}</p>` : ''}
+                                </div>
+                            `;
+                        }
+
+                        // 4. Image blocks
+                        if (block._type === 'image') {
+                            const imgUrl = block.imageUrl || block.asset?.url;
+                            if (!imgUrl) return '';
+                            return `
+                                <figure class="my-8">
+                                    <img src="${imgUrl}" alt="Article Image" class="rounded-xl w-full object-cover border border-zinc-800 shadow-lg" />
+                                    ${block.caption ? `<figcaption class="text-center text-xs text-zinc-400 mt-2">${block.caption}</figcaption>` : ''}
+                                </figure>
+                            `;
+                        }
+
+                        // Fallback debugger block for unknown types
+                        return `<div class="p-3 my-2 bg-zinc-900/60 border border-zinc-800 text-zinc-400 text-xs rounded-lg">
+                            [Unknown block type: <b>${block._type}</b>]
+                        </div>`;
+                    }).join('');
+                    
+                    document.getElementById('article-body').innerHTML = bodyHtml;
+                }
+
+            } catch (err) {
+                console.error("CRITICAL SCRIPT ERROR:", err);
+                document.getElementById('article-body').innerHTML = `<div class="p-4 bg-red-950 border border-red-800 text-red-200 rounded-xl">Error: ${err.message}</div>`;
+            }
+        }
+
+        fetchArticle();
+    </script>
+</body>
+</html>
