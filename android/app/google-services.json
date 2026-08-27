@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "830015894079",
+    "project_id": "stay-alive-youth",
+    "storage_bucket": "stay-alive-youth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830015894079:android:df8f41b8c4adb82cf97e8a",
+        "android_client_info": {
+          "package_name": "com.stay.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDViApx5DYSFFQVudYaftV-5_cxZUojYXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

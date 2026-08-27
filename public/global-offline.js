@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkNotebookAuthMode();
   loadUserProfileAndStreak();
   syncDailyStreak();
+  setupPushNotifications();
   loadCommunityInsights();
   initOnlinePresenceTracker();
   checkNotificationOptInState();
@@ -258,12 +259,28 @@ async function handleProfileClick() {
           </button>
         `;
 
-        document.getElementById('google-signin-btn').onclick = async () => {
-          const { error } = await client.auth.signInWithOAuth({
-            provider: 'google',
-            options: { redirectTo: window.location.origin }
-          });
-          if (error) alert("Google Sign-In Error: " + error.message);
+   document.getElementById('google-signin-btn').onclick = async () => {
+          // Check if Capacitor is available on the mobile build
+          if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+            const { data, error } = await client.auth.signInWithOAuth({
+              provider: 'google',
+              options: { skipBrowserRedirect: true }
+            });
+            if (error) {
+              alert("Google Sign-In Error: " + error.message);
+              return;
+            }
+            if (data?.url && window.Capacitor.Plugins.Browser) {
+              await window.Capacitor.Plugins.Browser.open({ url: data.url });
+            }
+          } else {
+            // Standard web fallback behavior
+            const { error } = await client.auth.signInWithOAuth({
+              provider: 'google',
+              options: { redirectTo: window.location.origin }
+            });
+            if (error) alert("Google Sign-In Error: " + error.message);
+          }
         };
 
         document.getElementById('forgot-password-link').onclick = async (e) => {
@@ -1246,3 +1263,104 @@ async function syncDailyStreak() {
     if (streakEl) streakEl.textContent = newStreak;
   }
 }
+// ==========================================
+// PUSH NOTIFICATIONS (Capacitor native)
+// ==========================================
+// Call this once per app load, after the user is signed in.
+// Registers the device for push notifications and saves the
+// device token to Supabase so we know where to send pushes.
+async function setupPushNotifications() {
+  // Only runs inside the native Capacitor app, not in a regular browser
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+
+  const { PushNotifications } = window.Capacitor.Plugins;
+  if (!PushNotifications) return;
+
+  const client = window.supabaseClient || window.supabase;
+  if (!client) return;
+
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) return;
+
+  // Ask permission
+  let permStatus = await PushNotifications.checkPermissions();
+  if (permStatus.receive === 'prompt') {
+    permStatus = await PushNotifications.requestPermissions();
+  }
+  if (permStatus.receive !== 'granted') {
+    console.log('Push notification permission denied');
+    return;
+  }
+
+  // Register with FCM
+  await PushNotifications.register();
+
+  // When registration succeeds, save the token to Supabase
+  PushNotifications.addListener('registration', async (token) => {
+    console.log('Push registration token:', token.value);
+    const { error } = await client
+      .from('profiles')
+      .update({ push_token: token.value })
+      .eq('id', session.user.id);
+    if (error) console.error('Failed to save push token:', error);
+  });
+
+  PushNotifications.addListener('registrationError', (err) => {
+    console.error('Push registration error:', err);
+  });
+
+  // Optional: log when a notification is tapped/received while app is open
+  PushNotifications.addListener('pushNotificationReceived', (notification) => {
+    console.log('Push received:', notification);
+  });
+}
+// ==========================================
+// SCROLL PROGRESS BAR + BACK-TO-TOP BUTTON
+// ==========================================
+// Injects on every page automatically since global-offline.js
+// already loads everywhere. Purely additive, no existing IDs touched.
+function setupScrollPolish() {
+  const progressBar = document.createElement('div');
+  progressBar.id = 'scroll-progress-bar';
+  progressBar.style.cssText = `
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: #FACC15; z-index: 9999; transition: width 0.1s ease-out;
+  `;
+  document.body.appendChild(progressBar);
+
+  const backToTop = document.createElement('button');
+  backToTop.id = 'back-to-top-btn';
+  backToTop.innerHTML = '&uarr;';
+  backToTop.style.cssText = `
+    position: fixed; bottom: 90px; right: 16px; width: 44px; height: 44px;
+    border-radius: 9999px; background: rgba(250, 204, 21, 0.95); color: #000;
+    font-size: 20px; font-weight: bold; border: none; z-index: 9998;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35); opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease; transform: scale(0.8);
+    cursor: pointer;
+  `;
+  document.body.appendChild(backToTop);
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+
+    if (scrollTop > 400) {
+      backToTop.style.opacity = '1';
+      backToTop.style.pointerEvents = 'auto';
+      backToTop.style.transform = 'scale(1)';
+    } else {
+      backToTop.style.opacity = '0';
+      backToTop.style.pointerEvents = 'none';
+      backToTop.style.transform = 'scale(0.8)';
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', setupScrollPolish);
