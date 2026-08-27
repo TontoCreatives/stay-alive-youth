@@ -2,6 +2,47 @@
 // GLOBAL SCRIPT - COMPLETE IMPLEMENTATION
 // ==========================================
 
+// Catch Google Sign-In redirect coming back into the native app.
+// Google/Supabase redirects to com.stay.app://auth-callback#access_token=...
+// This listener grabs that URL, closes the in-app browser, and feeds
+// the tokens into Supabase so the user ends up signed in inside the app.
+if (window.Capacitor && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins.App) {
+  window.Capacitor.Plugins.App.addListener('appUrlOpen', async (event) => {
+    const url = event.url || '';
+    if (!url.startsWith('com.stay.app://auth-callback')) return;
+
+    try {
+      // Close the in-app browser tab if it's still open
+      if (window.Capacitor.Plugins.Browser) {
+        await window.Capacitor.Plugins.Browser.close();
+      }
+
+      const client = window.supabaseClient || window.supabase;
+      if (!client) return;
+
+      // Supabase puts the tokens after a # fragment
+      const hashPart = url.split('#')[1];
+      if (!hashPart) return;
+
+      const params = new URLSearchParams(hashPart);
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+
+      if (access_token && refresh_token) {
+        const { error } = await client.auth.setSession({ access_token, refresh_token });
+        if (error) {
+          console.error('Failed to complete sign-in:', error);
+        } else {
+          // Reload so the whole page picks up the new signed-in session
+          window.location.reload();
+        }
+      }
+    } catch (err) {
+      console.error('Error handling auth redirect:', err);
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   injectGlobalHeader();
 
@@ -264,7 +305,10 @@ async function handleProfileClick() {
           if (window.Capacitor && window.Capacitor.isNativePlatform()) {
             const { data, error } = await client.auth.signInWithOAuth({
               provider: 'google',
-              options: { skipBrowserRedirect: true }
+              options: {
+                skipBrowserRedirect: true,
+                redirectTo: 'com.stay.app://auth-callback'
+              }
             });
             if (error) {
               alert("Google Sign-In Error: " + error.message);
