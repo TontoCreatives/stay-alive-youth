@@ -91,8 +91,43 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
     </div>
 </section>
 
+<!-- RESOURCES TAB NAVIGATION -->
+<div id="resources-tab-nav" class="sticky top-0 z-30 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3">
+    <div class="max-w-md mx-auto flex bg-zinc-900/80 rounded-xl p-1 gap-1">
+        <button type="button" data-res-tab-btn="study" class="res-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Study Tool</button>
+        <button type="button" data-res-tab-btn="library" class="res-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Library</button>
+    </div>
+</div>
+<style>
+    .res-tab-btn { color: #a1a1aa; }
+    .res-tab-btn.active { background-color: #FACC15; color: #09090b; }
+    .res-tab-panel.res-tab-hidden { display: none !important; }
+</style>
+<script>
+    (function () {
+        function activateResTab(tab) {
+            document.querySelectorAll('.res-tab-panel').forEach(function (el) {
+                el.classList.toggle('res-tab-hidden', el.getAttribute('data-res-tab') !== tab);
+            });
+            document.querySelectorAll('.res-tab-btn').forEach(function (btn) {
+                btn.classList.toggle('active', btn.getAttribute('data-res-tab-btn') === tab);
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var nav = document.getElementById('resources-tab-nav');
+            if (!nav) return;
+            nav.addEventListener('click', function (e) {
+                var btn = e.target.closest('[data-res-tab-btn]');
+                if (!btn) return;
+                activateResTab(btn.getAttribute('data-res-tab-btn'));
+            });
+            activateResTab('study');
+        });
+    })();
+</script>
+
 <!-- SCRIPTURE SEARCH TOOL & STUDY WORKSPACE -->
-<section class="py-8 bg-zinc-950/60 border-b border-zinc-900">
+<section data-res-tab="study" class="res-tab-panel py-8 bg-zinc-950/60 border-b border-zinc-900">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         <!-- Header -->
@@ -120,6 +155,16 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
                     Search
                 </button>
             </form>
+
+            <!-- Quick Verse Shortcuts -->
+            <div class="flex flex-wrap gap-2 mt-3">
+                <span class="text-[10px] text-zinc-500 uppercase tracking-wider w-full mb-1">Quick access</span>
+                <button type="button" class="quick-verse-chip text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-800/70 text-zinc-300 border border-zinc-700 hover:border-brandYellow hover:text-brandYellow transition-colors" data-ref="Psalm 23">Psalm 23</button>
+                <button type="button" class="quick-verse-chip text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-800/70 text-zinc-300 border border-zinc-700 hover:border-brandYellow hover:text-brandYellow transition-colors" data-ref="John 3:16">John 3:16</button>
+                <button type="button" class="quick-verse-chip text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-800/70 text-zinc-300 border border-zinc-700 hover:border-brandYellow hover:text-brandYellow transition-colors" data-ref="Romans 8:28">Romans 8:28</button>
+                <button type="button" class="quick-verse-chip text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-800/70 text-zinc-300 border border-zinc-700 hover:border-brandYellow hover:text-brandYellow transition-colors" data-ref="Philippians 4:13">Philippians 4:13</button>
+                <button type="button" class="quick-verse-chip text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-800/70 text-zinc-300 border border-zinc-700 hover:border-brandYellow hover:text-brandYellow transition-colors" data-ref="Hebrews 3:13">Hebrews 3:13</button>
+            </div>
         </div>
 
         <!-- Results Display Box -->
@@ -196,7 +241,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
     </div>
 </section>
 <!-- RESOURCES SECTION WITH CATEGORY FILTER TABS -->
-<section class="py-16 bg-darkBg min-h-screen relative overflow-hidden">
+<section data-res-tab="library" class="res-tab-panel py-16 bg-darkBg min-h-screen relative overflow-hidden">
     <!-- Ambient Bokeh Glow Effect -->
     <div class="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-brandYellow/5 rounded-full blur-3xl pointer-events-none"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative z-10">
@@ -632,6 +677,21 @@ document.getElementById('reader-modal').addEventListener('click', (e) => {
             }
         });
     }
+</script>
+
+<!-- QUICK VERSE SHORTCUT CHIPS -->
+<script>
+    document.querySelectorAll('.quick-verse-chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+            const ref = chip.getAttribute('data-ref');
+            const input = document.getElementById('bible-input');
+            const form = document.getElementById('bible-form');
+            if (input && form) {
+                input.value = ref;
+                form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit'));
+            }
+        });
+    });
 </script>
 
 <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
