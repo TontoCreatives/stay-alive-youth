@@ -2,15 +2,6 @@
 <html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
-<script>
-// Instantly apply pwa-installed class if launched as PWA to prevent layout flash
-if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-    document.documentElement.classList.add('pwa-mode');
-}
-document.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('pwa-installed');
-});
-</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Resources & E-Reader | Stay Alive Fellowship</title>
 <!-- Tailwind CSS CDN -->
@@ -71,17 +62,11 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <script defer src="/_vercel/insights/script.js"></script>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FACC15">
-<script>
-if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === 'true') {
-    document.documentElement.classList.add('pwa-mode');
-}
-</script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 
-
 <!-- NAVIGATION BAR -->
-<header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-4 flex justify-between items-center max-w-7xl mx-auto w-full">
+<div class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-4 flex justify-between items-center max-w-7xl mx-auto w-full">
     <a href="index.html" class="font-bold text-brandYellow text-lg tracking-wider">Stay Alive</a>
         <!-- Desktop Nav Links -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
@@ -93,7 +78,7 @@ if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getI
             <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
             <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
         </nav>
-</header>
+</div>
 
 <!-- PAGE HEADER -->
 <section class="py-16 border-b border-zinc-900 bg-zinc-950">
@@ -696,63 +681,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-<script>
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
-const installGate = document.getElementById('pwa-install-gate');
-const bottomNav = document.querySelector('.app-only-feature');
-
-if (isStandalone || isInstalledFlag) {
-    document.body.classList.add('pwa-installed');
-    if (installGate) installGate.style.setProperty('display', 'none', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
-} else {
-    document.body.classList.remove('pwa-installed');
-    if (installGate) installGate.style.setProperty('display', 'flex', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'none', 'important');
-}
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const installBtn = document.getElementById('install-btn');
-    const manualInstructions = document.getElementById('manual-instructions');
-    if (installBtn) {
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    localStorage.setItem('pwa_installed', 'true');
-                    document.body.classList.add('pwa-installed');
-                    if (installGate) installGate.style.setProperty('display', 'none', 'important');
-                    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
-                }
-                deferredPrompt = null;
-            } else {
-                if (manualInstructions) {
-                    manualInstructions.style.display = manualInstructions.style.display === 'block' ? 'none' : 'block';
-                }
-            }
-        });
-    }
-});
-
-setTimeout(() => {
-    if (!deferredPrompt && !isStandalone && !isInstalledFlag) {
-        const manualInstructions = document.getElementById('manual-instructions');
-        if (manualInstructions) manualInstructions.style.display = 'block';
-    }
-}, 1500);
-
-window.addEventListener('appinstalled', () => {
-    localStorage.setItem('pwa_installed', 'true');
-    document.body.classList.add('pwa-installed');
-    if (installGate) installGate.style.setProperty('display', 'none', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
-});
-</script>
 <script src="global-offline.js"></script>
 </body>
 </html>

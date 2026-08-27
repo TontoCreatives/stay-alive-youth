@@ -2,7 +2,6 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stay Alive Fellowship | Youth Bible Study</title>
     <!-- Tailwind CSS CDN -->
@@ -51,30 +50,9 @@
         });
       });
     </script>
-    <script>
-    if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === 'true') {
-        document.documentElement.classList.add('pwa-mode');
-    }
-</script>
-<script src="global-offline.js"></script>
+    <script src="global-offline.js"></script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
-<!-- PWA Install Gate Overlay -->
-<div id="pwa-install-gate" style="display: none; flex-direction: column; justify-content: center; align-items: center; background: #000000; color: #ffffff; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; padding: 20px; text-align: center;">
-    <div style="max-width: 400px; padding: 30px; background: #121212; border: 1px solid #27272a; border-radius: 16px;">
-        <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 12px; color: #ffffff;">Install Stay Alive Fellowship</h2>
-        <p style="font-size: 14px; color: #a1a1aa; margin-bottom: 24px; line-height: 1.5;">Please install our application to unlock full access to resources, prayers, and events.</p>
-        
-        <button id="install-btn" style="background: #c9a000; color: #000000; font-weight: bold; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 12px;">Install App Now</button>
-        
-        <!-- Manual Fallback Instructions (Hidden by default, pops up on mobile when clicked) -->
-        <div id="manual-instructions" style="display: none; text-align: left; background: #1a1a1e; padding: 14px; border-radius: 8px; border: 1px solid #3f3f46; font-size: 13px; color: #d4d4d8; margin-top: 10px;">
-            <p style="font-weight: bold; color: #c9a000; margin-bottom: 6px;">To install on this device:</p>
-            <p style="margin-bottom: 4px;">1. Tap your browser menu (the 3 dots or share icon).</p>
-            <p>2. Select <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong>.</p>
-        </div>
-    </div>
-</div>
     <!-- START GLASS CRACK INTRO -->
     <div id="glass-intro" class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center bg-black/90 transition-opacity">
         <div class="relative w-full h-full flex items-center justify-center overflow-hidden">
@@ -324,7 +302,7 @@
     Enable Daily Notifications
   </button>
 </div>
-
+</div>
 <!-- QUICK ACCESS SECTION -->
 <section data-tab="explore" class="tab-panel max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex items-center justify-between mb-4">
@@ -797,66 +775,6 @@ fetchLatestDevotional();
     </ul>
 </nav>
 <script>
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-const isInstalledFlag = localStorage.getItem('pwa_installed') === 'true';
-const isNativeApp = window.Capacitor && window.Capacitor.isNativePlatform();
-
-const installGate = document.getElementById('pwa-install-gate');
-const bottomNav = document.querySelector('.app-only-feature');
-
-// Explicitly handle layout based on install state or native wrapper
-if (isNativeApp || isStandalone || isInstalledFlag) {
-    document.body.classList.add('pwa-installed');
-    if (installGate) installGate.style.setProperty('display', 'none', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
-} else {
-    document.body.classList.remove('pwa-installed');
-    if (installGate) installGate.style.setProperty('display', 'flex', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'none', 'important');
-}
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-});
-
-const installBtn = document.getElementById('install-btn');
-const manualInstructions = document.getElementById('manual-instructions');
-
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                localStorage.setItem('pwa_installed', 'true');
-                document.body.classList.add('pwa-installed');
-                if (installGate) installGate.style.setProperty('display', 'none', 'important');
-                if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
-            }
-            deferredPrompt = null;
-        } else {
-            if (manualInstructions) {
-                manualInstructions.style.display = manualInstructions.style.display === 'block' ? 'none' : 'block';
-            }
-        }
-    });
-}
-
-// Fallback for Brave and privacy browsers that suppress the event
-setTimeout(() => {
-    if (!deferredPrompt && !isNativeApp && !isStandalone && !isInstalledFlag && manualInstructions) {
-        manualInstructions.style.display = 'block';
-    }
-}, 1500);
-
-window.addEventListener('appinstalled', () => {
-    localStorage.setItem('pwa_installed', 'true');
-    document.body.classList.add('pwa-installed');
-    if (installGate) installGate.style.setProperty('display', 'none', 'important');
-    if (bottomNav) bottomNav.style.setProperty('display', 'block', 'important');
-});
 // NFS Hero Carousel Fade Loop
     const slides = document.querySelectorAll('.hero-slide');
     if (slides.length > 0) {
@@ -925,5 +843,4 @@ function startHeroFadeLoop() {
 
 document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
 </script>
-</body>
 </html>
