@@ -15,6 +15,9 @@
     "StatusBar": {
       "style": "DARK",
       "backgroundColor": "#09090b"
+    },
+    "CapacitorUpdater": {
+      "appId": "com.stay.app"
     }
   }
 }
