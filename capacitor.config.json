@@ -17,7 +17,8 @@
       "backgroundColor": "#09090b"
     },
     "CapacitorUpdater": {
-      "appId": "com.stay.app"
+      "appId": "6c6a6990-eaab-4edb-91f9-e36a6c0a94a7",
+      "autoUpdate": true
     }
   }
 }

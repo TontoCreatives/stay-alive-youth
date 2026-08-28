@@ -1450,7 +1450,17 @@ document.addEventListener('DOMContentLoaded', setupScrollPolish);
 // ==========================================
 async function setupNativeAppExtras() {
   if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
-  const { StatusBar, SplashScreen } = window.Capacitor.Plugins;
+  const { StatusBar, SplashScreen, CapacitorUpdater } = window.Capacitor.Plugins;
+
+  // Tell Capgo the app is ready — this also confirms the update was
+  // good (auto-rollback protection if this line never runs after an update)
+  if (CapacitorUpdater) {
+    try {
+      await CapacitorUpdater.notifyAppReady();
+    } catch (err) {
+      console.log('CapacitorUpdater notifyAppReady skipped:', err);
+    }
+  }
 
   // Match the status bar to the app's dark/gold theme
   if (StatusBar) {
