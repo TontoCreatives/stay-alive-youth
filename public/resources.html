@@ -178,6 +178,12 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
                     <span class="text-xs uppercase bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded font-semibold">Scripture</span>
                 </div>
                 <div id="passage-text" class="text-zinc-200 text-base sm:text-lg leading-relaxed space-y-4 font-normal"></div>
+                <button
+                    type="button"
+                    id="ask-leaders-btn"
+                    class="mt-6 w-full flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-black bg-brandYellow hover:bg-yellow-400 px-4 py-3 rounded-xl transition-all">
+                    <span aria-hidden="true">💬</span> Ask a Leader About This Verse
+                </button>
             </div>
         </div>
 
@@ -692,6 +698,27 @@ document.getElementById('reader-modal').addEventListener('click', (e) => {
             }
         });
     });
+</script>
+
+<!-- ASK A LEADER ABOUT THIS VERSE -->
+<script>
+    const askLeadersBtn = document.getElementById('ask-leaders-btn');
+    if (askLeadersBtn) {
+        askLeadersBtn.addEventListener('click', () => {
+            if (typeof hapticTap === 'function') hapticTap('LIGHT');
+
+            const refEl = document.getElementById('passage-reference');
+            const ref = refEl ? refEl.innerText.trim() : 'this passage';
+            const message = `Hi! I have a question about ${ref} that I was reading in the Stay Alive app. Could someone help me understand it better? 🙏`;
+            const whatsappUrl = 'https://wa.me/254715836373?text=' + encodeURIComponent(message);
+
+            if (window.Capacitor && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins.Browser) {
+                window.Capacitor.Plugins.Browser.open({ url: whatsappUrl });
+            } else {
+                window.open(whatsappUrl, '_blank');
+            }
+        });
+    }
 </script>
 
 <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->

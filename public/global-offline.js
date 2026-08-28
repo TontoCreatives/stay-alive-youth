@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadUserProfileAndStreak();
   syncDailyStreak();
   setupPushNotifications();
+  setupNativeAppExtras();
   loadCommunityInsights();
   initOnlinePresenceTracker();
   checkNotificationOptInState();
@@ -934,6 +935,7 @@ async function loadUserProfileAndStreak() {
   const client = window.supabaseClient || window.supabase;
   const streakEl = document.getElementById('user-streak-counter');
   const avatarEl = document.getElementById('user-profile-avatar');
+  const greetingEl = document.getElementById('user-greeting');
 
   if (!client) return;
 
@@ -945,7 +947,7 @@ async function loadUserProfileAndStreak() {
 
     const { data: profile } = await client
       .from('profiles')
-      .select('streak_count, avatar_url')
+      .select('streak_count, avatar_url, display_name')
       .eq('id', session.user.id)
       .single();
 
@@ -955,6 +957,13 @@ async function loadUserProfileAndStreak() {
       }
       if (avatarEl) {
         avatarEl.src = profile.avatar_url || defaultAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${session.user.email}`;
+      }
+      if (greetingEl) {
+        const hour = new Date().getHours();
+        const timeGreeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+        const name = (profile.display_name || session.user.user_metadata?.full_name || '').trim();
+        greetingEl.textContent = name ? `${timeGreeting}, ${name.split(' ')[0]}` : timeGreeting;
+        greetingEl.classList.remove('hidden');
       }
     } else if (defaultAvatar && avatarEl) {
       avatarEl.src = defaultAvatar;
@@ -1231,19 +1240,46 @@ async function submitCommunityPost() {
 // 7. PUSH NOTIFICATION OPT-IN
 // ==========================================
 function checkNotificationOptInState() {
-  if (!("Notification" in window)) return;
-  
-  if (Notification.permission === "granted") {
-    const notifCards = document.querySelectorAll('div');
-    notifCards.forEach(card => {
-      if (card.textContent.includes("Never Miss a Devotion") && card.textContent.includes("Enable Daily Notifications")) {
-        card.style.display = 'none';
+  const isNative = window.Capacitor && window.Capacitor.isNativePlatform();
+
+  // Native app: hide the card once permission is already granted
+  if (isNative && window.Capacitor.Plugins.PushNotifications) {
+    window.Capacitor.Plugins.PushNotifications.checkPermissions().then((status) => {
+      if (status.receive === 'granted') {
+        hideNotificationOptInCard();
       }
     });
+    return;
+  }
+
+  // Browser/PWA fallback: use the old Web Notifications API
+  if (!("Notification" in window)) return;
+  if (Notification.permission === "granted") {
+    hideNotificationOptInCard();
   }
 }
 
+function hideNotificationOptInCard() {
+  const notifCards = document.querySelectorAll('div');
+  notifCards.forEach(card => {
+    if (card.textContent.includes("Never Miss a Devotion") && card.textContent.includes("Enable Daily Notifications")) {
+      card.style.display = 'none';
+    }
+  });
+}
+
 async function subscribeToPushNotifications() {
+  const isNative = window.Capacitor && window.Capacitor.isNativePlatform();
+
+  // Native app: request native push permission instead of the browser API
+  if (isNative && window.Capacitor.Plugins.PushNotifications) {
+    await setupPushNotifications();
+    alert("Daily notifications enabled successfully!");
+    checkNotificationOptInState();
+    return;
+  }
+
+  // Browser/PWA fallback
   if (!("Notification" in window)) {
     alert("This browser does not support desktop notifications.");
     return;
@@ -1408,3 +1444,71 @@ function setupScrollPolish() {
 }
 
 document.addEventListener('DOMContentLoaded', setupScrollPolish);
+
+// ==========================================
+// NATIVE APP EXTRAS: status bar, splash screen, haptics, share
+// ==========================================
+async function setupNativeAppExtras() {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  const { StatusBar, SplashScreen } = window.Capacitor.Plugins;
+
+  // Match the status bar to the app's dark/gold theme
+  if (StatusBar) {
+    try {
+      await StatusBar.setBackgroundColor({ color: '#09090b' });
+      await StatusBar.setStyle({ style: 'DARK' }); // light icons on dark background
+    } catch (err) {
+      console.log('StatusBar setup skipped:', err);
+    }
+  }
+
+  // Hide the splash screen once the page is ready (Capacitor shows it automatically on launch)
+  if (SplashScreen) {
+    try {
+      await SplashScreen.hide();
+    } catch (err) {
+      console.log('SplashScreen hide skipped:', err);
+    }
+  }
+}
+
+// Call this on any tappable element for a subtle native "tap" feel.
+// Usage: <button onclick="hapticTap()">...</button>
+async function hapticTap(style) {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  const { Haptics } = window.Capacitor.Plugins;
+  if (!Haptics) return;
+  try {
+    await Haptics.impact({ style: style || 'LIGHT' });
+  } catch (err) {
+    // silently ignore on devices without haptics support
+  }
+}
+
+// Share any piece of content (article, event, devotion) via the native share sheet.
+// Usage: shareContent("Slow Fade - Sunday Bible Study", "Join us this Sunday...", "https://stay-alive-youth.vercel.app/events.html")
+async function shareContent(title, text, url) {
+  hapticTap('MEDIUM');
+
+  if (window.Capacitor && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins.Share) {
+    try {
+      await window.Capacitor.Plugins.Share.share({
+        title: title || 'Stay Alive Fellowship',
+        text: text || '',
+        url: url || window.location.href,
+        dialogTitle: 'Share with a friend'
+      });
+    } catch (err) {
+      console.log('Share cancelled or failed:', err);
+    }
+    return;
+  }
+
+  // Browser/PWA fallback: use the Web Share API if available, else copy link
+  if (navigator.share) {
+    navigator.share({ title, text, url: url || window.location.href }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url || window.location.href);
+    alert('Link copied to clipboard!');
+  }
+}

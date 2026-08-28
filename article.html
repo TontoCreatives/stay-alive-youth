@@ -32,8 +32,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Studio">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <script src="https://cdn.jsdelivr.net/npm/@capacitor/core@latest/dist/capacitor.js"></script>
-
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 
@@ -55,11 +53,16 @@
     <main class="py-12 sm:py-20 bg-darkBg flex-grow">
         <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <!-- Back Navigation -->
-            <div class="mb-8">
+            <!-- Back Navigation + Share -->
+            <div class="mb-8 flex items-center justify-between gap-3">
                 <a href="series.html" class="inline-flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-brandYellow uppercase tracking-wider bg-cardBg px-4 py-2 rounded-lg border border-zinc-800 transition-all">
                     <span>&larr;</span> Back to Series Tracks
                 </a>
+                <button
+                    onclick="shareContent(document.getElementById('article-title').innerText, document.getElementById('article-intro').innerText || 'Check out this article from Stay Alive Fellowship', window.location.href)"
+                    class="inline-flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-brandYellow uppercase tracking-wider bg-cardBg px-4 py-2 rounded-lg border border-zinc-800 transition-all">
+                    <span aria-hidden="true">&#8599;</span> Share
+                </button>
             </div>
 
             <!-- Article Header Meta -->
@@ -83,6 +86,15 @@
             <!-- Article Body Content Block -->
             <div id="article-body" class="space-y-6 text-zinc-300 text-base sm:text-lg leading-relaxed">
                 Loading article body content...
+            </div>
+
+            <!-- Bottom Share CTA -->
+            <div class="mt-10 flex justify-center">
+                <button
+                    onclick="shareContent(document.getElementById('article-title').innerText, document.getElementById('article-intro').innerText || 'Check out this article from Stay Alive Fellowship', window.location.href)"
+                    class="inline-flex items-center gap-2 text-sm font-bold text-black uppercase tracking-wider bg-brandYellow hover:bg-yellow-400 px-6 py-3 rounded-xl transition-all shadow-lg">
+                    <span aria-hidden="true">&#8599;</span> Share this article
+                </button>
             </div>
 
             <!-- Author Bio Footer Box -->
@@ -261,5 +273,6 @@
 
         fetchArticle();
     </script>
+    <script src="global-offline.js"></script>
 </body>
 </html>

@@ -53,57 +53,6 @@
     <script src="global-offline.js"></script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
-    <!-- START GLASS CRACK INTRO -->
-    <div id="glass-intro" class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center bg-black/90 transition-opacity">
-        <div class="relative w-full h-full flex items-center justify-center overflow-hidden">
-            <svg class="absolute inset-0 w-full h-full stroke-brandYellow/80 stroke-[1.5] fill-none opacity-95" viewBox="0 0 1440 900" preserveAspectRatio="none">
-                <!-- Progressive top-to-bottom crack vectors -->
-                <path d="M720,0 L710,180 L730,320" stroke-dasharray="400" stroke-dashoffset="400" class="path-crack-1" />
-                <path d="M730,320 L680,480 L740,650" stroke-dasharray="600" stroke-dashoffset="600" class="path-crack-2" />
-                <path d="M740,650 L700,780 L720,900" stroke-dasharray="400" stroke-dashoffset="400" class="path-crack-3" />
-                <!-- Branching fissures -->
-                <path d="M730,320 L890,280 L1020,310" stroke-dasharray="500" stroke-dashoffset="500" class="path-crack-sub-1" />
-                <path d="M680,480 L510,430 L380,390" stroke-dasharray="500" stroke-dashoffset="500" class="path-crack-sub-2" />
-                <path d="M700,780 L850,820 L960,880" stroke-dasharray="500" stroke-dashoffset="500" class="path-crack-sub-3" />
-            </svg>
-            <div class="z-10 text-center px-4 animate-fade-in-out">
-                <p class="text-xs font-bold uppercase tracking-widest text-brandYellow mb-2">Pieces of Me</p>
-                <h2 class="text-2xl sm:text-4xl font-black tracking-tight text-white">Shattered to be Shaped.</h2>
-            </div>
-        </div>
-    </div>
-    <style>
-        @keyframes drawCrack {
-            0% { stroke-dashoffset: var(--dash-len); opacity: 1; }
-            100% { stroke-dashoffset: 0; opacity: 1; }
-        }
-        @keyframes fadeOutIntro {
-            0% { opacity: 1; visibility: visible; }
-            75% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
-        }
-        @keyframes fadeInText {
-            0% { opacity: 0; transform: scale(0.95); }
-            25% { opacity: 1; transform: scale(1); }
-            75% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        .path-crack-1 { --dash-len: 400; animation: drawCrack 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; }
-        .path-crack-2 { --dash-len: 600; animation: drawCrack 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards; }
-        .path-crack-3 { --dash-len: 400; animation: drawCrack 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.6s forwards; }
-        
-        .path-crack-sub-1 { --dash-len: 500; animation: drawCrack 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards; }
-        .path-crack-sub-2 { --dash-len: 500; animation: drawCrack 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards; }
-        .path-crack-sub-3 { --dash-len: 500; animation: drawCrack 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.8s forwards; }
-
-        #glass-intro {
-            animation: fadeOutIntro 3.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .animate-fade-in-out {
-            animation: fadeInText 3.2s ease-in-out forwards;
-        }
-    </style>
-    <!-- END GLASS CRACK INTRO -->
 
  <!-- NAVIGATION BAR -->
 
@@ -157,6 +106,9 @@
             });
         })();
     </script>
+
+    <!-- PERSONALIZED GREETING -->
+    <p id="user-greeting" data-tab="today" class="tab-panel hidden text-center text-sm text-zinc-400 pt-4 pb-1 px-4"></p>
 
     <!-- WEEKLY MEMORY VERSE BANNER -->
     <div id="memory-verse-banner" data-tab="today" class="tab-panel bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900 py-3 px-4 text-center hidden">
