@@ -1569,3 +1569,38 @@ async function shareEventPoster(imageUrl, title) {
   // Browser/PWA fallback: just share the link (can't share files from a normal browser easily)
   shareContent(title, 'Check out this event at Stay Alive Fellowship!', window.location.href);
 }
+
+// ==========================================
+// GLOBAL SAFETY NET
+// ==========================================
+// Catches unexpected JS errors so the app never shows a silent blank
+// screen. Doesn't change any existing behavior — just shows a friendly
+// recovery message in the rare case something genuinely breaks.
+window.addEventListener('error', function (event) {
+  console.error('Unhandled error caught by safety net:', event.error || event.message);
+  showSafetyNetBanner();
+});
+
+window.addEventListener('unhandledrejection', function (event) {
+  console.error('Unhandled promise rejection caught by safety net:', event.reason);
+});
+
+let safetyNetShown = false;
+function showSafetyNetBanner() {
+  if (safetyNetShown) return; // only show once per page load, don't spam
+  safetyNetShown = true;
+
+  const banner = document.createElement('div');
+  banner.style.cssText = `
+    position: fixed; bottom: 90px; left: 16px; right: 16px; z-index: 9997;
+    background: #1c1c1e; border: 1px solid #FACC15; border-radius: 14px;
+    padding: 14px 16px; color: #fff; font-size: 13px; font-family: sans-serif;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: flex;
+    align-items: center; justify-content: space-between; gap: 12px;
+  `;
+  banner.innerHTML = `
+    <span>Something didn't load quite right. Try refreshing.</span>
+    <button style="background:#FACC15;color:#000;border:none;border-radius:8px;padding:6px 12px;font-weight:bold;font-size:12px;cursor:pointer;flex-shrink:0;" onclick="window.location.reload()">Refresh</button>
+  `;
+  document.body.appendChild(banner);
+}
