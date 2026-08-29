@@ -2,3 +2,5 @@ node_modules
 firebase-key.json
 .env.secrets
 .env.secrets2
+android/keystore.properties
+android/app/*.jks
