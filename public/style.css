@@ -199,3 +199,146 @@ section {
 header, .app-only-feature {
   box-shadow: 0 2px 12px rgba(0,0,0,0.25);
 }
+
+/* ==========================================
+   PHONE FEEDBACK FIXES
+   ========================================== */
+
+/* 1. Safe area support — prevents header/logo getting cut off by
+   notches, curved screens, or status bar on different phone models */
+header, .sticky.top-0 {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+/* Also apply safe area to the very top of the page body, as a fallback
+   for any header that isn't using the .sticky/top-0 classes */
+body {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 2. Footer no longer hides behind the fixed bottom nav bar.
+   Reserves space equal to the nav's height + safe area at the bottom. */
+footer {
+  margin-bottom: calc(70px + env(safe-area-inset-bottom));
+}
+
+/* Footer text is now clearly separated from navigation, not overlapping */
+.app-only-feature, nav.fixed.bottom-0 {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 3. Reduce excessive spacing between page sections.
+   Overrides Tailwind's larger py-16/py-20 utility values with tighter ones. */
+section.py-16 {
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+}
+section.py-20 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+section.py-12 {
+  padding-top: 2rem !important;
+  padding-bottom: 2rem !important;
+}
+
+/* Hide the website-style copyright footer everywhere.
+   Native apps don't typically show this — removes web-page feel. */
+footer {
+  display: none !important;
+}
+
+/* ==========================================
+   APP-WIDE SPACING CONSISTENCY
+   ========================================== */
+/* Tightens vertical gaps between stacked content blocks
+   (Tailwind's space-y utilities) so every page feels equally
+   compact, not just the sections we already tightened above. */
+.space-y-12 > * + * {
+  margin-top: 2rem !important;
+}
+.space-y-8 > * + * {
+  margin-top: 1.5rem !important;
+}
+
+/* Normalize remaining oversized section/container padding
+   that wasn't already covered by py-16/py-20/py-12 above */
+.py-10 {
+  padding-top: 1.75rem !important;
+  padding-bottom: 1.75rem !important;
+}
+.py-8 {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+/* Consistent card corner rounding across every page, so cards from
+   different pages/sections look like one unified design system */
+.rounded-2xl, .rounded-xl {
+  border-radius: 1rem !important;
+}
+
+/* ==========================================
+   AMBIENT BOKEH BACKGROUND
+   ========================================== */
+#bokeh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bokeh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.18;
+  will-change: transform;
+}
+
+.bokeh-1 {
+  width: 320px;
+  height: 320px;
+  top: -60px;
+  left: -60px;
+  background: radial-gradient(circle, #FACC15, transparent 70%);
+  animation: bokehFloat1 18s ease-in-out infinite;
+}
+
+.bokeh-2 {
+  width: 280px;
+  height: 280px;
+  top: 40%;
+  right: -80px;
+  background: radial-gradient(circle, #f59e0b, transparent 70%);
+  animation: bokehFloat2 22s ease-in-out infinite;
+}
+
+.bokeh-3 {
+  width: 260px;
+  height: 260px;
+  bottom: -60px;
+  left: 20%;
+  background: radial-gradient(circle, #eab308, transparent 70%);
+  animation: bokehFloat3 26s ease-in-out infinite;
+}
+
+@keyframes bokehFloat1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, 40px); }
+}
+@keyframes bokehFloat2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-40px, 30px); }
+}
+@keyframes bokehFloat3 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(25px, -35px); }
+}
+
+/* Ensure actual page content always renders above the bokeh layer */
+body > *:not(#bokeh-bg) {
+  position: relative;
+  z-index: 1;
+}

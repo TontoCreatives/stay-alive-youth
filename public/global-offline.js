@@ -1604,3 +1604,60 @@ function showSafetyNetBanner() {
   `;
   document.body.appendChild(banner);
 }
+
+// ==========================================
+// AUTOMATIC IMAGE LAZY LOADING (performance)
+// ==========================================
+// Since most images (devotion photos, event posters, article banners)
+// are injected dynamically after fetching from Sanity, this watches
+// the page for new <img> elements and marks them for lazy loading —
+// meaning images below the fold only load once the user scrolls near
+// them, instead of every image loading immediately on page open.
+function setupLazyImageLoading() {
+  function tagImage(img) {
+    if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+    if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+  }
+
+  // Tag any images already on the page
+  document.querySelectorAll('img').forEach(tagImage);
+
+  // Watch for images added later (e.g. after Sanity content loads)
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType !== 1) return; // only element nodes
+        if (node.tagName === 'IMG') tagImage(node);
+        if (node.querySelectorAll) {
+          node.querySelectorAll('img').forEach(tagImage);
+        }
+      });
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+document.addEventListener('DOMContentLoaded', setupLazyImageLoading);
+
+// ==========================================
+// AMBIENT BOKEH BACKGROUND (decorative, on-brand)
+// ==========================================
+// Adds soft, blurred glowing shapes behind all content, fixed in
+// place so they don't move with scroll. Purely decorative — sits
+// behind everything, never interferes with taps or content.
+function setupBokehBackground() {
+  if (document.getElementById('bokeh-bg')) return; // don't duplicate
+
+  const bokeh = document.createElement('div');
+  bokeh.id = 'bokeh-bg';
+  bokeh.setAttribute('aria-hidden', 'true');
+  bokeh.innerHTML = `
+    <div class="bokeh-blob bokeh-1"></div>
+    <div class="bokeh-blob bokeh-2"></div>
+    <div class="bokeh-blob bokeh-3"></div>
+  `;
+  document.body.prepend(bokeh);
+}
+
+document.addEventListener('DOMContentLoaded', setupBokehBackground);
