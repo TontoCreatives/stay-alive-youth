@@ -159,7 +159,7 @@
                         </div>
                         <div class="px-6 pb-6">
                             <button
-                                onclick="shareContent('${(event.title || 'Event').replace(/'/g, "\\'")}', '${(event.description || 'Join us for this event at Stay Alive Fellowship').replace(/'/g, "\\'")}', window.location.href)"
+                                onclick="${event.imageUrl ? `shareEventPoster('${event.imageUrl}', '${(event.title || 'Event').replace(/'/g, "\\'")}')` : `shareContent('${(event.title || 'Event').replace(/'/g, "\\'")}', '${(event.description || 'Join us for this event at Stay Alive Fellowship').replace(/'/g, "\\'")}', window.location.href)`}"
                                 class="w-full flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-black bg-brandYellow hover:bg-yellow-400 px-4 py-2.5 rounded-xl transition-all">
                                 <span aria-hidden="true">&#8599;</span> Share This Event
                             </button>

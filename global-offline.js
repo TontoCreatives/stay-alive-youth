@@ -1522,3 +1522,50 @@ async function shareContent(title, text, url) {
     alert('Link copied to clipboard!');
   }
 }
+
+// Share an actual IMAGE (like an event poster) so it can be posted to
+// WhatsApp Status or shared as a real picture, not just a text link.
+// Usage: shareEventPoster("https://cdn.sanity.io/...jpg", "Slow Fade - Sunday Bible Study")
+async function shareEventPoster(imageUrl, title) {
+  hapticTap('MEDIUM');
+
+  const isNative = window.Capacitor && window.Capacitor.isNativePlatform();
+  const { Share, Filesystem } = isNative ? window.Capacitor.Plugins : {};
+
+  if (isNative && Share && Filesystem && imageUrl) {
+    try {
+      // Download the poster image
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+
+      // Convert to base64 so it can be written to the device's cache
+      const base64Data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      const fileName = `event-poster-${Date.now()}.jpg`;
+      const savedFile = await Filesystem.writeFile({
+        path: fileName,
+        data: base64Data,
+        directory: 'CACHE'
+      });
+
+      await Share.share({
+        title: title || 'Stay Alive Event',
+        text: `Check out this event: ${title || ''} 🙌`,
+        files: [savedFile.uri],
+        dialogTitle: 'Share this event'
+      });
+    } catch (err) {
+      console.log('Poster share failed, falling back to link share:', err);
+      shareContent(title, 'Check out this event at Stay Alive Fellowship!', window.location.href);
+    }
+    return;
+  }
+
+  // Browser/PWA fallback: just share the link (can't share files from a normal browser easily)
+  shareContent(title, 'Check out this event at Stay Alive Fellowship!', window.location.href);
+}
