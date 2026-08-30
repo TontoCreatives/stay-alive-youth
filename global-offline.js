@@ -1452,6 +1452,19 @@ async function setupNativeAppExtras() {
   if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
   const { StatusBar, SplashScreen, CapacitorUpdater } = window.Capacitor.Plugins;
 
+  // Show a friendly toast once a live update has finished downloading.
+  // The update itself applies on the NEXT app restart automatically —
+  // this just lets the user know something changed, so it doesn't feel invisible.
+  if (CapacitorUpdater) {
+    CapacitorUpdater.addListener('downloadComplete', (event) => {
+      console.log('Live update downloaded:', event.bundle?.version);
+      showUpdateToast('✨ App updated! Changes will appear next time you open it.');
+    });
+    CapacitorUpdater.addListener('updateFailed', (event) => {
+      console.log('Live update failed:', event);
+    });
+  }
+
   // Tell Capgo the app is ready — this also confirms the update was
   // good (auto-rollback protection if this line never runs after an update)
   if (CapacitorUpdater) {
@@ -1661,3 +1674,28 @@ function setupBokehBackground() {
 }
 
 document.addEventListener('DOMContentLoaded', setupBokehBackground);
+
+// ==========================================
+// UPDATE NOTIFICATION TOAST
+// ==========================================
+// Small, friendly banner shown once when a live update finishes
+// downloading in the background — reuses the same visual style as
+// the safety-net banner, so it feels consistent.
+function showUpdateToast(message) {
+  const toast = document.createElement('div');
+  toast.style.cssText = `
+    position: fixed; bottom: 90px; left: 16px; right: 16px; z-index: 9996;
+    background: #1c1c1e; border: 1px solid #22c55e; border-radius: 14px;
+    padding: 14px 16px; color: #fff; font-size: 13px; font-family: sans-serif;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: center;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // Auto-dismiss after 6 seconds
+  setTimeout(() => {
+    toast.style.transition = 'opacity 0.4s ease';
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 400);
+  }, 6000);
+}

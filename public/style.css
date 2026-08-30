@@ -184,12 +184,6 @@ img {
   to   { opacity: 1; }
 }
 
-/* Consistent breathing room + soft depth on content cards,
-   without touching any HTML structure or IDs */
-.bg-cardBg, [class*="bg-zinc-900"], [class*="bg-zinc-950"] section > div {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
 /* Section spacing rhythm — gives pages a less "cramped webpage" feel */
 section {
   scroll-margin-top: 80px;
@@ -205,9 +199,10 @@ header, .app-only-feature {
    ========================================== */
 
 /* 1. Safe area support — prevents header/logo getting cut off by
-   notches, curved screens, or status bar on different phone models */
+   notches, curved screens, or status bar on different phone models.
+   Requires viewport-fit=cover in the HTML meta tag to work correctly. */
 header, .sticky.top-0 {
-  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-top: max(1.25rem, calc(env(safe-area-inset-top) + 0.5rem));
 }
 
 /* Also apply safe area to the very top of the page body, as a fallback
@@ -292,9 +287,8 @@ footer {
 .bokeh-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.18;
-  will-change: transform;
+  filter: blur(60px);
+  opacity: 0.15;
 }
 
 .bokeh-1 {
@@ -303,7 +297,6 @@ footer {
   top: -60px;
   left: -60px;
   background: radial-gradient(circle, #FACC15, transparent 70%);
-  animation: bokehFloat1 18s ease-in-out infinite;
 }
 
 .bokeh-2 {
@@ -312,7 +305,6 @@ footer {
   top: 40%;
   right: -80px;
   background: radial-gradient(circle, #f59e0b, transparent 70%);
-  animation: bokehFloat2 22s ease-in-out infinite;
 }
 
 .bokeh-3 {
@@ -321,20 +313,6 @@ footer {
   bottom: -60px;
   left: 20%;
   background: radial-gradient(circle, #eab308, transparent 70%);
-  animation: bokehFloat3 26s ease-in-out infinite;
-}
-
-@keyframes bokehFloat1 {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(30px, 40px); }
-}
-@keyframes bokehFloat2 {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(-40px, 30px); }
-}
-@keyframes bokehFloat3 {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(25px, -35px); }
 }
 
 /* Ensure actual page content always renders above the bokeh layer */
