@@ -49,6 +49,13 @@ export default {
       name: 'closingPrayer',
       title: 'Closing Prayer / Reflection Prompt',
       type: 'text',
+    },
+    {
+      name: 'notifyOnPublish',
+      title: 'Send push notification when published/updated?',
+      description: 'Turn this OFF when fixing a typo or minor edit on an already-published devotional, so people don\'t get re-notified about old content.',
+      type: 'boolean',
+      initialValue: true,
     }
   ]
 }

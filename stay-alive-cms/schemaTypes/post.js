@@ -9,6 +9,7 @@ export default defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
+      validation: Rule => Rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -18,6 +19,15 @@ export default defineType({
         source: 'title',
         maxLength: 96,
       },
+      validation: Rule => Rule.required(),
+    }),
+    defineField({
+      name: 'excerpt',
+      title: 'Excerpt / Short Summary',
+      type: 'text',
+      rows: 3,
+      description: 'A short 1-2 sentence summary shown at the top of the article and used as the preview text in push notifications. Keep it under 150 characters.',
+      validation: Rule => Rule.max(200).warning('Keep excerpts concise — long excerpts get cut off in notifications.'),
     }),
     defineField({
       name: 'author',
@@ -70,6 +80,13 @@ export default defineType({
       title: 'Discussion & Devotional Questions',
       type: 'text',
       description: 'Questions for group discussion or personal self-reflection',
+    }),
+    defineField({
+      name: 'notifyOnPublish',
+      title: 'Send push notification when published/updated?',
+      description: 'Turn this OFF when fixing a typo or minor edit on an already-published article, so people don\'t get re-notified about old content.',
+      type: 'boolean',
+      initialValue: true,
     }),
   ],
 
