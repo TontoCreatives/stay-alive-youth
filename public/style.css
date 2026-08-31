@@ -43,7 +43,7 @@ nav.fixed.bottom-0 {
     -webkit-backdrop-filter: blur(16px) !important;
     border-top: 1px solid rgba(39, 39, 42, 0.8) !important;
     z-index: 9998 !important;
-    padding: 6px 0 !important;
+    padding: 10px 0 !important;
 }
 
 .app-only-feature ul,
@@ -71,10 +71,10 @@ nav.fixed.bottom-0 ul li a {
     justify-content: center !important;
     text-decoration: none !important;
     color: #a1a1aa !important;
-    font-size: 10px;
-    font-weight: 500;
-    padding: 6px 0;
-    border-radius: 9999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 10px 0;
+    border-radius: 16px;
     /* Springier physics curve */
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -94,9 +94,9 @@ nav.fixed.bottom-0 ul li a.active {
 
 .app-only-feature ul li a svg,
 nav.fixed.bottom-0 ul li a svg {
-    width: 20px;
-    height: 20px;
-    margin-bottom: 3px;
+    width: 25px;
+    height: 25px;
+    margin-bottom: 4px;
     /* Dynamic bouncier icon transition */
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -315,8 +315,15 @@ footer {
   background: radial-gradient(circle, #eab308, transparent 70%);
 }
 
-/* Ensure actual page content always renders above the bokeh layer */
-body > *:not(#bokeh-bg) {
+/* Ensure actual page content always renders above the bokeh layer,
+   but never override sticky/fixed positioning on the header or nav */
+body > *:not(#bokeh-bg):not(header):not(nav) {
   position: relative;
   z-index: 1;
+}
+
+/* Header and bottom nav also need to render above the bokeh layer,
+   without losing their sticky/fixed positioning */
+header, nav.fixed, .app-only-feature {
+  z-index: 50 !important;
 }
