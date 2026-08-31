@@ -316,8 +316,9 @@ footer {
 }
 
 /* Ensure actual page content always renders above the bokeh layer,
-   but never override sticky/fixed positioning on the header or nav */
-body > *:not(#bokeh-bg):not(header):not(nav) {
+   but never override sticky/fixed positioning on the header, nav,
+   or any modal/overlay using Tailwind's .fixed class */
+body > *:not(#bokeh-bg):not(header):not(nav):not(.fixed) {
   position: relative;
   z-index: 1;
 }
