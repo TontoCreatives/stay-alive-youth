@@ -72,7 +72,7 @@
 </header>
 
     <!-- HOME TAB NAVIGATION (Today / Community / Explore) -->
-    <div id="home-tab-nav" class="sticky top-0 z-30 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3">
+    <div id="home-tab-nav" class="sticky top-0 z-30 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3" style="background: linear-gradient(180deg, rgba(9,9,11,0.98), rgba(24,24,27,0.92));">
         <div class="max-w-md mx-auto flex bg-zinc-900/80 rounded-xl p-1 gap-1">
             <button type="button" data-tab-btn="today" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Today</button>
             <button type="button" data-tab-btn="community" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Community</button>
@@ -80,8 +80,18 @@
         </div>
     </div>
     <style>
-        .home-tab-btn { color: #a1a1aa; }
-        .home-tab-btn.active { background-color: #FACC15; color: #09090b; }
+        .home-tab-btn { color: #a1a1aa; position: relative; transition: color 0.2s ease; }
+        .home-tab-btn.active { background-color: transparent; color: #FACC15; font-weight: 700; }
+        .home-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 20%;
+            right: 20%;
+            height: 2.5px;
+            background: #FACC15;
+            border-radius: 2px;
+        }
         .tab-panel.tab-hidden { display: none !important; }
     </style>
     <script>
@@ -134,7 +144,7 @@
                     <p id="hero-desc" class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-8">
                         We exist to know Christ more deeply and make Him known more clearly. The Bible is God’s authoritative, sufficient, and life-giving Word. Our goal is transformation—minds renewed and lives shaped by the Gospel.
                     </p>
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-wrap gap-4 mb-24">
                         <a href="series.html" class="bg-brandYellow text-black font-bold px-6 py-3 rounded text-sm hover:bg-yellow-400 transition-all shadow-lg shadow-brandYellow/10">Explore Current Series</a>
                         <a href="prayer.html" class="border border-zinc-700/80 bg-zinc-900/40 backdrop-blur-md hover:border-brandYellow text-white font-semibold px-6 py-3 rounded text-sm transition-all">Send Prayer Request</a>
                     </div>
@@ -196,7 +206,7 @@
     </div>
 </section>
 <!-- Community Fellowship Feed Section -->
-<section data-tab="community" class="tab-panel max-w-xl mx-auto px-4 py-8 space-y-6">
+<section data-tab="community" class="tab-panel max-w-xl mx-auto px-4 pt-3 pb-8 space-y-6">
   <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
     <div>
       <h2 class="text-white font-bold text-lg">Community Fellowship</h2>
