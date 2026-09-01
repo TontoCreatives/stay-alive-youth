@@ -1,21 +1,38 @@
 # Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# By default, the flags in this file are appended to flags specified
+# in C:\Users\ST. ANDREWS COLLEGE\AppData\Local\Android\Sdk\tools\proguard\proguard-android.txt
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ==========================================
+# CAPACITOR CORE - required, do not remove
+# ==========================================
+-keep class com.getcapacitor.** { *; }
+-keep public class * extends com.getcapacitor.Plugin
+-keepclassmembers class * extends com.getcapacitor.Plugin { *; }
+-keep @com.getcapacitor.annotation.CapacitorPlugin public class *
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# WebView JavaScript bridge — critical, breaks native<->JS communication if removed
+-keepattributes *Annotation*
+-keepattributes JavascriptInterface
+-keep public class * extends android.webkit.WebViewClient
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ==========================================
+# CAPGO LIVE UPDATER - required for OTA to keep working
+# ==========================================
+-keep class ee.forgr.capacitor_updater.** { *; }
+
+# ==========================================
+# FIREBASE PUSH NOTIFICATIONS
+# ==========================================
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.firebase.**
+
+# ==========================================
+# GENERAL SAFETY
+# ==========================================
+# Keep line numbers for readable crash reports if something does go wrong
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
