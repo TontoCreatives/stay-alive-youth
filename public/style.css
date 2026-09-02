@@ -328,3 +328,27 @@ body > *:not(#bokeh-bg):not(header):not(nav):not(.fixed) {
 header, nav.fixed, .app-only-feature {
   z-index: 50 !important;
 }
+
+/* ==========================================
+   CONSISTENT GRADIENT STYLING APP-WIDE
+   ========================================== */
+
+/* Page headers get the same subtle dark gradient as the home tab nav,
+   so every page feels visually consistent */
+header {
+  background: linear-gradient(180deg, rgba(9,9,11,0.98), rgba(24,24,27,0.90)) !important;
+}
+
+/* Solid gold CTA buttons get a warm gradient fill instead of flat color,
+   matching the active tab style — applies to real buttons, not the
+   lighter bg-brandYellow/10 accent badges/pills used elsewhere */
+.bg-brandYellow:not([class*="bg-brandYellow/"]) {
+  background: linear-gradient(135deg, #FACC15, #f59e0b) !important;
+  color: #09090b !important;
+}
+
+/* Bottom navigation bar gets a subtle gradient too, for the same
+   cohesive depth as the header and tabs */
+.app-only-feature, nav.fixed.bottom-0 {
+  background: linear-gradient(0deg, rgba(18,18,20,0.92), rgba(24,24,27,0.85)) !important;
+}
