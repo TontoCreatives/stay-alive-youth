@@ -2,6 +2,23 @@
 // GLOBAL SCRIPT - COMPLETE IMPLEMENTATION
 // ==========================================
 
+// Preconnect to Sanity and Supabase as early as possible — starts the
+// network handshake (DNS, TLS) before any fetch actually happens,
+// shaving real time off every content load on every page.
+(function preconnectToServices() {
+  const domains = [
+    'https://y4q1h6a9.api.sanity.io',
+    'https://cdn.sanity.io',
+    'https://wgziqhahopomiyzvcvxd.supabase.co'
+  ];
+  domains.forEach((url) => {
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = url;
+    document.head.appendChild(link);
+  });
+})();
+
 // Catch Google Sign-In redirect coming back into the native app.
 // Google/Supabase redirects to com.stay.app://auth-callback#access_token=...
 // This listener grabs that URL, closes the in-app browser, and feeds
@@ -1682,20 +1699,23 @@ document.addEventListener('DOMContentLoaded', setupBokehBackground);
 // downloading in the background — reuses the same visual style as
 // the safety-net banner, so it feels consistent.
 function showUpdateToast(message) {
+  // Don't stack multiple toasts if one is already showing
+  if (document.getElementById('ota-update-toast')) return;
+
   const toast = document.createElement('div');
+  toast.id = 'ota-update-toast';
   toast.style.cssText = `
     position: fixed; bottom: 90px; left: 16px; right: 16px; z-index: 9996;
     background: #1c1c1e; border: 1px solid #22c55e; border-radius: 14px;
     padding: 14px 16px; color: #fff; font-size: 13px; font-family: sans-serif;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: flex;
+    align-items: center; justify-content: space-between; gap: 12px;
   `;
-  toast.textContent = message;
+  toast.innerHTML = `
+    <span>${message}</span>
+    <button style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:6px 12px;font-weight:bold;font-size:12px;cursor:pointer;flex-shrink:0;" onclick="this.parentElement.remove()">Got it</button>
+  `;
   document.body.appendChild(toast);
-
-  // Auto-dismiss after 6 seconds
-  setTimeout(() => {
-    toast.style.transition = 'opacity 0.4s ease';
-    toast.style.opacity = '0';
-    setTimeout(() => toast.remove(), 400);
-  }, 6000);
+  // No auto-dismiss — stays visible until the person taps "Got it"
+  // or closes/reopens the app.
 }
