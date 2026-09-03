@@ -1,12 +1,20 @@
-const CACHE_NAME = 'stay-alive-v10';
+const CACHE_NAME = 'stay-alive-v11';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
+  '/about.html',
+  '/series.html',
+  '/insights.html',
+  '/resources.html',
+  '/events.html',
+  '/prayer.html',
+  '/style.css',
+  '/global-offline.js',
   '/manifest.json',
   '/Banner images and logo/bible%20study%20logo.png'
 ];
 
-// Install Event: Cache core assets and force immediate activation
+// Install Event: Cache the app shell and force immediate activation
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -32,16 +40,60 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch Event: Network-first strategy with safe fallback guards
+// Helper: is this a request for our own static shell files
+// (HTML/CSS/JS/images/fonts on our own domain)?
+function isStaticAsset(request) {
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return false; // only our own files
+  return (
+    request.destination === 'document' ||
+    request.destination === 'style' ||
+    request.destination === 'script' ||
+    request.destination === 'image' ||
+    request.destination === 'font'
+  );
+}
+
+// Fetch Event:
+// - Our own static files (HTML/CSS/JS/images): CACHE-FIRST for an instant,
+//   snappy feel — shows the cached version immediately, then quietly
+//   fetches a fresh copy in the background to update the cache for next time.
+// - Everything else (Sanity, Supabase, any external API): NETWORK-FIRST
+//   as before, so devotionals/events/articles always stay fresh, with the
+//   cache only used as an offline fallback.
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
     return;
   }
 
+  if (isStaticAsset(event.request)) {
+    // CACHE-FIRST with background revalidation (stale-while-revalidate)
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const responseClone = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(event.request, responseClone);
+              });
+            }
+            return networkResponse;
+          })
+          .catch(() => cachedResponse); // if network fails, fall back silently
+
+        // Return the cached version immediately if we have one (instant feel),
+        // otherwise wait for the network just this first time.
+        return cachedResponse || fetchPromise;
+      })
+    );
+    return;
+  }
+
+  // NETWORK-FIRST for everything else (Sanity, Supabase, external APIs)
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Allow caching for standard 200 responses (supports both basic and cors types)
         if (response && response.status === 200 && (response.type === 'basic' || response.type === 'cors')) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -55,11 +107,9 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Fallback to index.html for page navigations if offline
           if (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
             return caches.match('/index.html');
           }
-          // Quiet 404 response for other missing assets to prevent script crashes
           return new Response('', { status: 404, statusText: 'Not Found' });
         });
       })

@@ -19,6 +19,21 @@
   });
 })();
 
+// Prefetch the main pages in the background so tapping between
+// Home/Resources/Prayer/Events feels instant, since the browser
+// already has them ready before the user taps.
+(function prefetchMainPages() {
+  const pages = ['index.html', 'resources.html', 'prayer.html', 'events.html'];
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  pages.forEach((page) => {
+    if (page === currentPage) return; // don't prefetch the page you're already on
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = page;
+    document.head.appendChild(link);
+  });
+})();
+
 // Catch Google Sign-In redirect coming back into the native app.
 // Google/Supabase redirects to com.stay.app://auth-callback#access_token=...
 // This listener grabs that URL, closes the in-app browser, and feeds
