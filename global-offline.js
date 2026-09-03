@@ -20,9 +20,16 @@
 })();
 
 // Prefetch the main pages in the background so tapping between
-// Home/Resources/Prayer/Events feels instant, since the browser
-// already has them ready before the user taps.
+// Home/Resources/Prayer/Events feels instant — but only when on WiFi
+// or a fast connection, so we don't waste battery/mobile data
+// downloading pages the person might not even visit.
 (function prefetchMainPages() {
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (connection) {
+    if (connection.saveData) return; // respect the user's data saver setting
+    if (connection.effectiveType && ['slow-2g', '2g', '3g'].includes(connection.effectiveType)) return;
+  }
+
   const pages = ['index.html', 'resources.html', 'prayer.html', 'events.html'];
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
   pages.forEach((page) => {
@@ -1457,7 +1464,12 @@ function setupScrollPolish() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  window.addEventListener('scroll', () => {
+  // Throttled with requestAnimationFrame — only updates once per actual
+  // screen refresh, instead of running the full calculation on every
+  // single scroll event (which can fire dozens of times per second and
+  // drain battery unnecessarily).
+  let scrollTicking = false;
+  function updateScrollUI() {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
@@ -1472,7 +1484,15 @@ function setupScrollPolish() {
       backToTop.style.pointerEvents = 'none';
       backToTop.style.transform = 'scale(0.8)';
     }
-  });
+    scrollTicking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+      requestAnimationFrame(updateScrollUI);
+      scrollTicking = true;
+    }
+  }, { passive: true });
 }
 
 document.addEventListener('DOMContentLoaded', setupScrollPolish);
