@@ -52,15 +52,31 @@
     </script>
     <script src="global-offline.js"></script>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation pb-20">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 
-    <!-- HOME TAB NAVIGATION -->
-    <div id="home-tab-nav" class="sticky top-0 z-35 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3" style="background: linear-gradient(180deg, rgba(9,9,11,0.98), rgba(24,24,27,0.92));">
+ <!-- NAVIGATION BAR -->
+
+   
+        <!-- Desktop Nav Links -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+            <a href="index.html" class="text-brandYellow transition-colors">Home</a>
+            <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
+            <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+            <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
+            <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+            <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+            <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+        </nav>
+
+    </div>
+</header>
+
+    <!-- HOME TAB NAVIGATION (Today / Community / Explore) -->
+    <div id="home-tab-nav" class="sticky top-0 z-30 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3" style="background: linear-gradient(180deg, rgba(9,9,11,0.98), rgba(24,24,27,0.92));">
         <div class="max-w-md mx-auto flex bg-zinc-900/80 rounded-xl p-1 gap-1">
             <button type="button" data-tab-btn="today" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Today</button>
             <button type="button" data-tab-btn="community" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Community</button>
             <button type="button" data-tab-btn="explore" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Explore</button>
-            <button type="button" data-tab-btn="challenges" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors text-amber-400">Study Arcade</button>
         </div>
     </div>
     <style>
@@ -72,8 +88,6 @@
             box-shadow: 0 2px 10px rgba(250, 204, 21, 0.35);
         }
         .tab-panel.tab-hidden { display: none !important; }
-        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .animate-pop { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
     <script>
         (function () {
@@ -110,12 +124,13 @@
         </div>
     </div>
 
-    <!-- HERO SECTION -->
+  <!-- HERO SECTION -->
     <section data-tab="today" class="tab-panel relative py-20 lg:py-32 overflow-hidden border-b border-zinc-900">
         <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brandYellow/5 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Column: Text -->
                 <div>
                     <span id="hero-badge" class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Deep Faith & Consistent Prayer</span>
                     <h1 id="hero-heading" class="text-4xl sm:text-6xl font-black tracking-tight text-white mt-6 mb-6 leading-none">
@@ -130,6 +145,7 @@
                     </div>
                 </div>
 
+                <!-- Right Column: Carousel Container -->
                 <div class="relative flex justify-center">
                     <div id="hero-carousel-container" class="relative w-full max-w-md h-[360px] sm:h-[400px] rounded-2xl overflow-hidden border border-zinc-800/80 shadow-2xl bg-cardBg/80 backdrop-blur-md p-2 flex items-center justify-center">
                         <p class="text-xs text-zinc-500 animate-pulse">Loading cinematic visual...</p>
@@ -139,7 +155,7 @@
         </div>
     </section>
 
-    <!-- DAILY OIA DEVOTIONAL SECTION -->
+  <!-- DAILY OIA DEVOTIONAL SECTION -->
     <section id="devotional-section" data-tab="today" class="tab-panel py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
             <div>
@@ -149,273 +165,147 @@
             <span id="dev-date" class="text-xs text-zinc-400 font-medium">Loading...</span>
         </div>
     
+        <!-- Devotional Card Container -->
         <div class="bg-cardBg/80 backdrop-blur-xl border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-            <img id="dev-image" src="" alt="Devotional Featured Image" class="w-full h-48 sm:h-72 object-cover rounded-xl hidden" />
-            <div class="border-l-4 border-brandYellow pl-4 py-1">
-                <h3 id="dev-title" class="text-xl font-bold text-white mb-1">Loading devotional...</h3>
-                <p id="dev-scripture-ref" class="text-brandYellow text-sm font-semibold"></p>
-                <p id="dev-scripture-text" class="text-zinc-300 text-sm italic mt-2"></p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80">
-                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                    <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">1. Observe</span>
-                    <p id="dev-observation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
-                </div>
-                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                    <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">2. Interpret</span>
-                    <p id="dev-interpretation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
-                </div>
-                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                    <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">3. Apply</span>
-                    <p id="dev-application" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
-                </div>
-            </div>
-
-            <div class="bg-brandYellow/5 p-4 rounded-xl border border-brandYellow/15">
-                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">Closing Prayer</span>
-                <p id="dev-prayer" class="text-xs text-zinc-300 mt-1 leading-relaxed"></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- MULTI-LEVEL ARCADE & GAME HUB (Tab: challenges) -->
-    <section data-tab="challenges" class="tab-panel hidden max-w-2xl mx-auto px-4 py-8 space-y-8">
-        
-        <!-- ARCADE HEADER & STATS -->
-        <div class="bg-gradient-to-br from-zinc-900 via-zinc-900/90 to-zinc-950 border border-zinc-800 rounded-3xl p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-                <span class="text-[10px] uppercase tracking-widest text-brandYellow font-extrabold bg-brandYellow/10 px-2.5 py-1 rounded-full border border-brandYellow/20">Level Progression Arcade</span>
-                <h2 class="text-white font-black text-2xl mt-2">Study Challenge Hub</h2>
-                <p class="text-xs text-zinc-400 mt-1">Clear levels, unlock chapters, and build your spiritual discipline streak.</p>
-            </div>
-            <div class="flex items-center gap-3 shrink-0">
-                <div class="bg-zinc-950 border border-zinc-800 px-4 py-2.5 rounded-2xl text-center">
-                    <span id="global-xp-badge" class="block text-brandYellow font-black text-base">0 XP</span>
-                    <span class="text-[10px] text-zinc-500 uppercase font-bold">Total Score</span>
-                </div>
-                <div id="global-streak-badge" class="bg-amber-400/10 border border-amber-400/30 text-amber-400 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 shadow-lg">
-                    🔥 0 Streak
-                </div>
-            </div>
-        </div>
-
-        <!-- GAME SELECTION SELECTOR TABS -->
-        <div class="grid grid-cols-5 gap-1 bg-zinc-900/80 p-1.5 rounded-2xl border border-zinc-800">
-            <button type="button" onclick="switchArcadeGame('scramble')" id="arcade-tab-scramble" class="arcade-sub-btn py-2 px-1 text-[11px] font-bold rounded-xl transition-all text-center bg-zinc-800 text-brandYellow shadow">1. Scramble</button>
-            <button type="button" onclick="switchArcadeGame('trivia')" id="arcade-tab-trivia" class="arcade-sub-btn py-2 px-1 text-[11px] font-bold rounded-xl transition-all text-center text-zinc-400 hover:text-white">2. Trivia</button>
-            <button type="button" onclick="switchArcadeGame('tower')" id="arcade-tab-tower" class="arcade-sub-btn py-2 px-1 text-[11px] font-bold rounded-xl transition-all text-center text-zinc-400 hover:text-white">3. Tower</button>
-            <button type="button" onclick="switchArcadeGame('timeline')" id="arcade-tab-timeline" class="arcade-sub-btn py-2 px-1 text-[11px] font-bold rounded-xl transition-all text-center text-zinc-400 hover:text-white">4. Timeline</button>
-            <button type="button" onclick="switchArcadeGame('match')" id="arcade-tab-match" class="arcade-sub-btn py-2 px-1 text-[11px] font-bold rounded-xl transition-all text-center text-zinc-400 hover:text-white">5. Match</button>
-        </div>
-
-        <!-- GAME 1: VERSE SCRAMBLE (MULTI-LEVEL) -->
-        <div id="game-panel-scramble" class="arcade-panel bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5 animate-pop">
-            <div class="flex items-center justify-between">
-                <div>
-                    <span class="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Game 1 • Multi-Level</span>
-                    <h3 class="text-white font-bold text-xl mt-1">Verse Scramble</h3>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span id="scramble-level-badge" class="text-xs text-amber-400 font-bold bg-amber-950/40 px-3 py-1 rounded-xl border border-amber-800/50">Stage 1/5</span>
-                    <button type="button" onclick="useScrambleHint()" class="text-[11px] bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 px-2.5 py-1 rounded-xl font-semibold transition-colors">💡 Hint</button>
-                </div>
-            </div>
-            <p id="scramble-hint-box" class="text-xs text-zinc-400 italic bg-zinc-950/60 p-3 rounded-xl border border-zinc-900 hidden"></p>
-            <div class="flex items-center justify-between text-xs text-zinc-400 bg-zinc-950/80 px-4 py-2.5 rounded-xl border border-zinc-900">
-                <span>Reference: <strong id="scramble-ref-badge" class="text-brandYellow">Proverbs 3:5</strong></span>
-                <span id="scramble-timer" class="text-amber-400 font-mono font-bold">⏱️ 00s</span>
-            </div>
-
-            <!-- Builder Zone -->
-            <div id="scramble-builder" class="min-h-[72px] bg-zinc-950 border border-dashed border-zinc-700/80 rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center transition-all">
-                <span id="scramble-placeholder" class="text-xs text-zinc-500 italic">Tap word blocks below in the correct order...</span>
-            </div>
-
-            <!-- Word Bank -->
-            <div id="scramble-bank" class="flex flex-wrap gap-2 justify-center pt-2"></div>
-            <div id="scramble-feedback" class="text-center text-xs font-semibold h-5"></div>
-        </div>
-
-        <!-- GAME 2: SCRIPTURE TRIVIA (ARCADE STAGES) -->
-        <div id="game-panel-trivia" class="arcade-panel bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5 hidden animate-pop">
-            <div class="flex items-center justify-between">
-                <div>
-                    <span class="text-[10px] font-bold text-blue-400 bg-blue-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Game 2 • Speed Trivia</span>
-                    <h3 class="text-white font-bold text-xl mt-1">Scripture Quest</h3>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span id="trivia-progress" class="text-xs text-blue-400 font-bold bg-blue-950/40 px-3 py-1 rounded-xl border border-blue-800/50">Stage 1/5</span>
-                    <span id="trivia-score" class="text-xs font-bold text-zinc-300">Score: 0</span>
-                </div>
-            </div>
-            <div class="w-full bg-zinc-950 h-2 rounded-full overflow-hidden border border-zinc-800">
-                <div id="trivia-bar" class="bg-blue-500 h-full w-[20%] transition-all duration-300"></div>
-            </div>
-            <p id="trivia-question" class="text-sm font-semibold text-zinc-100 leading-relaxed"></p>
-            <div id="trivia-options" class="grid grid-cols-1 gap-2.5 pt-1"></div>
-            <div id="trivia-feedback" class="text-center text-xs font-semibold h-5"></div>
-        </div>
-
-        <!-- GAME 3: FOUNDATION TOWER (JENGA ARCHITECTURE) -->
-        <div id="game-panel-tower" class="arcade-panel bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5 hidden animate-pop">
-            <div class="flex items-center justify-between">
-                <div>
-                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Game 3 • Strategic Balance</span>
-                    <h3 class="text-white font-bold text-xl mt-1">Foundation Tower</h3>
-                </div>
-                <span id="tower-level-badge" class="text-xs text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-800/50 px-3 py-1 rounded-xl">Tower Floor 1/4</span>
-            </div>
-            <p class="text-xs text-zinc-400">Choose sound theological doctrine to lock your structural blocks and reach the peak.</p>
             
-            <!-- Visual Tower Stack -->
-            <div id="tower-stack-visual" class="flex flex-col-reverse gap-1.5 p-3 rounded-2xl bg-zinc-950 border border-zinc-900">
-                <div class="tower-block h-6 rounded-lg bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400 border border-zinc-700 transition-all" id="tblock-0">Floor 1: Christology Core</div>
-                <div class="tower-block h-6 rounded-lg bg-zinc-900 flex items-center justify-center text-[10px] font-bold text-zinc-600 border border-zinc-800 transition-all" id="tblock-1">Floor 2: Authority of Scripture</div>
-                <div class="tower-block h-6 rounded-lg bg-zinc-900 flex items-center justify-center text-[10px] font-bold text-zinc-600 border border-zinc-800 transition-all" id="tblock-2">Floor 3: Justification by Grace</div>
-                <div class="tower-block h-6 rounded-lg bg-zinc-900 flex items-center justify-center text-[10px] font-bold text-zinc-600 border border-zinc-800 transition-all" id="tblock-3">Floor 4: Kingdom Perseverance</div>
-            </div>
-
-            <div id="tower-scenario-box" class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-200 leading-relaxed font-medium"></div>
-            <div id="tower-choices" class="grid grid-cols-1 gap-2.5"></div>
-            <div id="tower-feedback" class="text-center text-xs font-semibold h-5"></div>
+            <!-- Featured Image (PC Uploaded to Sanity) -->
+            <img id="dev-image" src="" alt="Devotional Featured Image" class="w-full h-48 sm:h-72 object-cover rounded-xl hidden" />
+        <!-- Scripture Banner -->
+        <div class="border-l-4 border-brandYellow pl-4 py-1">
+            <h3 id="dev-title" class="text-xl font-bold text-white mb-1">Loading devotional...</h3>
+            <p id="dev-scripture-ref" class="text-brandYellow text-sm font-semibold"></p>
+            <p id="dev-scripture-text" class="text-zinc-300 text-sm italic mt-2"></p>
         </div>
 
-        <!-- GAME 4: BIBLE TIMELINE ORDER -->
-        <div id="game-panel-timeline" class="arcade-panel bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5 hidden animate-pop">
-            <div class="flex items-center justify-between">
-                <div>
-                    <span class="text-[10px] font-bold text-purple-400 bg-purple-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Game 4 • Chronology</span>
-                    <h3 class="text-white font-bold text-xl mt-1">Timeline Architect</h3>
-                </div>
-                <span id="timeline-stage-badge" class="text-xs text-purple-400 font-bold bg-purple-950/40 border border-purple-800/50 px-3 py-1 rounded-xl">Event 1/4</span>
+        <!-- OIA Breakdown Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80">
+            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">1. Observe</span>
+                <p id="dev-observation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
             </div>
-            <p class="text-xs text-zinc-400">Order these biblical milestones correctly from earliest to latest in redemptive history.</p>
-            <div id="timeline-slot-container" class="space-y-2"></div>
-            <div class="flex gap-2 pt-2">
-                <button type="button" onclick="checkTimelineOrder()" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow">Verify Order</button>
-                <button type="button" onclick="resetTimeline()" class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all">Shuffle</button>
+            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">2. Interpret</span>
+                <p id="dev-interpretation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
             </div>
-            <div id="timeline-feedback" class="text-center text-xs font-semibold h-5"></div>
+            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">3. Apply</span>
+                <p id="dev-application" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+            </div>
         </div>
 
-        <!-- GAME 5: SCRIPTURE MATCH & PAIR -->
-        <div id="game-panel-match" class="arcade-panel bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5 hidden animate-pop">
-            <div class="flex items-center justify-between">
-                <div>
-                    <span class="text-[10px] font-bold text-rose-400 bg-rose-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Game 5 • Memory Match</span>
-                    <h3 class="text-white font-bold text-xl mt-1">Concept Match</h3>
-                </div>
-                <span id="match-score-badge" class="text-xs text-rose-400 font-bold bg-rose-950/40 border border-rose-800/50 px-3 py-1 rounded-xl">Pairs: 0/4</span>
-            </div>
-            <p class="text-xs text-zinc-400">Tap a theological term, then tap its matching definition or reference.</p>
-            <div id="match-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
-            <div id="match-feedback" class="text-center text-xs font-semibold h-5"></div>
+        <!-- Closing Prayer -->
+        <div class="bg-brandYellow/5 p-4 rounded-xl border border-brandYellow/15">
+            <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">Closing Prayer</span>
+            <p id="dev-prayer" class="text-xs text-zinc-300 mt-1 leading-relaxed"></p>
         </div>
-
-    </section>
-
-    <!-- Community Fellowship Feed Section -->
-    <section data-tab="community" class="tab-panel hidden max-w-xl mx-auto px-4 pt-3 pb-8 space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
-        <div>
-          <h2 class="text-white font-bold text-lg">Community Fellowship</h2>
-          <p class="text-xs text-zinc-400">A shared sanctuary to read what fellow believers are learning from God's Word, encourage one another, and grow together.</p>
-        </div>
-        <button onclick="openNewPostModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl transition-all shadow-lg cursor-pointer shrink-0">
-          + Share Insight
-        </button>
-      </div>
-
-      <div id="community-feed-container" class="space-y-4">
-        <div class="text-center py-10 text-zinc-500 text-xs">Loading community insights...</div>
-      </div>
-    </section>
-
-    <!-- Share Insight Modal -->
-    <div id="post-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
-        <button onclick="closeNewPostModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
-        <h3 class="text-white font-bold text-base mb-1">What are you learning?</h3>
-        <p class="text-xs text-zinc-400 mb-4">Share a revelation or verse insight with the fellowship.</p>
-        
-        <div class="space-y-3">
-          <div>
-            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Scripture Reference (Optional)</label>
-            <input type="text" id="post-verse-input" placeholder="e.g. Psalm 23:1-3" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Your Insight / Note</label>
-            <textarea id="post-text-input" rows="3" placeholder="What is God showing you through His Word today..." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500 resize-none"></textarea>
-          </div>
-          
-          <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800">
-            <div>
-              <p class="text-xs font-medium text-white">Share with Community Feed</p>
-              <p class="text-[10px] text-zinc-400">If unchecked, it remains private to your account.</p>
-            </div>
-            <input type="checkbox" id="post-public-toggle" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked>
-          </div>
-
-          <button onclick="submitCommunityPost()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
-            Publish Post
-          </button>
-        </div>
-      </div>
     </div>
+</section>
+<!-- Community Fellowship Feed Section -->
+<section data-tab="community" class="tab-panel max-w-xl mx-auto px-4 pt-3 pb-8 space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
+    <div>
+      <h2 class="text-white font-bold text-lg">Community Fellowship</h2>
+      <p class="text-xs text-zinc-400">A shared sanctuary to read what fellow believers are learning from God's Word, encourage one another, and grow together.</p>
+    </div>
+    <button onclick="openNewPostModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl transition-all shadow-lg cursor-pointer shrink-0">
+      + Share Insight
+    </button>
+  </div>
 
-    <!-- Push Notification Opt-in -->
-    <div id="notification-prompt-box" data-tab="today" class="tab-panel my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center max-w-4xl mx-auto">
-      <h3 class="text-white font-semibold mb-1">Never Miss a Devotion</h3>
-      <p class="text-xs text-zinc-400 mb-4">Get daily reminders sent straight to your device.</p>
+  <!-- Live Feed Container -->
+  <div id="community-feed-container" class="space-y-4">
+    <div class="text-center py-10 text-zinc-500 text-xs">Loading community insights...</div>
+  </div>
+</section>
+
+<!-- Share Insight Modal -->
+<div id="post-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+    <button onclick="closeNewPostModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
+    <h3 class="text-white font-bold text-base mb-1">What are you learning?</h3>
+    <p class="text-xs text-zinc-400 mb-4">Share a revelation or verse insight with the fellowship.</p>
+    
+    <div class="space-y-3">
+      <div>
+        <label class="block text-[11px] font-medium text-zinc-400 mb-1">Scripture Reference (Optional)</label>
+        <input type="text" id="post-verse-input" placeholder="e.g. Psalm 23:1-3" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+      </div>
+      <div>
+        <label class="block text-[11px] font-medium text-zinc-400 mb-1">Your Insight / Note</label>
+        <textarea id="post-text-input" rows="3" placeholder="What is God showing you through His Word today..." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500 resize-none"></textarea>
+      </div>
       
-      <button onclick="subscribeToPushNotifications()" class="w-full py-3 px-4 bg-brandYellow text-zinc-950 font-bold rounded-xl hover:opacity-90 transition-all text-center">
-        Enable Daily Notifications
+      <!-- Privacy Toggle for Post -->
+      <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800">
+        <div>
+          <p class="text-xs font-medium text-white">Share with Community Feed</p>
+          <p class="text-[10px] text-zinc-400">If unchecked, it remains private to your account.</p>
+        </div>
+        <input type="checkbox" id="post-public-toggle" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked>
+      </div>
+
+      <button onclick="submitCommunityPost()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
+        Publish Post
       </button>
     </div>
+  </div>
+</div>
+<!-- Push Notification Opt-in -->
+<div id="notification-prompt-box" data-tab="today" class="tab-panel my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center">
+  <h3 class="text-white font-semibold mb-1">Never Miss a Devotion</h3>
+  <p class="text-xs text-zinc-400 mb-4">Get daily reminders sent straight to your device.</p>
+  
+  <button onclick="subscribeToPushNotifications()" class="w-full py-3 px-4 bg-brandYellow text-zinc-950 font-bold rounded-xl hover:opacity-90 transition-all text-center">
+    Enable Daily Notifications
+  </button>
+</div>
+</div>
+<!-- QUICK ACCESS SECTION -->
+<section data-tab="explore" class="tab-panel max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex items-center justify-between mb-4">
+        <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Quick Access</span>
+        <span class="text-zinc-500 text-xs">Explore More</span>
+    </div>
 
-    <!-- QUICK ACCESS SECTION -->
-    <section data-tab="explore" class="tab-panel hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="flex items-center justify-between mb-4">
-            <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Quick Access</span>
-            <span class="text-zinc-500 text-xs">Explore More</span>
-        </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        
+        <!-- Series Tracks -->
+        <a href="series.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
+            <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Series Tracks</h3>
+                <p class="text-zinc-400 text-[11px] mt-0.5">Deep dive studies</p>
+            </div>
+        </a>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            <a href="series.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
-                <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                </div>
-                <div>
-                    <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Series Tracks</h3>
-                    <p class="text-zinc-400 text-[11px] mt-0.5">Deep dive studies</p>
-                </div>
-            </a>
+        <!-- Articles / Insights -->
+        <a href="insights.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
+            <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/></svg>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Articles</h3>
+                <p class="text-zinc-400 text-[11px] mt-0.5">Insights & readings</p>
+            </div>
+        </a>
 
-            <a href="insights.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
-                <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/></svg>
-                </div>
-                <div>
-                    <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Articles</h3>
-                    <p class="text-zinc-400 text-[11px] mt-0.5">Insights & readings</p>
-                </div>
-            </a>
+        <!-- About Us -->
+        <a href="about.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300 col-span-2 sm:col-span-1">
+            <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">About Us</h3>
+                <p class="text-zinc-400 text-[11px] mt-0.5">Mission & vision</p>
+            </div>
+        </a>
 
-            <a href="about.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300 col-span-2 sm:col-span-1">
-                <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-                <div>
-                    <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">About Us</h3>
-                    <p class="text-zinc-400 text-[11px] mt-0.5">Mission & vision</p>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- DNA SECTION -->
-    <section data-tab="explore" class="tab-panel hidden py-12 px-4 sm:px-6 lg:px-8">
+    </div>
+</section>
+<!-- DNA SECTION -->
+    <section data-tab="explore" class="tab-panel py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto media-card-gradient rounded-3xl p-6 sm:p-10 border border-zinc-800/80">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Foundational Truths</span>
@@ -459,6 +349,7 @@
                 <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
             </div>
             <div id="tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                <!-- Instant skeleton loader -->
                 <div class="bg-cardBg/80 backdrop-blur-md rounded-xl overflow-hidden border border-zinc-800 p-6 lg:p-8 animate-pulse">
                     <div class="w-full aspect-[4/5] bg-zinc-900 rounded-lg mb-6"></div>
                     <div class="h-4 bg-zinc-900 rounded w-1/3 mb-4"></div>
@@ -471,7 +362,7 @@
     </section>
 
     <!-- UPCOMING EVENTS SECTION -->
-    <section data-tab="explore" class="tab-panel hidden py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
+    <section data-tab="explore" class="tab-panel py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
@@ -481,6 +372,7 @@
                 <a href="events.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View All Events &rarr;</a>
             </div>
             <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Instant skeleton loader -->
                 <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 p-6 animate-pulse">
                     <div class="w-full h-40 bg-zinc-900 rounded-lg mb-4"></div>
                     <div class="h-6 bg-zinc-900 rounded w-3/4 mb-2"></div>
@@ -491,7 +383,7 @@
     </section>
 
     <!-- LATEST THEOLOGICAL REFLECTIONS SECTION -->
-    <section data-tab="explore" class="tab-panel hidden py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
+    <section data-tab="explore" class="tab-panel py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
@@ -501,6 +393,7 @@
                 <a href="insights.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View All Essays &rarr;</a>
             </div>
             <div id="latest-articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Instant skeleton loader -->
                 <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 p-6 animate-pulse">
                     <div class="w-full h-48 bg-zinc-900 rounded-lg mb-4"></div>
                     <div class="h-6 bg-zinc-900 rounded w-3/4 mb-2"></div>
@@ -511,14 +404,24 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center mb-16">
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p id="footer-text">&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
         </div>
     </footer>
 
+  <!-- Mobile Menu Script -->
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+</script>
     <!-- PWA Update Banner -->
-    <div id="pwa-update-banner" class="hidden fixed bottom-20 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
+    <div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
         <div>
             <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
             <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
@@ -528,420 +431,23 @@
         </button>
     </div>
 
-    <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/95 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
-        <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
-            <li>
-                <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                    Resources
-                </a>
-            </li>
-            <li>
-                <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                    Prayer
-                </a>
-            </li>
-            <li>
-                <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    Events
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- EMBEDDED ARCADE GAMES & LOCAL STORAGE ENGINE -->
+    <!-- Service Worker Registration & Update Listener Script -->
     <script>
-        // GLOBAL APP STATS & ARCADE SWITCHER
-        const progressKey = 'stay_arcade_progress';
-        let userStats = JSON.parse(localStorage.getItem(progressKey)) || { streak: 0, lastDate: null, xp: 0 };
-        const todayStr = new Date().toDateString();
-
-        if (userStats.lastDate) {
-            const last = new Date(userStats.lastDate);
-            const diffTime = Math.abs(new Date(todayStr) - last);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (diffDays > 1) userStats.streak = 0;
-        }
-
-        function updateGlobalHud() {
-            const streakBadge = document.getElementById("global-streak-badge");
-            const xpBadge = document.getElementById("global-xp-badge");
-            if (streakBadge) streakBadge.innerHTML = `🔥 ${userStats.streak} Streak`;
-            if (xpBadge) xpBadge.innerText = `${userStats.xp} XP`;
-            localStorage.setItem(progressKey, JSON.stringify(userStats));
-        }
-
-        function addXp(amount) {
-            userStats.xp += amount;
-            if (userStats.lastDate !== todayStr) {
-                userStats.streak += 1;
-                userStats.lastDate = todayStr;
-            }
-            updateGlobalHud();
-            if (navigator.vibrate) navigator.vibrate(40);
-        }
-        updateGlobalHud();
-
-        function switchArcadeGame(gameId) {
-            document.querySelectorAll('.arcade-panel').forEach(panel => panel.classList.add('hidden'));
-            document.querySelectorAll('.arcade-sub-btn').forEach(btn => {
-                btn.className = "arcade-sub-btn py-2 px-1 text-[11px] font-bold rounded-xl transition-all text-center text-zinc-400 hover:text-white";
-            });
-            document.getElementById(`game-panel-${gameId}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`arcade-tab-${gameId}`);
-            if (activeBtn) activeBtn.className = "arcade-sub-btn py-2 px-1 text-[11px] font-bold rounded-xl transition-all text-center bg-zinc-800 text-brandYellow shadow";
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            // ==========================================
-            // GAME 1: VERSE SCRAMBLE (5 STAGES)
-            // ==========================================
-            const scrambleStages = [
-                { ref: "Proverbs 3:5", text: "Trust in the Lord with all your heart", hint: "Rely completely on God's wisdom, not your own." },
-                { ref: "Philippians 4:6", text: "Do not be anxious about anything in life", hint: "Bring every request to God with thanksgiving." },
-                { ref: "Psalm 119:105", text: "Your word is a lamp to my feet", hint: "Scripture illuminates your daily path and direction." },
-                { ref: "Romans 12:2", text: "Do not conform to the pattern of this world", hint: "Allow God to transform your mind completely." },
-                { ref: "John 14:6", text: "I am the way and the truth and the life", hint: "No one comes to the Father except through Christ." }
-            ];
-            let currentScrambleIdx = 0;
-            let originalWords = [], shuffledWords = [], selectedWords = [];
-            let scrambleSeconds = 0, scrambleTimerInterval = null;
-
-            function initScrambleStage() {
-                const stage = scrambleStages[currentScrambleIdx];
-                document.getElementById("scramble-ref-badge").textContent = stage.ref;
-                document.getElementById("scramble-level-badge").textContent = `Stage ${currentScrambleIdx + 1}/5`;
-                document.getElementById("scramble-hint-box").classList.add("hidden");
-                document.getElementById("scramble-feedback").textContent = "";
-
-                originalWords = stage.text.split(" ");
-                shuffledWords = originalWords.map((word, id) => ({ id, word })).sort(() => Math.random() - 0.5);
-                selectedWords = [];
-
-                if (scrambleTimerInterval) clearInterval(scrambleTimerInterval);
-                scrambleSeconds = 0;
-                scrambleTimerInterval = setInterval(() => { scrambleSeconds++; document.getElementById("scramble-timer").textContent = `⏱️ ${scrambleSeconds}s`; }, 1000);
-
-                renderScramble();
-            }
-
-            window.useScrambleHint = function() {
-                const box = document.getElementById("scramble-hint-box");
-                box.textContent = `💡 Hint: ${scrambleStages[currentScrambleIdx].hint}`;
-                box.classList.remove("hidden");
-            }
-
-            function renderScramble() {
-                const builder = document.getElementById("scramble-builder");
-                const bank = document.getElementById("scramble-bank");
-                const placeholder = document.getElementById("scramble-placeholder");
-
-                bank.innerHTML = "";
-                Array.from(builder.querySelectorAll('.word-chip')).forEach(c => c.remove());
-
-                if (selectedWords.length === 0) {
-                    placeholder.style.display = "block";
-                } else {
-                    placeholder.style.display = "none";
-                }
-
-                selectedWords.forEach((item, index) => {
-                    const btn = createChip(item.word, () => {
-                        shuffledWords.push(item);
-                        selectedWords.splice(index, 1);
-                        renderScramble();
-                    });
-                    builder.appendChild(btn);
-                });
-
-                shuffledWords.forEach((item, index) => {
-                    const btn = createChip(item.word, () => {
-                        selectedWords.push(item);
-                        shuffledWords.splice(index, 1);
-                        renderScramble();
-                        checkScrambleWin();
-                    });
-                    bank.appendChild(btn);
-                });
-            }
-
-            function createChip(text, handler) {
-                const btn = document.createElement("button");
-                btn.type = "button";
-                btn.textContent = text;
-                btn.className = "word-chip px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-xs font-bold rounded-xl border border-zinc-700 shadow-md cursor-pointer active:scale-95 transition-all";
-                btn.addEventListener("click", handler);
-                return btn;
-            }
-
-            function checkScrambleWin() {
-                if (shuffledWords.length === 0) {
-                    const attempt = selectedWords.map(i => i.word).join(" ");
-                    const target = scrambleStages[currentScrambleIdx].text;
-                    const feedback = document.getElementById("scramble-feedback");
-
-                    if (attempt === target) {
-                        clearInterval(scrambleTimerInterval);
-                        feedback.textContent = `✨ Stage Cleared! +50 XP`;
-                        feedback.className = "text-center text-xs font-bold h-5 text-amber-400 animate-bounce";
-                        addXp(50);
-                        setTimeout(() => {
-                            currentScrambleIdx = (currentScrambleIdx + 1) % scrambleStages.length;
-                            initScrambleStage();
-                        }, 1800);
-                    } else {
-                        feedback.textContent = "Sequence incorrect. Check word order!";
-                        feedback.className = "text-center text-xs font-semibold h-5 text-red-400";
-                    }
-                }
-            }
-            initScrambleStage();
-
-            // ==========================================
-            // GAME 2: SCRIPTURE TRIVIA (5 STAGES)
-            // ==========================================
-            const triviaStages = [
-                { q: "Who wrote the majority of the New Testament epistles?", options: ["Peter", "Paul", "John", "James"], correct: 1 },
-                { q: "Which prophetic book contains the valley of dry bones?", options: ["Isaiah", "Jeremiah", "Ezekiel", "Daniel"], correct: 2 },
-                { q: "What is the shortest chapter in the Bible?", options: ["Psalm 117", "Psalm 23", "John 11", "Malachi 3"], correct: 0 },
-                { q: "On which mountain did Elijah confront the prophets of Baal?", options: ["Mount Sinai", "Mount Carmel", "Mount Olive", "Mount Ararat"], correct: 1 },
-                { q: "Who was exiled on the island of Patmos when he wrote Revelation?", options: ["Stephen", "Timothy", "John", "Mark"], correct: 2 }
-            ];
-            let currentTriviaIdx = 0, triviaScoreCount = 0;
-
-            function loadTrivia() {
-                if (currentTriviaIdx >= triviaStages.length) currentTriviaIdx = 0;
-                const curr = triviaStages[currentTriviaIdx];
-                document.getElementById("trivia-question").textContent = curr.q;
-                document.getElementById("trivia-progress").textContent = `Stage ${currentTriviaIdx + 1}/5`;
-                document.getElementById("trivia-score").textContent = `Score: ${triviaScoreCount}`;
-                document.getElementById("trivia-bar").style.width = `${((currentTriviaIdx + 1) / triviaStages.length) * 100}%`;
-                document.getElementById("trivia-feedback").textContent = "";
-
-                const optContainer = document.getElementById("trivia-options");
-                optContainer.innerHTML = "";
-
-                curr.options.forEach((opt, idx) => {
-                    const btn = document.createElement("button");
-                    btn.type = "button";
-                    btn.textContent = opt;
-                    btn.className = "w-full text-left px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold rounded-2xl border border-zinc-800 transition-all cursor-pointer";
-                    btn.addEventListener("click", () => {
-                        const feedback = document.getElementById("trivia-feedback");
-                        if (idx === curr.correct) {
-                            btn.className = "w-full text-left px-4 py-3 bg-blue-950/80 text-blue-300 text-xs font-bold rounded-2xl border border-blue-600 shadow";
-                            feedback.textContent = "Correct! +30 XP";
-                            feedback.className = "text-center text-xs font-bold h-5 text-blue-400";
-                            triviaScoreCount += 30;
-                            addXp(30);
-                            setTimeout(() => { currentTriviaIdx++; loadTrivia(); }, 1400);
-                        } else {
-                            btn.className = "w-full text-left px-4 py-3 bg-red-950/80 text-red-300 text-xs font-bold rounded-2xl border border-red-600";
-                            feedback.textContent = "Incorrect option. Try the next stage!";
-                            feedback.className = "text-center text-xs font-semibold h-5 text-red-400";
-                        }
-                    });
-                    optContainer.appendChild(btn);
-                });
-            }
-            loadTrivia();
-
-            // ==========================================
-            // GAME 3: FOUNDATION TOWER (JENGA ARCHITECTURE)
-            // ==========================================
-            const towerScenarios = [
-                { level: 0, blockName: "Floor 1: Christology Core", scenario: "A teacher claims Jesus was merely a great moral leader, denying His divinity and bodily resurrection.", choices: ["Accept as cultural wisdom", "Reject: Resurrection & divinity are essential (1 Cor 15)"], correct: 1 },
-                { level: 1, blockName: "Floor 2: Authority of Scripture", scenario: "An idea surfaces that modern culture dictates moral truth over biblical absolutes.", choices: ["Reject: Scripture is sufficient & authoritative (2 Tim 3)", "Adapt Scripture to modern trends"], correct: 0 },
-                { level: 2, blockName: "Floor 3: Justification by Grace", scenario: "A philosophy teaches that human good deeds and moral performance can earn salvation apart from grace.", choices: ["Accept to encourage charity", "Reject: Salvation is a gift through faith alone (Eph 2:8)"], correct: 1 },
-                { level: 3, blockName: "Floor 4: Kingdom Perseverance", scenario: "Pressure mounts to compromise Christian witness to avoid social persecution.", choices: ["Stand firm anchored in Christ's victory", "Compromise to blend in seamlessly"], correct: 0 }
-            ];
-            let currentTowerLevel = 0;
-
-            function loadTower() {
-                const scenarioBox = document.getElementById("tower-scenario-box");
-                const choicesContainer = document.getElementById("tower-choices");
-                const feedback = document.getElementById("tower-feedback");
-                const badge = document.getElementById("tower-level-badge");
-
-                if (currentTowerLevel >= towerScenarios.length) {
-                    scenarioBox.textContent = "🎉 Tower Fully Secured! Your theological foundation stands unshakeable.";
-                    choicesContainer.innerHTML = "";
-                    badge.textContent = "Maximum Stability";
-                    return;
-                }
-
-                const sc = towerScenarios[currentTowerLevel];
-                scenarioBox.textContent = sc.scenario;
-                badge.textContent = `Tower Floor ${currentTowerLevel + 1}/4`;
-                feedback.textContent = "";
-                choicesContainer.innerHTML = "";
-
-                sc.choices.forEach((choice, idx) => {
-                    const btn = document.createElement("button");
-                    btn.type = "button";
-                    btn.textContent = choice;
-                    btn.className = "w-full text-left px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold rounded-2xl border border-zinc-800 transition-all cursor-pointer";
-                    btn.addEventListener("click", () => {
-                        if (idx === sc.correct) {
-                            feedback.textContent = "Block locked securely! +40 XP";
-                            feedback.className = "text-center text-xs font-bold h-5 text-emerald-400";
-                            
-                            const blockEl = document.getElementById(`tblock-${currentTowerLevel}`);
-                            if (blockEl) {
-                                blockEl.className = "tower-block h-6 rounded-lg bg-emerald-900/60 flex items-center justify-center text-[10px] font-bold text-emerald-300 border border-emerald-500 shadow transition-all";
-                                blockEl.textContent = sc.blockName + " [Secured]";
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then((reg) => {
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                const banner = document.getElementById('pwa-update-banner');
+                                if (banner) banner.classList.remove('hidden');
                             }
-
-                            addXp(40);
-                            setTimeout(() => {
-                                currentTowerLevel++;
-                                loadTower();
-                            }, 1500);
-                        } else {
-                            feedback.textContent = "Unstable block! The structure wobbled. Try again.";
-                            feedback.className = "text-center text-xs font-semibold h-5 text-red-400";
-                        }
+                        });
                     });
-                    choicesContainer.appendChild(btn);
                 });
-            }
-            loadTower();
-
-            // ==========================================
-            // GAME 4: TIMELINE ARCHITECT
-            // ==========================================
-            const timelineEvents = [
-                { id: 1, text: "Creation & Fall in Eden" },
-                { id: 2, text: "The Exodus from Egypt" },
-                { id: 3, text: "The Death & Resurrection of Christ" },
-                { id: 4, text: "The Return of Christ & New Creation" }
-            ];
-            let randomizedTimeline = [];
-
-            function initTimeline() {
-                randomizedTimeline = [...timelineEvents].sort(() => Math.random() - 0.5);
-                renderTimeline();
-                document.getElementById("timeline-feedback").textContent = "";
-            }
-            window.resetTimeline = initTimeline;
-
-            function renderTimeline() {
-                const container = document.getElementById("timeline-slot-container");
-                container.innerHTML = "";
-                randomizedTimeline.forEach((item, index) => {
-                    const row = document.createElement("div");
-                    row.className = "flex items-center gap-2 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800";
-                    row.innerHTML = `
-                        <span class="text-xs font-bold text-purple-400 w-16">Step ${index + 1}</span>
-                        <span class="flex-1 text-xs text-zinc-200 font-medium">${item.text}</span>
-                        <div class="flex gap-1">
-                            <button type="button" onclick="moveTimeline(${index}, -1)" class="px-2 py-1 bg-zinc-900 hover:bg-zinc-800 rounded text-xs text-zinc-300">▲</button>
-                            <button type="button" onclick="moveTimeline(${index}, 1)" class="px-2 py-1 bg-zinc-900 hover:bg-zinc-800 rounded text-xs text-zinc-300">▼</button>
-                        </div>
-                    `;
-                    container.appendChild(row);
-                });
-            }
-
-            window.moveTimeline = function(index, direction) {
-                const target = index + direction;
-                if (target < 0 || target >= randomizedTimeline.length) return;
-                const temp = randomizedTimeline[index];
-                randomizedTimeline[index] = randomizedTimeline[target];
-                randomizedTimeline[target] = temp;
-                renderTimeline();
-            }
-
-            window.checkTimelineOrder = function() {
-                const isCorrect = randomizedTimeline.every((item, idx) => item.id === idx + 1);
-                const feedback = document.getElementById("timeline-feedback");
-                if (isCorrect) {
-                    feedback.textContent = "🎯 Perfect Redemptive Sequence! +40 XP";
-                    feedback.className = "text-center text-xs font-bold h-5 text-purple-400";
-                    addXp(40);
-                } else {
-                    feedback.textContent = "Order is out of sequence. Adjust using arrows!";
-                    feedback.className = "text-center text-xs font-semibold h-5 text-red-400";
-                }
-            }
-            initTimeline();
-
-            // ==========================================
-            // GAME 5: SCRIPTURE & CONCEPT MATCH
-            // ==========================================
-            const matchPairs = [
-                { term: "Justification", def: "Declared righteous by grace" },
-                { term: "Sanctification", def: "Becoming holy like Christ" },
-                { term: "Redemption", def: "Bought back from sin" },
-                { term: "Atonement", def: "Reconciliation with God" }
-            ];
-            let selectedMatchItem = null, matchedCount = 0;
-
-            function initMatchGame() {
-                const grid = document.getElementById("match-grid");
-                grid.innerHTML = "";
-                matchedCount = 0;
-                document.getElementById("match-score-badge").textContent = `Pairs: 0/4`;
-                document.getElementById("match-feedback").textContent = "";
-
-                let cards = [];
-                matchPairs.forEach((p, idx) => {
-                    cards.push({ id: idx, type: 'term', text: p.term });
-                    cards.push({ id: idx, type: 'def', text: p.def });
-                });
-                cards.sort(() => Math.random() - 0.5);
-
-                cards.forEach(card => {
-                    const btn = document.createElement("button");
-                    btn.type = "button";
-                    btn.textContent = card.text;
-                    btn.className = "p-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-[11px] font-semibold rounded-2xl border border-zinc-800 text-center transition-all cursor-pointer h-20 flex items-center justify-center";
-                    btn.addEventListener("click", () => handleMatchClick(card, btn));
-                    grid.appendChild(btn);
-                });
-            }
-
-            function handleMatchClick(card, btn) {
-                if (btn.disabled) return;
-                btn.classList.add("border-rose-500", "bg-rose-950/40");
-
-                if (!selectedMatchItem) {
-                    selectedMatchItem = { card, btn };
-                } else {
-                    if (selectedMatchItem.card.id === card.id && selectedMatchItem.card.type !== card.type) {
-                        selectedMatchItem.btn.disabled = true;
-                        btn.disabled = true;
-                        selectedMatchItem.btn.className = "p-3 bg-rose-950/80 text-rose-300 text-[11px] font-bold rounded-2xl border border-rose-500 text-center h-20 flex items-center justify-center opacity-60";
-                        btn.className = "p-3 bg-rose-950/80 text-rose-300 text-[11px] font-bold rounded-2xl border border-rose-500 text-center h-20 flex items-center justify-center opacity-60";
-                        matchedCount++;
-                        document.getElementById("match-score-badge").textContent = `Pairs: ${matchedCount}/4`;
-                        selectedMatchItem = null;
-
-                        if (matchedCount === 4) {
-                            document.getElementById("match-feedback").textContent = "🏆 All Pairs Matched! +50 XP";
-                            document.getElementById("match-feedback").className = "text-center text-xs font-bold h-5 text-rose-400";
-                            addXp(50);
-                        }
-                    } else {
-                        setTimeout(() => {
-                            selectedMatchItem.btn.className = "p-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-[11px] font-semibold rounded-2xl border border-zinc-800 text-center transition-all cursor-pointer h-20 flex items-center justify-center";
-                            btn.className = "p-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-[11px] font-semibold rounded-2xl border border-zinc-800 text-center transition-all cursor-pointer h-20 flex items-center justify-center";
-                            selectedMatchItem = null;
-                        }, 500);
-                    }
-                }
-            }
-            initMatchGame();
-        });
+            });
+        }
     </script>
 
     <!-- Sanity CMS Client & Data Fetching Scripts -->
@@ -1007,6 +513,8 @@
                         document.getElementById('hero-heading').innerHTML = `${data.heroTitle} <span class="text-brandYellow">${data.heroHighlight}</span>`;
                     }
                     if (data.heroDescription) document.getElementById('hero-desc').innerText = data.heroDescription;
+                    if (data.heroImgUrl) document.getElementById('hero-img').src = data.heroImgUrl;
+                    if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
                     if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
                     const tracksContainer = document.getElementById('tracks-container');
@@ -1073,27 +581,27 @@
                         eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
                         return;
                     }
-                    eventsContainer.innerHTML = events.map(event => {
-                        return `
-                            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
-                                <div>
-                                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
-                                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
-                                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
-                                    </div>
-                                    <div class="p-6 pb-2">
-                                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
-                                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
-                                    </div>
-                                </div>
-                                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
-                                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
-                                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
+eventsContainer.innerHTML = events.map(event => {
+        return `
+            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+                <div>
+                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
+                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
+                    </div>
+                    <div class="p-6 pb-2">
+                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
+                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
+                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
+                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
+                </div>
+            </div>
+        `;
+    }).join('');
                 }
             } catch (err) {
                 console.error("Sanity events fetch error:", err);
@@ -1150,41 +658,146 @@
             }
         }
 
-        async function fetchLatestDevotional() {
-            try {
-                const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
-                const dev = await client.fetch(query);
-
-                if (dev) {
-                    document.getElementById('dev-date').textContent = dev.publishedAt || '';
-                    document.getElementById('dev-title').textContent = dev.title || '';
-                    document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
-                    document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
-                    document.getElementById('dev-observation').textContent = dev.observation || '';
-                    document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
-                    document.getElementById('dev-application').textContent = dev.application || '';
-                    document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
-
-                    const imgElement = document.getElementById('dev-image');
-                    if (dev.imageUrl) {
-                        imgElement.src = dev.imageUrl;
-                        imgElement.classList.remove('hidden');
-                    } else {
-                        imgElement.classList.add('hidden');
-                    }
-                } else {
-                    document.getElementById('dev-title').textContent = "No devotionals published yet.";
-                }
-            } catch (error) {
-                console.error("Error fetching devotional:", error);
-                document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
-            }
-        }
-
+        // Run all fetch functions on page load
         fetchSiteSettings();
         fetchHomeSettings();
         fetchEvents();
         fetchLatestArticles();
         fetchLatestDevotional();
+async function fetchLatestDevotional() {
+    try {
+        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
+        const dev = await client.fetch(query);
+
+        if (dev) {
+            document.getElementById('dev-date').textContent = dev.publishedAt || '';
+            document.getElementById('dev-title').textContent = dev.title || '';
+            document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
+            
+            // Clean single-assignment without hardcoded extra quotes
+            document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
+            
+            document.getElementById('dev-observation').textContent = dev.observation || '';
+            document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
+            document.getElementById('dev-application').textContent = dev.application || '';
+            document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
+
+            // Handle Featured Image display from Sanity CDN asset URL
+            const imgElement = document.getElementById('dev-image');
+            if (dev.imageUrl) {
+                imgElement.src = dev.imageUrl;
+                imgElement.classList.remove('hidden');
+            } else {
+                imgElement.classList.add('hidden');
+            }
+        } else {
+            document.getElementById('dev-title').textContent = "No devotionals published yet.";
+        }
+    } catch (error) {
+        console.error("Error fetching devotional:", error);
+        document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
+    }
+}
+
+// Ensure it runs on page load
+fetchLatestDevotional();
     </script>
+<!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/85 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
+    <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
+        <li>
+            <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors active">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Home
+            </a>
+        </li>
+        <li>
+            <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                Resources
+            </a>
+        </li>
+        <li>
+            <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                Prayer
+            </a>
+        </li>
+        <li>
+            <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Events
+            </a>
+        </li>
+    </ul>
+</nav>
+<script>
+// NFS Hero Carousel Fade Loop
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].style.opacity = '0';
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].style.opacity = '1';
+        }, 4000);
+    }
+    async function loadDynamicHeroCarousel() {
+    const projectId = "y4q1h6a9"; // Your Sanity Project ID
+    const dataset = "production";
+    
+    const query = encodeURIComponent(`*[_type == "homeSettings"][0]{
+        heroCarousel[]{
+            "url": image.asset->url,
+            badge,
+            caption
+        }
+    }`);
+
+    const url = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=${query}`;
+
+    try {
+        const response = await fetch(url);
+        const { result } = await response.json();
+        
+        if (!result || !result.heroCarousel || result.heroCarousel.length === 0) return;
+
+        const container = document.getElementById('hero-carousel-container');
+        container.innerHTML = ''; 
+
+        result.heroCarousel.forEach((slide, index) => {
+            const opacityClass = index === 0 ? 'opacity-100' : 'opacity-0';
+            const slideHTML = `
+                <div class="absolute inset-2 transition-opacity duration-1000 ease-in-out ${opacityClass} hero-slide rounded-xl overflow-hidden">
+                    <img src="${slide.url}" alt="${slide.caption || 'Slide'}" class="w-full h-full object-cover">
+                    <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-xl p-4 rounded-lg border border-zinc-800">
+                        <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">${slide.badge || 'Active'}</p>
+                        <p class="text-sm font-medium text-white">${slide.caption || ''}</p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', slideHTML);
+        });
+
+        startHeroFadeLoop();
+
+    } catch (error) {
+        console.error("Failed to load hero slides from Sanity:", error);
+    }
+}
+
+function startHeroFadeLoop() {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length <= 1) return;
+    
+    let currentSlide = 0;
+    setInterval(() => {
+        slides[currentSlide].style.opacity = '0';
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].style.opacity = '1';
+    }, 4000);
+}
+
+document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
+</script>
 </html>
