@@ -52,31 +52,15 @@
     </script>
     <script src="global-offline.js"></script>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation pb-20">
 
- <!-- NAVIGATION BAR -->
-
-   
-        <!-- Desktop Nav Links -->
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
-            <a href="index.html" class="text-brandYellow transition-colors">Home</a>
-            <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
-            <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
-            <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
-            <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
-            <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
-            <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
-        </nav>
-
-    </div>
-</header>
-
-    <!-- HOME TAB NAVIGATION (Today / Community / Explore) -->
+    <!-- HOME TAB NAVIGATION (Today / Community / Explore / Games) -->
     <div id="home-tab-nav" class="sticky top-0 z-30 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3" style="background: linear-gradient(180deg, rgba(9,9,11,0.98), rgba(24,24,27,0.92));">
         <div class="max-w-md mx-auto flex bg-zinc-900/80 rounded-xl p-1 gap-1">
             <button type="button" data-tab-btn="today" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Today</button>
             <button type="button" data-tab-btn="community" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Community</button>
             <button type="button" data-tab-btn="explore" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Explore</button>
+            <button type="button" data-tab-btn="challenges" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors text-amber-400">Games</button>
         </div>
     </div>
     <style>
@@ -112,8 +96,8 @@
         })();
     </script>
 
-    <!-- PERSONALIZED GREETING -->
-    <p id="user-greeting" data-tab="today" class="tab-panel hidden text-center text-sm text-zinc-400 pt-4 pb-1 px-4"></p>
+    <!-- PERSONALIZED GREETING (Pushed down slightly to prevent overlapping) -->
+    <p id="user-greeting" data-tab="today" class="tab-panel hidden text-center text-sm text-zinc-400 pt-6 pb-2 px-4"></p>
 
     <!-- WEEKLY MEMORY VERSE BANNER -->
     <div id="memory-verse-banner" data-tab="today" class="tab-panel bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900 py-3 px-4 text-center hidden">
@@ -124,13 +108,12 @@
         </div>
     </div>
 
-  <!-- HERO SECTION -->
+    <!-- HERO SECTION -->
     <section data-tab="today" class="tab-panel relative py-20 lg:py-32 overflow-hidden border-b border-zinc-900">
         <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brandYellow/5 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Left Column: Text -->
                 <div>
                     <span id="hero-badge" class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Deep Faith & Consistent Prayer</span>
                     <h1 id="hero-heading" class="text-4xl sm:text-6xl font-black tracking-tight text-white mt-6 mb-6 leading-none">
@@ -145,7 +128,6 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Carousel Container -->
                 <div class="relative flex justify-center">
                     <div id="hero-carousel-container" class="relative w-full max-w-md h-[360px] sm:h-[400px] rounded-2xl overflow-hidden border border-zinc-800/80 shadow-2xl bg-cardBg/80 backdrop-blur-md p-2 flex items-center justify-center">
                         <p class="text-xs text-zinc-500 animate-pulse">Loading cinematic visual...</p>
@@ -155,7 +137,7 @@
         </div>
     </section>
 
-  <!-- DAILY OIA DEVOTIONAL SECTION -->
+    <!-- DAILY OIA DEVOTIONAL SECTION -->
     <section id="devotional-section" data-tab="today" class="tab-panel py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
             <div>
@@ -165,147 +147,200 @@
             <span id="dev-date" class="text-xs text-zinc-400 font-medium">Loading...</span>
         </div>
     
-        <!-- Devotional Card Container -->
         <div class="bg-cardBg/80 backdrop-blur-xl border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-            
-            <!-- Featured Image (PC Uploaded to Sanity) -->
             <img id="dev-image" src="" alt="Devotional Featured Image" class="w-full h-48 sm:h-72 object-cover rounded-xl hidden" />
-        <!-- Scripture Banner -->
-        <div class="border-l-4 border-brandYellow pl-4 py-1">
-            <h3 id="dev-title" class="text-xl font-bold text-white mb-1">Loading devotional...</h3>
-            <p id="dev-scripture-ref" class="text-brandYellow text-sm font-semibold"></p>
-            <p id="dev-scripture-text" class="text-zinc-300 text-sm italic mt-2"></p>
+            <div class="border-l-4 border-brandYellow pl-4 py-1">
+                <h3 id="dev-title" class="text-xl font-bold text-white mb-1">Loading devotional...</h3>
+                <p id="dev-scripture-ref" class="text-brandYellow text-sm font-semibold"></p>
+                <p id="dev-scripture-text" class="text-zinc-300 text-sm italic mt-2"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80">
+                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                    <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">1. Observe</span>
+                    <p id="dev-observation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+                </div>
+                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                    <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">2. Interpret</span>
+                    <p id="dev-interpretation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+                </div>
+                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                    <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">3. Apply</span>
+                    <p id="dev-application" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <div class="bg-brandYellow/5 p-4 rounded-xl border border-brandYellow/15">
+                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">Closing Prayer</span>
+                <p id="dev-prayer" class="text-xs text-zinc-300 mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW GAMES & CHALLENGES SECTION (Tab: challenges) -->
+    <section data-tab="challenges" class="tab-panel tab-hidden max-w-2xl mx-auto px-4 py-8 space-y-8">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Streak & Focus Hub</span>
+                <h2 class="text-white font-black text-2xl mt-1">Study Challenges</h2>
+            </div>
+            <div id="global-streak-badge" class="bg-amber-400/10 border border-amber-400/30 text-amber-400 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                🔥 0 Day Streak
+            </div>
         </div>
 
-        <!-- OIA Breakdown Steps -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80">
-            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">1. Observe</span>
-                <p id="dev-observation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+        <!-- GAME 1: VERSE SCRAMBLE -->
+        <div class="bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Daily Puzzle</span>
+                    <h3 class="text-white font-bold text-lg mt-1">Verse Scramble</h3>
+                </div>
+                <span id="scramble-ref-badge" class="text-xs text-zinc-400 font-semibold bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-800">Proverbs 3:5</span>
             </div>
-            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">2. Interpret</span>
-                <p id="dev-interpretation" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
+            <p class="text-xs text-zinc-400">Tap the words in the correct sequence to rebuild today's passage.</p>
+
+            <!-- Builder Zone -->
+            <div id="scramble-builder" class="min-h-[64px] bg-zinc-950/80 border border-dashed border-zinc-700 rounded-xl p-3 flex flex-wrap gap-2 items-center justify-center transition-colors">
+                <span id="scramble-placeholder" class="text-xs text-zinc-500 italic">Tap blocks below to build verse...</span>
             </div>
-            <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">3. Apply</span>
-                <p id="dev-application" class="text-xs text-zinc-300 mt-2 leading-relaxed"></p>
-            </div>
+
+            <!-- Word Bank -->
+            <div id="scramble-bank" class="flex flex-wrap gap-2 justify-center pt-2"></div>
+            <div id="scramble-feedback" class="text-center text-xs font-semibold h-4"></div>
         </div>
 
-        <!-- Closing Prayer -->
-        <div class="bg-brandYellow/5 p-4 rounded-xl border border-brandYellow/15">
-            <span class="text-xs font-bold text-brandYellow uppercase tracking-wider">Closing Prayer</span>
-            <p id="dev-prayer" class="text-xs text-zinc-300 mt-1 leading-relaxed"></p>
+        <!-- GAME 2: SCRIPTURE TRIVIA -->
+        <div class="bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-blue-400 bg-blue-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Quick Quiz</span>
+                    <h3 class="text-white font-bold text-lg mt-1">Scripture Trivia</h3>
+                </div>
+                <span id="trivia-progress" class="text-xs text-zinc-400 font-semibold bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-800">Question 1/3</span>
+            </div>
+            <p id="trivia-question" class="text-sm font-medium text-zinc-200">Loading trivia challenge...</p>
+            <div id="trivia-options" class="grid grid-cols-1 gap-2 pt-2"></div>
+            <div id="trivia-feedback" class="text-center text-xs font-semibold h-4"></div>
         </div>
-    </div>
-</section>
-<!-- Community Fellowship Feed Section -->
-<section data-tab="community" class="tab-panel max-w-xl mx-auto px-4 pt-3 pb-8 space-y-6">
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
-    <div>
-      <h2 class="text-white font-bold text-lg">Community Fellowship</h2>
-      <p class="text-xs text-zinc-400">A shared sanctuary to read what fellow believers are learning from God's Word, encourage one another, and grow together.</p>
-    </div>
-    <button onclick="openNewPostModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl transition-all shadow-lg cursor-pointer shrink-0">
-      + Share Insight
-    </button>
-  </div>
 
-  <!-- Live Feed Container -->
-  <div id="community-feed-container" class="space-y-4">
-    <div class="text-center py-10 text-zinc-500 text-xs">Loading community insights...</div>
-  </div>
-</section>
+        <!-- GAME 3: FOUNDATION TOWER (JENGA METAPHOR) -->
+        <div class="bg-cardBg/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-0.5 rounded uppercase tracking-wider">Strategic Balance</span>
+                    <h3 class="text-white font-bold text-lg mt-1">Foundation Tower</h3>
+                </div>
+                <span id="tower-level-badge" class="text-xs text-emerald-400 font-semibold bg-emerald-950/40 border border-emerald-800/50 px-2.5 py-1 rounded-lg">Level 1 Stable</span>
+            </div>
+            <p class="text-xs text-zinc-400">Test doctrinal stability. Choose the sound biblical response to secure your structural block.</p>
+            <div id="tower-scenario-box" class="p-4 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-300 leading-relaxed"></div>
+            <div id="tower-choices" class="grid grid-cols-1 gap-2"></div>
+            <div id="tower-feedback" class="text-center text-xs font-semibold h-4"></div>
+        </div>
+    </section>
 
-<!-- Share Insight Modal -->
-<div id="post-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
-    <button onclick="closeNewPostModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
-    <h3 class="text-white font-bold text-base mb-1">What are you learning?</h3>
-    <p class="text-xs text-zinc-400 mb-4">Share a revelation or verse insight with the fellowship.</p>
-    
-    <div class="space-y-3">
-      <div>
-        <label class="block text-[11px] font-medium text-zinc-400 mb-1">Scripture Reference (Optional)</label>
-        <input type="text" id="post-verse-input" placeholder="e.g. Psalm 23:1-3" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
-      </div>
-      <div>
-        <label class="block text-[11px] font-medium text-zinc-400 mb-1">Your Insight / Note</label>
-        <textarea id="post-text-input" rows="3" placeholder="What is God showing you through His Word today..." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500 resize-none"></textarea>
-      </div>
-      
-      <!-- Privacy Toggle for Post -->
-      <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800">
+    <!-- Community Fellowship Feed Section -->
+    <section data-tab="community" class="tab-panel tab-hidden max-w-xl mx-auto px-4 pt-3 pb-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
         <div>
-          <p class="text-xs font-medium text-white">Share with Community Feed</p>
-          <p class="text-[10px] text-zinc-400">If unchecked, it remains private to your account.</p>
+          <h2 class="text-white font-bold text-lg">Community Fellowship</h2>
+          <p class="text-xs text-zinc-400">A shared sanctuary to read what fellow believers are learning from God's Word, encourage one another, and grow together.</p>
         </div>
-        <input type="checkbox" id="post-public-toggle" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked>
+        <button onclick="openNewPostModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl transition-all shadow-lg cursor-pointer shrink-0">
+          + Share Insight
+        </button>
       </div>
 
-      <button onclick="submitCommunityPost()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
-        Publish Post
+      <div id="community-feed-container" class="space-y-4">
+        <div class="text-center py-10 text-zinc-500 text-xs">Loading community insights...</div>
+      </div>
+    </section>
+
+    <!-- Share Insight Modal -->
+    <div id="post-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+        <button onclick="closeNewPostModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-all cursor-pointer">✕</button>
+        <h3 class="text-white font-bold text-base mb-1">What are you learning?</h3>
+        <p class="text-xs text-zinc-400 mb-4">Share a revelation or verse insight with the fellowship.</p>
+        
+        <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Scripture Reference (Optional)</label>
+            <input type="text" id="post-verse-input" placeholder="e.g. Psalm 23:1-3" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-medium text-zinc-400 mb-1">Your Insight / Note</label>
+            <textarea id="post-text-input" rows="3" placeholder="What is God showing you through His Word today..." class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-emerald-500 resize-none"></textarea>
+          </div>
+          
+          <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800">
+            <div>
+              <p class="text-xs font-medium text-white">Share with Community Feed</p>
+              <p class="text-[10px] text-zinc-400">If unchecked, it remains private to your account.</p>
+            </div>
+            <input type="checkbox" id="post-public-toggle" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked>
+          </div>
+
+          <button onclick="submitCommunityPost()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition-all shadow-lg cursor-pointer">
+            Publish Post
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Push Notification Opt-in -->
+    <div id="notification-prompt-box" data-tab="today" class="tab-panel my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center max-w-4xl mx-auto">
+      <h3 class="text-white font-semibold mb-1">Never Miss a Devotion</h3>
+      <p class="text-xs text-zinc-400 mb-4">Get daily reminders sent straight to your device.</p>
+      
+      <button onclick="subscribeToPushNotifications()" class="w-full py-3 px-4 bg-brandYellow text-zinc-950 font-bold rounded-xl hover:opacity-90 transition-all text-center">
+        Enable Daily Notifications
       </button>
     </div>
-  </div>
-</div>
-<!-- Push Notification Opt-in -->
-<div id="notification-prompt-box" data-tab="today" class="tab-panel my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center">
-  <h3 class="text-white font-semibold mb-1">Never Miss a Devotion</h3>
-  <p class="text-xs text-zinc-400 mb-4">Get daily reminders sent straight to your device.</p>
-  
-  <button onclick="subscribeToPushNotifications()" class="w-full py-3 px-4 bg-brandYellow text-zinc-950 font-bold rounded-xl hover:opacity-90 transition-all text-center">
-    Enable Daily Notifications
-  </button>
-</div>
-</div>
-<!-- QUICK ACCESS SECTION -->
-<section data-tab="explore" class="tab-panel max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex items-center justify-between mb-4">
-        <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Quick Access</span>
-        <span class="text-zinc-500 text-xs">Explore More</span>
-    </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        
-        <!-- Series Tracks -->
-        <a href="series.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
-            <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-            </div>
-            <div>
-                <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Series Tracks</h3>
-                <p class="text-zinc-400 text-[11px] mt-0.5">Deep dive studies</p>
-            </div>
-        </a>
+    <!-- QUICK ACCESS SECTION -->
+    <section data-tab="explore" class="tab-panel tab-hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Quick Access</span>
+            <span class="text-zinc-500 text-xs">Explore More</span>
+        </div>
 
-        <!-- Articles / Insights -->
-        <a href="insights.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
-            <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/></svg>
-            </div>
-            <div>
-                <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Articles</h3>
-                <p class="text-zinc-400 text-[11px] mt-0.5">Insights & readings</p>
-            </div>
-        </a>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <a href="series.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
+                <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Series Tracks</h3>
+                    <p class="text-zinc-400 text-[11px] mt-0.5">Deep dive studies</p>
+                </div>
+            </a>
 
-        <!-- About Us -->
-        <a href="about.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300 col-span-2 sm:col-span-1">
-            <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div>
-                <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">About Us</h3>
-                <p class="text-zinc-400 text-[11px] mt-0.5">Mission & vision</p>
-            </div>
-        </a>
+            <a href="insights.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
+                <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">Articles</h3>
+                    <p class="text-zinc-400 text-[11px] mt-0.5">Insights & readings</p>
+                </div>
+            </a>
 
-    </div>
-</section>
-<!-- DNA SECTION -->
-    <section data-tab="explore" class="tab-panel py-12 px-4 sm:px-6 lg:px-8">
+            <a href="about.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300 col-span-2 sm:col-span-1">
+                <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold text-xs sm:text-sm group-hover:text-brandYellow transition-colors">About Us</h3>
+                    <p class="text-zinc-400 text-[11px] mt-0.5">Mission & vision</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- DNA SECTION -->
+    <section data-tab="explore" class="tab-panel tab-hidden py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto media-card-gradient rounded-3xl p-6 sm:p-10 border border-zinc-800/80">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Foundational Truths</span>
@@ -349,7 +384,6 @@
                 <h2 class="text-3xl font-black tracking-tight text-white mt-2">What We Are Studying Now</h2>
             </div>
             <div id="tracks-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-                <!-- Instant skeleton loader -->
                 <div class="bg-cardBg/80 backdrop-blur-md rounded-xl overflow-hidden border border-zinc-800 p-6 lg:p-8 animate-pulse">
                     <div class="w-full aspect-[4/5] bg-zinc-900 rounded-lg mb-6"></div>
                     <div class="h-4 bg-zinc-900 rounded w-1/3 mb-4"></div>
@@ -362,7 +396,7 @@
     </section>
 
     <!-- UPCOMING EVENTS SECTION -->
-    <section data-tab="explore" class="tab-panel py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
+    <section data-tab="explore" class="tab-panel tab-hidden py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
@@ -372,7 +406,6 @@
                 <a href="events.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View All Events &rarr;</a>
             </div>
             <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Instant skeleton loader -->
                 <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 p-6 animate-pulse">
                     <div class="w-full h-40 bg-zinc-900 rounded-lg mb-4"></div>
                     <div class="h-6 bg-zinc-900 rounded w-3/4 mb-2"></div>
@@ -383,7 +416,7 @@
     </section>
 
     <!-- LATEST THEOLOGICAL REFLECTIONS SECTION -->
-    <section data-tab="explore" class="tab-panel py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
+    <section data-tab="explore" class="tab-panel tab-hidden py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
@@ -393,7 +426,6 @@
                 <a href="insights.html" class="text-brandYellow text-sm font-semibold hover:underline mt-4 md:mt-0">View All Essays &rarr;</a>
             </div>
             <div id="latest-articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Instant skeleton loader -->
                 <div class="bg-cardBg/80 backdrop-blur-md rounded-xl border border-zinc-800 p-6 animate-pulse">
                     <div class="w-full h-48 bg-zinc-900 rounded-lg mb-4"></div>
                     <div class="h-6 bg-zinc-900 rounded w-3/4 mb-2"></div>
@@ -404,24 +436,14 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center">
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12 text-sm text-zinc-500 text-center mb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p id="footer-text">&copy; 2026 Stay Alive Fellowship. Built for the Glory of Christ.</p>
         </div>
     </footer>
 
-  <!-- Mobile Menu Script -->
-<script>
-  const btn = document.getElementById('menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  if (btn && menu) {
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-    });
-  }
-</script>
     <!-- PWA Update Banner -->
-    <div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
+    <div id="pwa-update-banner" class="hidden fixed bottom-20 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
         <div>
             <p class="text-sm font-bold text-brandYellow">New Update Available!</p>
             <p class="text-xs text-zinc-400">A fresh version of Stay Alive Fellowship is ready.</p>
@@ -431,23 +453,229 @@
         </button>
     </div>
 
-    <!-- Service Worker Registration & Update Listener Script -->
+    <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/95 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
+        <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
+            <li>
+                <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    Resources
+                </a>
+            </li>
+            <li>
+                <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    Prayer
+                </a>
+            </li>
+            <li>
+                <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Events
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- EMBEDDED GAMES & LOCAL STORAGE ENGINE -->
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then((reg) => {
-                    reg.addEventListener('updatefound', () => {
-                        const newWorker = reg.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                const banner = document.getElementById('pwa-update-banner');
-                                if (banner) banner.classList.remove('hidden');
-                            }
-                        });
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. STREAK MANAGEMENT SYSTEM
+            const progressKey = 'stay_game_progress';
+            let progress = JSON.parse(localStorage.getItem(progressKey)) || { streak: 0, lastDate: null };
+            const todayStr = new Date().toDateString();
+
+            if (progress.lastDate) {
+                const last = new Date(progress.lastDate);
+                const diffTime = Math.abs(new Date(todayStr) - last);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 1) {
+                    progress.streak = 0; // Reset streak if user missed a day
+                }
+            }
+            
+            function updateStreakDisplay() {
+                const badge = document.getElementById("global-streak-badge");
+                if (badge) badge.innerHTML = `🔥 ${progress.streak} Day Streak`;
+            }
+            updateStreakDisplay();
+
+            function recordActivity() {
+                if (progress.lastDate !== todayStr) {
+                    progress.streak += 1;
+                    progress.lastDate = todayStr;
+                    localStorage.setItem(progressKey, JSON.stringify(progress));
+                    updateStreakDisplay();
+                }
+            }
+
+            // 2. GAME 1: VERSE SCRAMBLE ENGINE
+            const verseData = { reference: "Proverbs 3:5", text: "Trust in the Lord with all your heart" };
+            const originalWords = verseData.text.split(" ");
+            let shuffledWords = originalWords.map((word, index) => ({ id: index, word })).sort(() => Math.random() - 0.5);
+            let selectedWords = [];
+
+            const builderZone = document.getElementById("scramble-builder");
+            const wordBank = document.getElementById("scramble-bank");
+            const placeholder = document.getElementById("scramble-placeholder");
+            const scrambleFeedback = document.getElementById("scramble-feedback");
+            document.getElementById("scramble-ref-badge").textContent = verseData.reference;
+
+            function renderScramble() {
+                wordBank.innerHTML = "";
+                if (selectedWords.length === 0) {
+                    if (!builderZone.contains(placeholder)) builderZone.insertBefore(placeholder, builderZone.firstChild);
+                    placeholder.style.display = "block";
+                } else {
+                    if (builderZone.contains(placeholder)) placeholder.style.display = "none";
+                }
+
+                selectedWords.forEach((item, index) => {
+                    const btn = createChip(item.word, () => {
+                        shuffledWords.push(item);
+                        selectedWords.splice(index, 1);
+                        scrambleFeedback.textContent = "";
+                        renderScramble();
                     });
+                    builderZone.appendChild(btn);
                 });
-            });
-        }
+
+                shuffledWords.forEach((item, index) => {
+                    const btn = createChip(item.word, () => {
+                        selectedWords.push(item);
+                        shuffledWords.splice(index, 1);
+                        scrambleFeedback.textContent = "";
+                        renderScramble();
+                        checkScrambleWin();
+                    });
+                    wordBank.appendChild(btn);
+                });
+            }
+
+            function createChip(text, handler) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = text;
+                btn.className = "px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold rounded-lg border border-zinc-700 shadow cursor-pointer active:scale-95 transition-transform";
+                btn.addEventListener("click", handler);
+                return btn;
+            }
+
+            function checkScrambleWin() {
+                if (shuffledWords.length === 0) {
+                    const attempt = selectedWords.map(i => i.word).join(" ");
+                    if (attempt === verseData.text) {
+                        scrambleFeedback.textContent = "✨ Correct! Verse memorized successfully.";
+                        scrambleFeedback.className = "text-center text-xs font-semibold h-4 text-amber-400 animate-pulse";
+                        recordActivity();
+                        if (navigator.vibrate) navigator.vibrate(50);
+                    } else {
+                        scrambleFeedback.textContent = "Not quite right. Tap words to rearrange.";
+                        scrambleFeedback.className = "text-center text-xs font-semibold h-4 text-red-400";
+                    }
+                }
+            }
+            renderScramble();
+
+            // 3. GAME 2: SCRIPTURE TRIVIA ENGINE
+            const triviaQuestions = [
+                { q: "Who wrote the majority of the New Testament epistles?", options: ["Peter", "Paul", "John", "James"], correct: 1 },
+                { q: "Which prophetic book contains the valley of dry bones?", options: ["Isaiah", "Jeremiah", "Ezekiel", "Daniel"], correct: 2 },
+                { q: "What is the shortest chapter in the Bible?", options: ["Psalm 117", "Psalm 23", "John 11", "Malachi 3"], correct: 0 }
+            ];
+            let currentTriviaIdx = 0;
+            const qElem = document.getElementById("trivia-question");
+            const optContainer = document.getElementById("trivia-options");
+            const triviaFeedback = document.getElementById("trivia-feedback");
+            const triviaProg = document.getElementById("trivia-progress");
+
+            function loadTrivia() {
+                const curr = triviaQuestions[currentTriviaIdx];
+                qElem.textContent = curr.q;
+                triviaProg.textContent = `Question ${currentTriviaIdx + 1}/${triviaQuestions.length}`;
+                optContainer.innerHTML = "";
+                triviaFeedback.textContent = "";
+
+                curr.options.forEach((opt, idx) => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.textContent = opt;
+                    btn.className = "w-full text-left px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium rounded-xl border border-zinc-800 transition-all cursor-pointer";
+                    btn.addEventListener("click", () => {
+                        if (idx === curr.correct) {
+                            btn.className = "w-full text-left px-4 py-2.5 bg-emerald-950/60 text-emerald-300 text-xs font-bold rounded-xl border border-emerald-700";
+                            triviaFeedback.textContent = "Correct! Great biblical insight.";
+                            triviaFeedback.className = "text-center text-xs font-semibold h-4 text-emerald-400";
+                            recordActivity();
+                            setTimeout(() => {
+                                currentTriviaIdx = (currentTriviaIdx + 1) % triviaQuestions.length;
+                                loadTrivia();
+                            }, 1500);
+                        } else {
+                            btn.className = "w-full text-left px-4 py-2.5 bg-red-950/60 text-red-300 text-xs font-bold rounded-xl border border-red-700";
+                            triviaFeedback.textContent = "Incorrect. Review your scriptures!";
+                            triviaFeedback.className = "text-center text-xs font-semibold h-4 text-red-400";
+                        }
+                    });
+                    optContainer.appendChild(btn);
+                });
+            }
+            loadTrivia();
+
+            // 4. GAME 3: FOUNDATION TOWER (JENGA METAPHOR) ENGINE
+            const towerScenarios = [
+                { level: 1, scenario: "A teacher claims Jesus was a great moral leader, but denies His bodily resurrection.", choices: ["Accept as cultural wisdom", "Reject: Resurrection is the core pillar (1 Cor 15)"], correct: 1 },
+                { level: 2, scenario: "An idea surfaces that human effort and good deeds can earn salvation apart from grace.", choices: ["Reject: Salvation is a gift through faith (Eph 2:8)", "Accept to encourage good behavior"], correct: 0 }
+            ];
+            let towerLevel = 0;
+            const scenarioBox = document.getElementById("tower-scenario-box");
+            const towerChoices = document.getElementById("tower-choices");
+            const towerFeedback = document.getElementById("tower-feedback");
+            const towerBadge = document.getElementById("tower-level-badge");
+
+            function loadTower() {
+                if (towerLevel >= towerScenarios.length) {
+                    scenarioBox.textContent = "🎉 Tower Fully Secured! Your theological foundation stands firm against shifting winds.";
+                    towerChoices.innerHTML = "";
+                    towerBadge.textContent = "Max Stability Achieved";
+                    return;
+                }
+                const sc = towerScenarios[towerLevel];
+                scenarioBox.textContent = sc.scenario;
+                towerBadge.textContent = `Level ${towerLevel + 1} Foundation`;
+                towerChoices.innerHTML = "";
+                towerFeedback.textContent = "";
+
+                sc.choices.forEach((choice, idx) => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.textContent = choice;
+                    btn.className = "w-full text-left px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium rounded-xl border border-zinc-800 transition-all cursor-pointer";
+                    btn.addEventListener("click", () => {
+                        if (idx === sc.correct) {
+                            towerFeedback.textContent = "Block locked securely in place!";
+                            towerFeedback.className = "text-center text-xs font-semibold h-4 text-emerald-400";
+                            recordActivity();
+                            setTimeout(() => {
+                                towerLevel++;
+                                loadTower();
+                            }, 1200);
+                        } else {
+                            towerFeedback.textContent = "Unstable block! The structure wobbled. Try again.";
+                            towerFeedback.className = "text-center text-xs font-semibold h-4 text-red-400";
+                        }
+                    });
+                    towerChoices.appendChild(btn);
+                });
+            }
+            loadTower();
+        });
     </script>
 
     <!-- Sanity CMS Client & Data Fetching Scripts -->
@@ -513,8 +741,6 @@
                         document.getElementById('hero-heading').innerHTML = `${data.heroTitle} <span class="text-brandYellow">${data.heroHighlight}</span>`;
                     }
                     if (data.heroDescription) document.getElementById('hero-desc').innerText = data.heroDescription;
-                    if (data.heroImgUrl) document.getElementById('hero-img').src = data.heroImgUrl;
-                    if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
                     if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
                     const tracksContainer = document.getElementById('tracks-container');
@@ -581,27 +807,27 @@
                         eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
                         return;
                     }
-eventsContainer.innerHTML = events.map(event => {
-        return `
-            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
-                <div>
-                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
-                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
-                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
-                    </div>
-                    <div class="p-6 pb-2">
-                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
-                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
-                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
-                    </div>
-                </div>
-                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
-                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
-                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
-                </div>
-            </div>
-        `;
-    }).join('');
+                    eventsContainer.innerHTML = events.map(event => {
+                        return `
+                            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+                                <div>
+                                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
+                                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
+                                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
+                                    </div>
+                                    <div class="p-6 pb-2">
+                                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
+                                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
+                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
+                                    </div>
+                                </div>
+                                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+                                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
+                                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
                 }
             } catch (err) {
                 console.error("Sanity events fetch error:", err);
@@ -658,146 +884,41 @@ eventsContainer.innerHTML = events.map(event => {
             }
         }
 
-        // Run all fetch functions on page load
+        async function fetchLatestDevotional() {
+            try {
+                const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
+                const dev = await client.fetch(query);
+
+                if (dev) {
+                    document.getElementById('dev-date').textContent = dev.publishedAt || '';
+                    document.getElementById('dev-title').textContent = dev.title || '';
+                    document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
+                    document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
+                    document.getElementById('dev-observation').textContent = dev.observation || '';
+                    document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
+                    document.getElementById('dev-application').textContent = dev.application || '';
+                    document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
+
+                    const imgElement = document.getElementById('dev-image');
+                    if (dev.imageUrl) {
+                        imgElement.src = dev.imageUrl;
+                        imgElement.classList.remove('hidden');
+                    } else {
+                        imgElement.classList.add('hidden');
+                    }
+                } else {
+                    document.getElementById('dev-title').textContent = "No devotionals published yet.";
+                }
+            } catch (error) {
+                console.error("Error fetching devotional:", error);
+                document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
+            }
+        }
+
         fetchSiteSettings();
         fetchHomeSettings();
         fetchEvents();
         fetchLatestArticles();
         fetchLatestDevotional();
-async function fetchLatestDevotional() {
-    try {
-        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
-        const dev = await client.fetch(query);
-
-        if (dev) {
-            document.getElementById('dev-date').textContent = dev.publishedAt || '';
-            document.getElementById('dev-title').textContent = dev.title || '';
-            document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
-            
-            // Clean single-assignment without hardcoded extra quotes
-            document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
-            
-            document.getElementById('dev-observation').textContent = dev.observation || '';
-            document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
-            document.getElementById('dev-application').textContent = dev.application || '';
-            document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
-
-            // Handle Featured Image display from Sanity CDN asset URL
-            const imgElement = document.getElementById('dev-image');
-            if (dev.imageUrl) {
-                imgElement.src = dev.imageUrl;
-                imgElement.classList.remove('hidden');
-            } else {
-                imgElement.classList.add('hidden');
-            }
-        } else {
-            document.getElementById('dev-title').textContent = "No devotionals published yet.";
-        }
-    } catch (error) {
-        console.error("Error fetching devotional:", error);
-        document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
-    }
-}
-
-// Ensure it runs on page load
-fetchLatestDevotional();
     </script>
-<!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
-<nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/85 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
-    <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
-        <li>
-            <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors active">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                Home
-            </a>
-        </li>
-        <li>
-            <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                Resources
-            </a>
-        </li>
-        <li>
-            <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                Prayer
-            </a>
-        </li>
-        <li>
-            <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                Events
-            </a>
-        </li>
-    </ul>
-</nav>
-<script>
-// NFS Hero Carousel Fade Loop
-    const slides = document.querySelectorAll('.hero-slide');
-    if (slides.length > 0) {
-        let currentSlide = 0;
-        setInterval(() => {
-            slides[currentSlide].style.opacity = '0';
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].style.opacity = '1';
-        }, 4000);
-    }
-    async function loadDynamicHeroCarousel() {
-    const projectId = "y4q1h6a9"; // Your Sanity Project ID
-    const dataset = "production";
-    
-    const query = encodeURIComponent(`*[_type == "homeSettings"][0]{
-        heroCarousel[]{
-            "url": image.asset->url,
-            badge,
-            caption
-        }
-    }`);
-
-    const url = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=${query}`;
-
-    try {
-        const response = await fetch(url);
-        const { result } = await response.json();
-        
-        if (!result || !result.heroCarousel || result.heroCarousel.length === 0) return;
-
-        const container = document.getElementById('hero-carousel-container');
-        container.innerHTML = ''; 
-
-        result.heroCarousel.forEach((slide, index) => {
-            const opacityClass = index === 0 ? 'opacity-100' : 'opacity-0';
-            const slideHTML = `
-                <div class="absolute inset-2 transition-opacity duration-1000 ease-in-out ${opacityClass} hero-slide rounded-xl overflow-hidden">
-                    <img src="${slide.url}" alt="${slide.caption || 'Slide'}" class="w-full h-full object-cover">
-                    <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-xl p-4 rounded-lg border border-zinc-800">
-                        <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">${slide.badge || 'Active'}</p>
-                        <p class="text-sm font-medium text-white">${slide.caption || ''}</p>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', slideHTML);
-        });
-
-        startHeroFadeLoop();
-
-    } catch (error) {
-        console.error("Failed to load hero slides from Sanity:", error);
-    }
-}
-
-function startHeroFadeLoop() {
-    const slides = document.querySelectorAll('.hero-slide');
-    if (slides.length <= 1) return;
-    
-    let currentSlide = 0;
-    setInterval(() => {
-        slides[currentSlide].style.opacity = '0';
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].style.opacity = '1';
-    }, 4000);
-}
-
-document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
-</script>
 </html>
