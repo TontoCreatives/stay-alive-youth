@@ -55,32 +55,28 @@
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-brandYellow selection:text-black antialiased overscroll-none select-none touch-manipulation">
 
  <!-- NAVIGATION BAR -->
-    <header class="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900 px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-2">
-                <img id="nav-logo" src="Banner images and logo/bible study logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-cover">
-                <span class="font-bold text-white text-sm sm:text-base tracking-tight">Stay Alive</span>
-            </a>
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
-                <a href="index.html" class="text-brandYellow transition-colors">Home</a>
-                <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
-                <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
-                <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
-                <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
-                <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
-                <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
-            </nav>
-        </div>
-    </header>
 
-    <!-- HOME TAB NAVIGATION (Today / Community / Explore / Study Arcade) -->
-    <div id="home-tab-nav" class="sticky top-[57px] z-30 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3" style="background: linear-gradient(180deg, rgba(9,9,11,0.98), rgba(24,24,27,0.92));">
+   
+        <!-- Desktop Nav Links -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+            <a href="index.html" class="text-brandYellow transition-colors">Home</a>
+            <a href="about.html" class="hover:text-brandYellow transition-colors">About</a>
+            <a href="series.html" class="hover:text-brandYellow transition-colors">Series Tracks</a>
+            <a href="insights.html" class="hover:text-brandYellow transition-colors">Articles</a>
+            <a href="resources.html" class="hover:text-brandYellow transition-colors">Resources</a>
+            <a href="events.html" class="hover:text-brandYellow transition-colors">Events</a>
+            <a href="prayer.html" class="hover:text-brandYellow transition-colors">Prayer</a>
+        </nav>
+
+    </div>
+</header>
+
+    <!-- HOME TAB NAVIGATION (Today / Community / Explore) -->
+    <div id="home-tab-nav" class="sticky top-0 z-30 backdrop-blur-md border-b border-zinc-900 px-4 pt-3 pb-3" style="background: linear-gradient(180deg, rgba(9,9,11,0.98), rgba(24,24,27,0.92));">
         <div class="max-w-md mx-auto flex bg-zinc-900/80 rounded-xl p-1 gap-1">
             <button type="button" data-tab-btn="today" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Today</button>
             <button type="button" data-tab-btn="community" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Community</button>
             <button type="button" data-tab-btn="explore" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Explore</button>
-            <button type="button" data-tab-btn="challenges" class="home-tab-btn flex-1 text-xs font-semibold py-2 rounded-lg transition-colors">Arcade</button>
         </div>
     </div>
     <style>
@@ -172,7 +168,7 @@
         <!-- Devotional Card Container -->
         <div class="bg-cardBg/80 backdrop-blur-xl border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
             
-            <!-- Featured Image -->
+            <!-- Featured Image (PC Uploaded to Sanity) -->
             <img id="dev-image" src="" alt="Devotional Featured Image" class="w-full h-48 sm:h-72 object-cover rounded-xl hidden" />
         <!-- Scripture Banner -->
         <div class="border-l-4 border-brandYellow pl-4 py-1">
@@ -204,9 +200,8 @@
         </div>
     </div>
 </section>
-
 <!-- Community Fellowship Feed Section -->
-<section data-tab="community" class="tab-panel tab-hidden max-w-xl mx-auto px-4 pt-3 pb-8 space-y-6">
+<section data-tab="community" class="tab-panel max-w-xl mx-auto px-4 pt-3 pb-8 space-y-6">
   <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-4 gap-3">
     <div>
       <h2 class="text-white font-bold text-lg">Community Fellowship</h2>
@@ -255,9 +250,8 @@
     </div>
   </div>
 </div>
-
 <!-- Push Notification Opt-in -->
-<div id="notification-prompt-box" data-tab="today" class="tab-panel my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center max-w-4xl mx-auto">
+<div id="notification-prompt-box" data-tab="today" class="tab-panel my-6 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center">
   <h3 class="text-white font-semibold mb-1">Never Miss a Devotion</h3>
   <p class="text-xs text-zinc-400 mb-4">Get daily reminders sent straight to your device.</p>
   
@@ -265,332 +259,16 @@
     Enable Daily Notifications
   </button>
 </div>
-
-<!-- STUDY ARCADE TAB PANEL -->
-<section data-tab="challenges" class="tab-panel tab-hidden max-w-4xl mx-auto px-4 py-8 space-y-8">
-    <div class="text-center">
-        <span class="text-brandYellow text-xs font-bold uppercase tracking-widest bg-brandYellow/10 px-3 py-1 rounded-full border border-brandYellow/20">Interactive Engagement</span>
-        <h2 class="text-3xl font-black text-white mt-2">Study Arcade</h2>
-        <p class="text-xs text-zinc-400 mt-1">Test your scriptural knowledge and master key memory verses through engaging mini-games.</p>
-    </div>
-
-    <!-- Game Selector Tabs -->
-    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-zinc-900/80 p-2 rounded-2xl border border-zinc-800">
-        <button onclick="switchGame('scramble')" id="arcade-tab-scramble" class="arcade-sub-btn py-2 px-3 rounded-xl text-xs font-bold bg-brandYellow text-black transition-all">Word Scramble</button>
-        <button onclick="switchGame('trivia')" id="arcade-tab-trivia" class="arcade-sub-btn py-2 px-3 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all">Scripture Trivia</button>
-        <button onclick="switchGame('tower')" id="arcade-tab-tower" class="arcade-sub-btn py-2 px-3 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all">Armor Stack</button>
-        <button onclick="switchGame('timeline')" id="arcade-tab-timeline" class="arcade-sub-btn py-2 px-3 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all">Bible Timeline</button>
-        <button onclick="switchGame('match')" id="arcade-tab-match" class="arcade-sub-btn py-2 px-3 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all col-span-2 sm:col-span-1">Verse Match</button>
-    </div>
-
-    <!-- GAME 1: WORD SCRAMBLE -->
-    <div id="game-scramble" class="arcade-game-panel bg-cardBg/90 backdrop-blur-xl border border-zinc-800 p-6 rounded-3xl text-center space-y-4">
-        <h3 class="text-white font-bold text-lg">Verse Word Scramble</h3>
-        <p class="text-xs text-zinc-400">Unscramble the letters to reveal the hidden biblical word or theme.</p>
-        <div id="scramble-word" class="text-3xl font-black tracking-widest text-brandYellow py-4 uppercase font-mono"></div>
-        <div class="flex max-w-xs mx-auto gap-2">
-            <input type="text" id="scramble-input" placeholder="Type your answer..." class="w-full px-4 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs text-center uppercase tracking-wider focus:outline-none focus:border-brandYellow">
-            <button onclick="checkScramble()" class="px-5 py-2 bg-brandYellow text-black font-bold text-xs rounded-xl hover:bg-yellow-400 transition-all shrink-0">Guess</button>
-        </div>
-        <p id="scramble-feedback" class="text-xs font-medium h-5"></p>
-    </div>
-
-    <!-- GAME 2: TRIVIA -->
-    <div id="game-trivia" class="arcade-game-panel arcade-hidden bg-cardBg/90 backdrop-blur-xl border border-zinc-800 p-6 rounded-3xl space-y-4">
-        <div class="flex justify-between items-center text-xs text-zinc-400">
-            <span id="trivia-progress">Question 1 of 5</span>
-            <span id="trivia-score" class="text-brandYellow font-bold">Score: 0</span>
-        </div>
-        <h3 id="trivia-question" class="text-white font-bold text-base min-h-[48px]">Loading question...</h3>
-        <div id="trivia-options" class="grid grid-cols-1 gap-2"></div>
-        <button id="trivia-next-btn" onclick="nextTriviaQuestion()" class="hidden w-full py-2.5 bg-brandYellow text-black font-bold text-xs rounded-xl hover:bg-yellow-400 transition-all">Next Question &rarr;</button>
-    </div>
-
-    <!-- GAME 3: ARMOR TOWER STACK -->
-    <div id="game-tower" class="arcade-game-panel arcade-hidden bg-cardBg/90 backdrop-blur-xl border border-zinc-800 p-6 rounded-3xl text-center space-y-4">
-        <h3 class="text-white font-bold text-lg">Armor of God Stack</h3>
-        <p class="text-xs text-zinc-400">Stack the pieces of spiritual armor in correct order (Ephesians 6).</p>
-        <div id="tower-stack" class="space-y-2 max-w-sm mx-auto min-h-[160px] flex flex-col justify-center"></div>
-        <div id="tower-options" class="flex flex-wrap justify-center gap-2 max-w-sm mx-auto"></div>
-        <p id="tower-feedback" class="text-xs font-medium h-5 text-zinc-400"></p>
-    </div>
-
-    <!-- GAME 4: BIBLE TIMELINE -->
-    <div id="game-timeline" class="arcade-game-panel arcade-hidden bg-cardBg/90 backdrop-blur-xl border border-zinc-800 p-6 rounded-3xl space-y-4">
-        <h3 class="text-white font-bold text-lg text-center">Chronological Bible Order</h3>
-        <p class="text-xs text-zinc-400 text-center">Arrange these biblical events in the order they occurred in history.</p>
-        <div id="timeline-list" class="space-y-2 max-w-md mx-auto"></div>
-        <button onclick="checkTimeline()" class="w-full py-2.5 bg-brandYellow text-black font-bold text-xs rounded-xl hover:bg-yellow-400 transition-all">Verify Order</button>
-        <p id="timeline-feedback" class="text-xs font-medium text-center h-5"></p>
-    </div>
-
-    <!-- GAME 5: VERSE MATCH -->
-    <div id="game-match" class="arcade-game-panel arcade-hidden bg-cardBg/90 backdrop-blur-xl border border-zinc-800 p-6 rounded-3xl space-y-4">
-        <h3 class="text-white font-bold text-lg text-center">Verse Reference Match</h3>
-        <p class="text-xs text-zinc-400 text-center">Tap a Scripture quote, then tap its correct book and chapter reference.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
-            <div id="match-quotes" class="space-y-2"></div>
-            <div id="match-refs" class="space-y-2"></div>
-        </div>
-        <p id="match-feedback" class="text-xs font-medium text-center h-5 text-zinc-400"></p>
-    </div>
-</section>
-
-<style>
-    .arcade-hidden { display: none !important; }
-</style>
-
-<script>
-    function switchGame(gameKey) {
-        document.querySelectorAll('.arcade-game-panel').forEach(p => p.classList.add('arcade-hidden'));
-        document.querySelectorAll('.arcade-sub-btn').forEach(b => {
-            b.classList.remove('bg-brandYellow', 'text-black', 'font-bold');
-            b.classList.add('text-zinc-400');
-        });
-        const targetPanel = document.getElementById('game-' + gameKey);
-        const targetBtn = document.getElementById('arcade-tab-' + gameKey);
-        if (targetPanel) targetPanel.classList.remove('arcade-hidden');
-        if (targetBtn) {
-            targetBtn.classList.remove('text-zinc-400');
-            targetBtn.classList.add('bg-brandYellow', 'text-black', 'font-bold');
-        }
-    }
-
-    // GAME 1: SCRAMBLE LOGIC
-    const scrambleWords = [
-        { word: 'GOSPEL', hint: 'The good news of Jesus Christ' },
-        { word: 'GRACE', hint: 'Unearned favor from God' },
-        { word: 'FAITH', hint: 'Assurance of things hoped for' },
-        { word: 'REDEMPTION', hint: 'Bought back through Christ' },
-        { word: 'SALVATION', hint: 'Rescued from sin and death' }
-    ];
-    let currentScrambleIdx = 0;
-    function initScramble() {
-        const item = scrambleWords[currentScrambleIdx];
-        const scrambled = item.word.split('').sort(() => Math.random() - 0.5).join('');
-        document.getElementById('scramble-word').textContent = scrambled;
-        document.getElementById('scramble-input').value = '';
-        document.getElementById('scramble-feedback').textContent = `Hint: ${item.hint}`;
-        document.getElementById('scramble-feedback').className = 'text-xs font-medium h-5 text-zinc-400';
-    }
-    function checkScramble() {
-        const val = document.getElementById('scramble-input').value.trim().toUpperCase();
-        const fb = document.getElementById('scramble-feedback');
-        if (val === scrambleWords[currentScrambleIdx].word) {
-            fb.textContent = 'Correct! Well done.';
-            fb.className = 'text-xs font-bold text-emerald-400 h-5';
-            setTimeout(() => {
-                currentScrambleIdx = (currentScrambleIdx + 1) % scrambleWords.length;
-                initScramble();
-            }, 1500);
-        } else {
-            fb.textContent = 'Not quite right. Try again!';
-            fb.className = 'text-xs font-bold text-rose-400 h-5';
-        }
-    }
-    document.addEventListener('DOMContentLoaded', initScramble);
-
-    // GAME 2: TRIVIA LOGIC
-    const triviaQuestions = [
-        { q: "Who wrote the majority of the New Testament epistles?", options: ["Peter", "Paul", "John", "James"], answer: 1 },
-        { q: "What is the shortest verse in the Bible?", options: ["Jesus wept.", "Rejoice always.", "God is love.", "Pray without ceasing."], answer: 0 },
-        { q: "Which prophet was swallowed by a great fish?", options: ["Elijah", "Elisha", "Jonah", "Daniel"], answer: 2 },
-        { q: "What armor piece represents the Word of God in Ephesians 6?", options: ["Helmet of Salvation", "Shield of Faith", "Sword of the Spirit", "Breastplate of Righteousness"], answer: 2 },
-        { q: "In which book of the Bible is the famous 'Love Chapter' (Love is patient, love is kind)?", options: ["Romans", "1 Corinthians", "Galatians", "Colossians"], answer: 1 }
-    ];
-    let currentTriviaIdx = 0;
-    let triviaScore = 0;
-    function initTrivia() {
-        currentTriviaIdx = 0;
-        triviaScore = 0;
-        loadTriviaCard();
-    }
-    function loadTriviaCard() {
-        const qData = triviaQuestions[currentTriviaIdx];
-        document.getElementById('trivia-progress').textContent = `Question ${currentTriviaIdx + 1} of ${triviaQuestions.length}`;
-        document.getElementById('trivia-score').textContent = `Score: ${triviaScore}`;
-        document.getElementById('trivia-question').textContent = qData.q;
-        const optContainer = document.getElementById('trivia-options');
-        optContainer.innerHTML = '';
-        document.getElementById('trivia-next-btn').classList.add('hidden');
-
-        qData.options.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'w-full py-3 px-4 rounded-xl bg-zinc-950 border border-zinc-800 text-left text-xs font-medium text-zinc-300 hover:border-brandYellow transition-all';
-            btn.textContent = opt;
-            btn.onclick = () => selectTriviaOption(idx, btn);
-            optContainer.appendChild(btn);
-        });
-    }
-    function selectTriviaOption(selectedIdx, btnElem) {
-        const qData = triviaQuestions[currentTriviaIdx];
-        const allBtns = document.querySelectorAll('#trivia-options button');
-        allBtns.forEach(b => b.disabled = true);
-
-        if (selectedIdx === qData.answer) {
-            btnElem.className = 'w-full py-3 px-4 rounded-xl bg-emerald-950/80 border border-emerald-500 text-left text-xs font-bold text-emerald-300';
-            triviaScore += 20;
-        } else {
-            btnElem.className = 'w-full py-3 px-4 rounded-xl bg-rose-950/80 border border-rose-500 text-left text-xs font-bold text-rose-300';
-            allBtns[qData.answer].className = 'w-full py-3 px-4 rounded-xl bg-emerald-950/80 border border-emerald-500 text-left text-xs font-bold text-emerald-300';
-        }
-        document.getElementById('trivia-score').textContent = `Score: ${triviaScore}`;
-        document.getElementById('trivia-next-btn').classList.remove('hidden');
-    }
-    function nextTriviaQuestion() {
-        currentTriviaIdx++;
-        if (currentTriviaIdx < triviaQuestions.length) {
-            loadTriviaCard();
-        } else {
-            document.getElementById('trivia-question').textContent = `Quiz Complete! Final Score: ${triviaScore}/100`;
-            document.getElementById('trivia-options').innerHTML = `<button onclick="initTrivia()" class="w-full py-3 bg-brandYellow text-black font-bold text-xs rounded-xl">Play Again</button>`;
-            document.getElementById('trivia-next-btn').classList.add('hidden');
-        }
-    }
-    document.addEventListener('DOMContentLoaded', initTrivia);
-
-    // GAME 3: TOWER STACK LOGIC
-    const armorPieces = ["Belt of Truth", "Breastplate of Righteousness", "Shoes of Peace", "Shield of Faith", "Helmet of Salvation", "Sword of the Spirit"];
-    let stackedArmor = [];
-    let remainingArmor = [];
-    function initTower() {
-        stackedArmor = [];
-        remainingArmor = [...armorPieces].sort(() => Math.random() - 0.5);
-        renderTower();
-    }
-    function renderTower() {
-        const stackContainer = document.getElementById('tower-stack');
-        const optsContainer = document.getElementById('tower-options');
-        const fb = document.getElementById('tower-feedback');
-
-        stackContainer.innerHTML = stackedArmor.map(item => `<div class="p-2.5 rounded-xl bg-brandYellow/10 border border-brandYellow text-brandYellow text-xs font-bold">${item}</div>`).join('') || '<p class="text-xs text-zinc-500 italic">Tap items below to stack in correct order</p>';
-
-        optsContainer.innerHTML = remainingArmor.map((item, idx) => `<button onclick="stackArmorItem(${idx})" class="py-2 px-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-300 hover:border-brandYellow transition-all">${item}</button>`).join('');
-
-        if (stackedArmor.length === armorPieces.length) {
-            fb.textContent = 'Armor Fully Asquitted & Stacked!';
-            fb.className = 'text-xs font-bold text-emerald-400 h-5';
-        } else {
-            fb.textContent = '';
-        }
-    }
-    function stackArmorItem(idx) {
-        const chosen = remainingArmor[idx];
-        const expectedNext = armorPieces[stackedArmor.length];
-        if (chosen === expectedNext) {
-            stackedArmor.push(chosen);
-            remainingArmor.splice(idx, 1);
-            renderTower();
-        } else {
-            const fb = document.getElementById('tower-feedback');
-            fb.textContent = `Incorrect order! Expected: ${expectedNext}`;
-            fb.className = 'text-xs font-bold text-rose-400 h-5';
-        }
-    }
-    document.addEventListener('DOMContentLoaded', initTower);
-
-    // GAME 4: TIMELINE LOGIC
-    const timelineEvents = [
-        { id: 1, text: "Creation & Fall of Man", order: 1 },
-        { id: 2, text: "Call of Abraham", order: 2 },
-        { id: 3, text: "Exodus from Egypt", order: 3 },
-        { id: 4, text: "Birth & Ministry of Jesus", order: 4 }
-    ];
-    let shuffledTimeline = [];
-    function initTimeline() {
-        shuffledTimeline = [...timelineEvents].sort(() => Math.random() - 0.5);
-        renderTimeline();
-    }
-    function renderTimeline() {
-        const container = document.getElementById('timeline-list');
-        container.innerHTML = shuffledTimeline.map((ev, idx) => `
-            <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs">
-                <span class="text-white font-medium">${ev.text}</span>
-                <div class="flex gap-1">
-                    <button onclick="moveTimeline(${idx}, -1)" class="px-2 py-1 bg-zinc-800 rounded text-zinc-300 hover:bg-zinc-700">↑</button>
-                    <button onclick="moveTimeline(${idx}, 1)" class="px-2 py-1 bg-zinc-800 rounded text-zinc-300 hover:bg-zinc-700">↓</button>
-                </div>
-            </div>
-        `).join('');
-    }
-    function moveTimeline(idx, dir) {
-        const newIdx = idx + dir;
-        if (newIdx < 0 || newIdx >= shuffledTimeline.length) return;
-        const temp = shuffledTimeline[idx];
-        shuffledTimeline[idx] = shuffledTimelinenewIdx = shuffledTimeline[newIdx]; // Wait, standard swap:
-        shuffledTimeline[idx] = shuffledTimeline[newIdx];
-        shuffledTimeline[newIdx] = temp;
-        renderTimeline();
-    }
-    function checkTimeline() {
-        let correct = true;
-        for (let i = 0; i < shuffledTimeline.length; i++) {
-            if (shuffledTimeline[i].order !== i + 1) correct = false;
-        }
-        const fb = document.getElementById('timeline-feedback');
-        if (correct) {
-            fb.textContent = 'Perfect chronological order!';
-            fb.className = 'text-xs font-bold text-emerald-400 h-5';
-        } else {
-            fb.textContent = 'Not quite right yet. Adjust the order!';
-            fb.className = 'text-xs font-bold text-rose-400 h-5';
-        }
-    }
-    document.addEventListener('DOMContentLoaded', initTimeline);
-
-    // GAME 5: VERSE MATCH LOGIC
-    const matchPairs = [
-        { quote: "For all have sinned and fall short...", ref: "Romans 3:23" },
-        { quote: "I can do all things through Christ...", ref: "Philippians 4:13" },
-        { quote: "Trust in the Lord with all your heart...", ref: "Proverbs 3:5" }
-    ];
-    let selectedQuote = null;
-    let matchedCount = 0;
-    function initMatch() {
-        selectedQuote = null;
-        matchedCount = 0;
-        const quotesContainer = document.getElementById('match-quotes');
-        const refsContainer = document.getElementById('match-refs');
-        const shuffledQuotes = [...matchPairs].sort(() => Math.random() - 0.5);
-        const shuffledRefs = [...matchPairs].sort(() => Math.random() - 0.5);
-
-        quotesContainer.innerHTML = shuffledQuotes.map((p, idx) => `<button id="q-${idx}" onclick="selectMatchQuote('${p.ref}', this)" class="w-full p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-left text-xs text-zinc-300 hover:border-brandYellow transition-all">"${p.quote}"</button>`).join('');
-
-        refsContainer.innerHTML = shuffledRefs.map((p, idx) => `<button id="r-${idx}" onclick="selectMatchRef('${p.ref}', this)" class="w-full p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-center text-xs font-bold text-brandYellow hover:border-brandYellow transition-all">${p.ref}</button>`).join('');
-    }
-    function selectMatchQuote(ref, btn) {
-        document.querySelectorAll('#match-quotes button').forEach(b => b.classList.remove('border-brandYellow', 'bg-brandYellow/10'));
-        btn.classList.add('border-brandYellow', 'bg-brandYellow/10');
-        selectedQuote = ref;
-    }
-    function selectMatchRef(ref, btn) {
-        if (!selectedQuote) {
-            document.getElementById('match-feedback').textContent = 'Please tap a verse quote first!';
-            return;
-        }
-        if (selectedQuote === ref) {
-            btn.classList.add('bg-emerald-950/80', 'border-emerald-500', 'text-emerald-300');
-            btn.disabled = true;
-            matchedCount++;
-            selectedQuote = null;
-            document.getElementById('match-feedback').textContent = matchedCount === matchPairs.length ? 'All verses matched correctly!' : 'Match correct! Keep going.';
-            document.getElementById('match-feedback').className = 'text-xs font-bold text-emerald-400 h-5 text-center';
-        } else {
-            document.getElementById('match-feedback').textContent = 'Incorrect match. Try again!';
-            document.getElementById('match-feedback').className = 'text-xs font-bold text-rose-400 h-5 text-center';
-        }
-    }
-    document.addEventListener('DOMContentLoaded', initMatch);
-</script>
-
+</div>
 <!-- QUICK ACCESS SECTION -->
-<section data-tab="explore" class="tab-panel tab-hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<section data-tab="explore" class="tab-panel max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex items-center justify-between mb-4">
         <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Quick Access</span>
         <span class="text-zinc-500 text-xs">Explore More</span>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        
         <!-- Series Tracks -->
         <a href="series.html" class="media-card-gradient p-4 sm:p-5 rounded-2xl flex flex-col justify-between group hover:border-brandYellow/50 transition-all duration-300">
             <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-3 group-hover:scale-110 transition-transform">
@@ -623,11 +301,11 @@
                 <p class="text-zinc-400 text-[11px] mt-0.5">Mission & vision</p>
             </div>
         </a>
+
     </div>
 </section>
-
 <!-- DNA SECTION -->
-    <section data-tab="explore" class="tab-panel tab-hidden py-12 px-4 sm:px-6 lg:px-8">
+    <section data-tab="explore" class="tab-panel py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto media-card-gradient rounded-3xl p-6 sm:p-10 border border-zinc-800/80">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <span class="text-xs uppercase tracking-widest text-brandYellow font-semibold">Foundational Truths</span>
@@ -684,7 +362,7 @@
     </section>
 
     <!-- UPCOMING EVENTS SECTION -->
-    <section data-tab="explore" class="tab-panel tab-hidden py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
+    <section data-tab="explore" class="tab-panel py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
@@ -705,7 +383,7 @@
     </section>
 
     <!-- LATEST THEOLOGICAL REFLECTIONS SECTION -->
-    <section data-tab="explore" class="tab-panel tab-hidden py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
+    <section data-tab="explore" class="tab-panel py-16 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
@@ -732,6 +410,16 @@
         </div>
     </footer>
 
+  <!-- Mobile Menu Script -->
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+</script>
     <!-- PWA Update Banner -->
     <div id="pwa-update-banner" class="hidden fixed bottom-4 right-4 z-50 bg-zinc-900 border border-brandYellow text-white p-4 rounded-xl shadow-2xl flex items-center gap-4">
         <div>
@@ -825,6 +513,7 @@
                         document.getElementById('hero-heading').innerHTML = `${data.heroTitle} <span class="text-brandYellow">${data.heroHighlight}</span>`;
                     }
                     if (data.heroDescription) document.getElementById('hero-desc').innerText = data.heroDescription;
+                    if (data.heroImgUrl) document.getElementById('hero-img').src = data.heroImgUrl;
                     if (data.siteLogoUrl) document.getElementById('nav-logo').src = data.siteLogoUrl;
                     if (data.footerText) document.getElementById('footer-text').innerHTML = `&copy; 2026 ${data.footerText}`;
 
@@ -892,27 +581,27 @@
                         eventsContainer.innerHTML = "<p class='text-zinc-400 text-sm col-span-full'>No upcoming events available.</p>";
                         return;
                     }
-                    eventsContainer.innerHTML = events.map(event => {
-                        return `
-                            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
-                                <div>
-                                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
-                                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
-                                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
-                                    </div>
-                                    <div class="p-6 pb-2">
-                                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
-                                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
-                                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
-                                    </div>
-                                </div>
-                                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
-                                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
-                                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
+eventsContainer.innerHTML = events.map(event => {
+        return `
+            <div class="bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-brandYellow/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+                <div>
+                    <div class="relative w-full bg-zinc-950/60 flex items-center justify-center p-3 overflow-hidden">
+                        <img src="${event.imageUrl || 'blog%20images/WHY.jpg'}" alt="${event.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-md group-hover:scale-[1.02] transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brandYellow border border-zinc-800/80 shadow-lg">${event.badge || 'Gathering'}</div>
+                    </div>
+                    <div class="p-6 pb-2">
+                        <div class="text-brandYellow/80 text-xs font-semibold tracking-wider uppercase mb-2">${event.dateText || ''}</div>
+                        <h3 class="text-xl font-bold text-white mb-2 tracking-tight">${event.title || 'Fellowship Event'}</h3>
+                        <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${event.description || ''}</p>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 pt-2 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
+                    <span class="font-medium">${event.schedule || 'Check Schedule'}</span>
+                    <a href="events.html" class="text-brandYellow font-bold hover:underline inline-flex items-center gap-1">Details &rarr;</a>
+                </div>
+            </div>
+        `;
+    }).join('');
                 }
             } catch (err) {
                 console.error("Sanity events fetch error:", err);
@@ -969,133 +658,146 @@
             }
         }
 
-        async function fetchLatestDevotional() {
-            try {
-                const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
-                const dev = await client.fetch(query);
-
-                if (dev) {
-                    document.getElementById('dev-date').textContent = dev.publishedAt || '';
-                    document.getElementById('dev-title').textContent = dev.title || '';
-                    document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
-                    document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
-                    document.getElementById('dev-observation').textContent = dev.observation || '';
-                    document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
-                    document.getElementById('dev-application').textContent = dev.application || '';
-                    document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
-
-                    const imgElement = document.getElementById('dev-image');
-                    if (dev.imageUrl) {
-                        imgElement.src = dev.imageUrl;
-                        imgElement.classList.remove('hidden');
-                    } else {
-                        imgElement.classList.add('hidden');
-                    }
-                } else {
-                    document.getElementById('dev-title').textContent = "No devotionals published yet.";
-                }
-            } catch (error) {
-                console.error("Error fetching devotional:", error);
-                document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
-            }
-        }
-
+        // Run all fetch functions on page load
         fetchSiteSettings();
         fetchHomeSettings();
         fetchEvents();
         fetchLatestArticles();
         fetchLatestDevotional();
-    </script>
+async function fetchLatestDevotional() {
+    try {
+        const query = '*[_type == "devotional"] | order(publishedAt desc)[0]{ ..., "imageUrl": mainImage.asset->url }';
+        const dev = await client.fetch(query);
 
-    <!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/85 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
-        <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
-            <li>
-                <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors active">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                    Resources
-                </a>
-            </li>
-            <li>
-                <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                    Prayer
-                </a>
-            </li>
-            <li>
-                <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
-                    <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    Events
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- Dynamic Hero Carousel Script -->
-    <script>
-        async function loadDynamicHeroCarousel() {
-            const projectId = "y4q1h6a9";
-            const dataset = "production";
+        if (dev) {
+            document.getElementById('dev-date').textContent = dev.publishedAt || '';
+            document.getElementById('dev-title').textContent = dev.title || '';
+            document.getElementById('dev-scripture-ref').textContent = dev.scriptureRef || '';
             
-            const query = encodeURIComponent(`*[_type == "homeSettings"][0]{
-                heroCarousel[]{
-                    "url": image.asset->url,
-                    badge,
-                    caption
-                }
-            }`);
+            // Clean single-assignment without hardcoded extra quotes
+            document.getElementById('dev-scripture-text').textContent = dev.scriptureText || '';
+            
+            document.getElementById('dev-observation').textContent = dev.observation || '';
+            document.getElementById('dev-interpretation').textContent = dev.interpretation || '';
+            document.getElementById('dev-application').textContent = dev.application || '';
+            document.getElementById('dev-prayer').textContent = dev.closingPrayer || '';
 
-            const url = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=${query}`;
-
-            try {
-                const response = await fetch(url);
-                const { result } = await response.json();
-                
-                if (!result || !result.heroCarousel || result.heroCarousel.length === 0) return;
-
-                const container = document.getElementById('hero-carousel-container');
-                container.innerHTML = ''; 
-
-                result.heroCarousel.forEach((slide, index) => {
-                    const opacityClass = index === 0 ? 'opacity-100' : 'opacity-0';
-                    const slideHTML = `
-                        <div class="absolute inset-2 transition-opacity duration-1000 ease-in-out ${opacityClass} hero-slide rounded-xl overflow-hidden">
-                            <img src="${slide.url}" alt="${slide.caption || 'Slide'}" class="w-full h-full object-cover">
-                            <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-xl p-4 rounded-lg border border-zinc-800">
-                                <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">${slide.badge || 'Active'}</p>
-                                <p class="text-sm font-medium text-white">${slide.caption || ''}</p>
-                            </div>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', slideHTML);
-                });
-
-                startHeroFadeLoop();
-
-            } catch (error) {
-                console.error("Failed to load hero slides from Sanity:", error);
+            // Handle Featured Image display from Sanity CDN asset URL
+            const imgElement = document.getElementById('dev-image');
+            if (dev.imageUrl) {
+                imgElement.src = dev.imageUrl;
+                imgElement.classList.remove('hidden');
+            } else {
+                imgElement.classList.add('hidden');
             }
+        } else {
+            document.getElementById('dev-title').textContent = "No devotionals published yet.";
         }
+    } catch (error) {
+        console.error("Error fetching devotional:", error);
+        document.getElementById('dev-title').textContent = "Failed to load today's devotional.";
+    }
+}
 
-        function startHeroFadeLoop() {
-            const slides = document.querySelectorAll('.hero-slide');
-            if (slides.length <= 1) return;
-            
-            let currentSlide = 0;
-            setInterval(() => {
-                slides[currentSlide].style.opacity = '0';
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].style.opacity = '1';
-            }, 4000);
-        }
-
-        document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
+// Ensure it runs on page load
+fetchLatestDevotional();
     </script>
-</body>
+<!-- MOBILE BOTTOM TAB BAR (Thumb Zone) -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#121214]/85 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-2 py-2 app-only-feature">
+    <ul class="grid grid-cols-4 gap-1 text-center w-full m-0 p-0 list-none">
+        <li>
+            <a href="index.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors active">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Home
+            </a>
+        </li>
+        <li>
+            <a href="resources.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                Resources
+            </a>
+        </li>
+        <li>
+            <a href="prayer.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                Prayer
+            </a>
+        </li>
+        <li>
+            <a href="events.html" class="flex flex-col items-center py-1 text-[10px] font-medium text-zinc-400 hover:text-brandYellow transition-colors">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Events
+            </a>
+        </li>
+    </ul>
+</nav>
+<script>
+// NFS Hero Carousel Fade Loop
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].style.opacity = '0';
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].style.opacity = '1';
+        }, 4000);
+    }
+    async function loadDynamicHeroCarousel() {
+    const projectId = "y4q1h6a9"; // Your Sanity Project ID
+    const dataset = "production";
+    
+    const query = encodeURIComponent(`*[_type == "homeSettings"][0]{
+        heroCarousel[]{
+            "url": image.asset->url,
+            badge,
+            caption
+        }
+    }`);
+
+    const url = `https://${projectId}.api.sanity.io/v2023-05-03/data/query/${dataset}?query=${query}`;
+
+    try {
+        const response = await fetch(url);
+        const { result } = await response.json();
+        
+        if (!result || !result.heroCarousel || result.heroCarousel.length === 0) return;
+
+        const container = document.getElementById('hero-carousel-container');
+        container.innerHTML = ''; 
+
+        result.heroCarousel.forEach((slide, index) => {
+            const opacityClass = index === 0 ? 'opacity-100' : 'opacity-0';
+            const slideHTML = `
+                <div class="absolute inset-2 transition-opacity duration-1000 ease-in-out ${opacityClass} hero-slide rounded-xl overflow-hidden">
+                    <img src="${slide.url}" alt="${slide.caption || 'Slide'}" class="w-full h-full object-cover">
+                    <div class="absolute bottom-4 left-4 right-4 bg-darkBg/80 backdrop-blur-xl p-4 rounded-lg border border-zinc-800">
+                        <p class="text-xs text-brandYellow font-semibold uppercase tracking-wider">${slide.badge || 'Active'}</p>
+                        <p class="text-sm font-medium text-white">${slide.caption || ''}</p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', slideHTML);
+        });
+
+        startHeroFadeLoop();
+
+    } catch (error) {
+        console.error("Failed to load hero slides from Sanity:", error);
+    }
+}
+
+function startHeroFadeLoop() {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length <= 1) return;
+    
+    let currentSlide = 0;
+    setInterval(() => {
+        slides[currentSlide].style.opacity = '0';
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].style.opacity = '1';
+    }, 4000);
+}
+
+document.addEventListener("DOMContentLoaded", loadDynamicHeroCarousel);
+</script>
 </html>
