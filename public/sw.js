@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay-alive-v11';
+const CACHE_NAME = 'stay-alive-v12';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -41,13 +41,14 @@ self.addEventListener('activate', (event) => {
 });
 
 // Helper: is this a request for our own static shell files
-// (HTML/CSS/JS/images/fonts on our own domain)?
+// (HTML/JS/images/fonts on our own domain)? CSS is deliberately
+// excluded here — style fixes need to apply immediately, not wait
+// for a background cache revalidation cycle.
 function isStaticAsset(request) {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return false; // only our own files
   return (
     request.destination === 'document' ||
-    request.destination === 'style' ||
     request.destination === 'script' ||
     request.destination === 'image' ||
     request.destination === 'font'

@@ -11,28 +11,9 @@
 html, body {
     scrollbar-width: none;
     -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch; /* Momentum scrolling for iOS/Android WebView */
-    scroll-behavior: smooth;
-    overscroll-behavior-y: none; /* Prevents rubber-banding stutter */
 }
 html::-webkit-scrollbar, body::-webkit-scrollbar {
     display: none;
-}
-
-/* Force hardware acceleration on lists and scrollable elements */
-.app-only-feature,
-nav.fixed.bottom-0,
-#community-feed-container, 
-#saved-notebooks-container, 
-.scrollable-panel {
-    transform: translateZ(0);
-    will-change: transform;
-    backface-visibility: hidden;
-}
-
-/* Instantly registers taps without the 300ms mobile browser delay */
-button, a, input, select, .cursor-pointer {
-    touch-action: manipulation;
 }
 
 /* Reusable utility class if you want to hide scrollbars on specific containers */
@@ -179,6 +160,11 @@ nav.fixed.bottom-0 ul li a:active svg {
 /* Page fade-in removed here — was conflicting with the existing
    glass-crack intro animation on body, causing layout push and
    the crack text failing to display */
+
+/* Smooth scrolling between sections/anchors */
+html {
+  scroll-behavior: smooth;
+}
 
 /* Native-feeling tap feedback on buttons and cards */
 a, button {
@@ -331,7 +317,7 @@ footer {
 
 /* Ensure actual page content always renders above the bokeh layer,
    but never override sticky/fixed positioning on the header, nav,
-   vocal layout containers, or any modal/overlay using Tailwind's .fixed class */
+   or any modal/overlay using Tailwind's .fixed class */
 body > *:not(#bokeh-bg):not(header):not(nav):not(.fixed) {
   position: relative;
   z-index: 1;
@@ -365,4 +351,24 @@ header {
    cohesive depth as the header and tabs */
 .app-only-feature, nav.fixed.bottom-0 {
   background: linear-gradient(0deg, rgba(18,18,20,0.92), rgba(24,24,27,0.85)) !important;
+}
+
+/* ==========================================
+   GUARANTEED BOTTOM NAV CLEARANCE (all pages)
+   ========================================== */
+/* Ensures no content, button, or card ever sinks behind the fixed
+   bottom nav bar, regardless of phone height or content length */
+body {
+  padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+}
+
+/* ==========================================
+   GLOBAL FIX: content near page bottom
+   sinking behind the fixed bottom nav
+   ========================================== */
+/* Ensures whatever the LAST section is on any page (buttons, credits,
+   CTAs) always has enough room to clear the fixed bottom nav bar,
+   regardless of which page or what content sits there. */
+section:last-of-type {
+  padding-bottom: calc(100px + env(safe-area-inset-bottom)) !important;
 }
